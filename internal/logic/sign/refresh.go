@@ -2,26 +2,31 @@ package sign
 
 import "li17server/internal/logic/sign/util/li17"
 
-func (a *sGenerator) GenContextP1(preivateKey, publicKey string) string {
+func (a *sSign) GenContextP1(preivateKey, publicKey string) string {
 	return li17.GenContextP1(preivateKey, publicKey)
 }
 
-func (a *sGenerator) GenContextP2(preivateKey, publicKey string) string {
+func (a *sSign) GenContextP2(preivateKey, publicKey string) string {
 	return li17.GenContextP2(preivateKey, publicKey)
 }
 
-func (a *sGenerator) SendZkProofP1(p1 string) string {
-	return li17.SendZkProofP1(p1)
+func (a *sSign) SendZKProofP1(p1 string) string {
+	return li17.SendZKProofP1(p1)
 }
 
-func (a *sGenerator) RecvZkProofP1(p1, zkproof2 string) string {
-	return li17.RecvZkProofP1(p1, zkproof2)
+func (a *sSign) RecvZKProofP1(p1, ZKProof2 string) string {
+	return li17.RecvZKProofP1(p1, ZKProof2)
 }
 
-func (a *sGenerator) SendZkProofP2(p2 string) string {
-	return li17.SendZkProofP2(p2)
+func (a *sSign) SendZKProofP2(p2 string) string {
+	return li17.SendZKProofP2(p2)
 }
 
-func (a *sGenerator) RecvZkProofP2(p2, zkproof1 string) string {
-	return li17.RecvZkProofP2(p2, zkproof1)
+func (a *sSign) RecvZKProofP2(p2, ZKProof1 string) string {
+	defer func() {
+		if err := recover(); err != nil {
+			return
+		}
+	}()
+	return li17.RecvZKProofP2(p2, ZKProof1)
 }

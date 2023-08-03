@@ -13,11 +13,11 @@ func Test_Refresh(t *testing.T) {
 	p1 := GenContextP1(private_key1, public_key)
 	p2 := GenContextP2(private_key2, public_key)
 
-	proof1 := SendZkProofP1(p1)
-	pkey2 := RecvZkProofP2(p2, proof1)
+	proof1 := SendZKProofP1(p1)
+	pkey2 := RecvZKProofP2(p2, proof1)
 
-	proof2 := SendZkProofP2(p2)
-	pkey1 := RecvZkProofP1(p1, proof2)
+	proof2 := SendZKProofP2(p2)
+	pkey1 := RecvZKProofP1(p1, proof2)
 
 	context1 := GenContextP1(pkey1, "")
 	context2 := GenContextP2(pkey2, "")
@@ -25,11 +25,11 @@ func Test_Refresh(t *testing.T) {
 	////gen
 	hashProof1 := KeygenSendHashProofP1(context1)
 	context2 = KeygenRecvHashProofP2(context2, hashProof1)
-	zkproof2 := KeygenSendZkProofP2(context2)
+	ZKProof2 := KeygenSendZKProofP2(context2)
 
-	context1 = KeygenRecvZkProofP1(context1, zkproof2)
-	zkproof1 := KeygenSendZkProofP1(context1)
-	context2 = KeygenRecvZkProofP2(context2, zkproof1)
+	context1 = KeygenRecvZKProofP1(context1, ZKProof2)
+	ZKProof1 := KeygenSendZKProofP1(context1)
+	context2 = KeygenRecvZKProofP2(context2, ZKProof1)
 
 	pk_v1 := PublicKeyP1(context1)
 	pk_v2 := PublicKeyP2(context2)

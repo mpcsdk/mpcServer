@@ -4,14 +4,13 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-type NewSessionReq struct {
-	g.Meta `path:"/newSession" tags:"NewSession" method:"get" summary:"NewSession"`
-	UserId string `name:"userId"`
-	PubKey string `name:"pubKey"`
-	Proof  string `name:"proof"`
+// ///
+type AuthUserReq struct {
+	g.Meta    `path:"/AuthUser" tags:"AuthUser" method:"post" summary:"AuthUser"`
+	UserToken string `name:"userToken"`
+	PubKey    string `name:"pubKey"`
 }
-type NewSessionRes struct {
-	// g.Meta `mime:"text/html" example:"string"`
+type AuthUserRes struct {
 	SessionId string `name:"sessionId"`
 }
 
@@ -22,6 +21,16 @@ type GetStateReq struct {
 }
 type GetStateRes struct {
 	State string `name:"state"`
+}
+
+// //
+type SendZKProof1Req struct {
+	g.Meta    `path:"/SendZKProof1" tags:"SendZKProof1" method:"post" summary:"SendZKProof1"`
+	SessionId string `name:"sessionId"`
+	ZKProof1  string `name:"ZKProof1"`
+}
+type SendZKProof1Res struct {
+	// g.Meta `mime:"text/html" example:"string"`
 }
 
 // ///
@@ -43,21 +52,21 @@ type SendHashProofRes struct {
 }
 
 // ///
-type GetZkProofP2Req struct {
-	g.Meta    `path:"/GetZkProofP2" tags:"GetZkProofP2" method:"post" summary:"GetZkProofP2"`
+type GetZKProofP2Req struct {
+	g.Meta    `path:"/GetZKProofP2" tags:"GetZKProofP2" method:"post" summary:"GetZKProofP2"`
 	SessionId string `name:"sessionId"`
 }
-type GetZkProofP2Res struct {
-	ZkProofP2 string `name:"zkProofP2"`
+type GetZKProofP2Res struct {
+	ZKProofP2 string `name:"ZKProofP2"`
 }
 
 // ///
-type SendZkProofReq struct {
-	g.Meta    `path:"/SendZkProof" tags:"SendZkProof" method:"post" summary:"SendZkProof"`
+type SendZKProofReq struct {
+	g.Meta    `path:"/SendZKProof" tags:"SendZKProof" method:"post" summary:"SendZKProof"`
 	SessionId string `name:"sessionId"`
-	ZkProof   string `name:"zkProof"`
+	ZKProof   string `name:"ZKProof"`
 }
-type SendZkProofRes struct {
+type SendZKProofRes struct {
 }
 
 // ///

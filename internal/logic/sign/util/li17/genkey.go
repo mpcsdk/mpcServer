@@ -29,14 +29,14 @@ func KeygenRecvHashProofP2(context2, proof1 string) string {
 	return C.GoString(p2_context)
 }
 
-func KeygenSendZkProofP1(context1 string) string {
+func KeygenSendZKProofP1(context1 string) string {
 	c_context1 := C.CString(context1)
 	var p1_zk_proof = C.li17_p1_keygen_send_zk_proof(c_context1)
 
 	return C.GoString(p1_zk_proof)
 }
 
-func KeygenRecvZkProofP1(context1, proof2 string) string {
+func KeygenRecvZKProofP1(context1, proof2 string) string {
 
 	s_context1 := (*Li17String)(unsafe.Pointer(&context1)).Str
 	s_proof2 := (*Li17String)(unsafe.Pointer(&proof2)).Str
@@ -49,13 +49,13 @@ func KeygenRecvZkProofP1(context1, proof2 string) string {
 
 }
 
-func KeygenSendZkProofP2(context1 string) string {
+func KeygenSendZKProofP2(context1 string) string {
 	c_context := C.CString(context1)
 	var p1_zk_proof = C.li17_p2_keygen_send_zk_proof(c_context)
 	return C.GoString(p1_zk_proof)
 }
 
-func KeygenRecvZkProofP2(context2, proof1 string) string {
+func KeygenRecvZKProofP2(context2, proof1 string) string {
 	c_context := C.CString(context2)
 	proof := C.CString(proof1)
 	p2_context := C.li17_p2_keygen_recv_zk_proof(c_context, proof)

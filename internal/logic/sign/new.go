@@ -1,13 +1,15 @@
 package sign
 
-import "li17server/internal/service"
+import (
+	"li17server/internal/service"
+)
 
-type sGenerator struct{}
+type sSign struct{}
 
-func New() *sGenerator {
-	return &sGenerator{}
+func new() *sSign {
+	return &sSign{}
 }
 
 func init() {
-	service.RegisterGenerator(New())
+	service.RegisterSign(new())
 }

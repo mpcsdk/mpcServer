@@ -5,5 +5,7 @@
 package logic
 
 import (
+	_ "li17server/internal/logic/cache"
+	_ "li17server/internal/logic/generator"
 	_ "li17server/internal/logic/sign"
 )
