@@ -8,5 +8,12 @@ logger:
   level : "all"
   stdout: true
 
+cache:
+# redis mem
+  type: "redis"
+  redis:
+    Addr: "127.0.0.1:6379"
+    Db: 1
+
 
 

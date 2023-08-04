@@ -6,8 +6,13 @@ import (
 	"sync"
 	"time"
 
+	_ "github.com/gogf/gf/contrib/nosql/redis/v2"
 	"github.com/gogf/gf/v2/container/gvar"
+	"github.com/gogf/gf/v2/database/gredis"
+
 	"github.com/gogf/gf/v2/os/gcache"
+	"github.com/gogf/gf/v2/os/gcfg"
+	"github.com/gogf/gf/v2/os/glog"
 )
 
 type sCache struct {
@@ -19,9 +24,39 @@ var once sync.Once
 
 func init() {
 	once.Do(func() {
+		// default cache
 		cache = &sCache{
 			c: gcache.New(),
 		}
+
+		cfg := gcfg.Instance()
+		cacheType, err := cfg.Get(context.Background(), "cache.type")
+		if err == nil && cacheType.String() == "redis" {
+			addr, err := cfg.Get(context.Background(), "cache.redis.Addr")
+			if err != nil {
+				return
+			}
+			db, err := cfg.Get(context.Background(), "cache.redis.Db")
+			if err != nil {
+				return
+			}
+
+			redisConfig := &gredis.Config{
+				Address: addr.String(),
+				Pass:    "",
+				Db:      db.Int(),
+			}
+
+			redis, err := gredis.New(redisConfig)
+			if err != nil {
+				return
+			}
+			cache.c.SetAdapter(gcache.NewAdapterRedis(redis))
+		} else {
+			glog.Error(context.Background(), "have no redis config")
+			return
+		}
+
 	})
 
 	service.RegisterCache(NewCache())
