@@ -1,13 +1,24 @@
 package generator
 
 import (
+	"context"
 	"li17server/internal/service"
+
+	"github.com/panjf2000/ants/v2"
 )
 
-type sGenerator struct{}
+type sGenerator struct {
+	pool *ants.Pool
+	ctx  context.Context
+}
 
 func New() *sGenerator {
-	return &sGenerator{}
+	p, _ := ants.NewPool(10)
+
+	return &sGenerator{
+		ctx:  context.Background(),
+		pool: p,
+	}
 }
 
 func init() {

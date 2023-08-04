@@ -23,8 +23,9 @@ type (
 		CalRequest(ctx context.Context, sid string, request string) error
 		// 9.signature
 		CalSign(ctx context.Context, sid string, msg string) error
-		UpGeneratorState(ctx context.Context, sid string, state string) error
+		UpGeneratorState(ctx context.Context, sid string, state string, err error) error
 		GetGeneratorState(ctx context.Context, sid string) (string, error)
+		GetStateData(ctx context.Context, sid, state string) (string, error)
 		// pubkey
 		FetchPubKey(ctx context.Context, sid string) (string, error)
 		RecordPubKey(ctx context.Context, sid string, pubkey string) error

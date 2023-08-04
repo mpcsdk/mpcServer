@@ -9,8 +9,10 @@ import (
 
 func (c *ControllerV1) GetState(ctx context.Context, req *v1.GetStateReq) (res *v1.GetStateRes, err error) {
 	state, err := service.Generator().GetGeneratorState(ctx, req.SessionId)
+	data, err := service.Generator().GetStateData(ctx, req.SessionId, state)
 	res = &v1.GetStateRes{
 		State: state,
+		Data:  data,
 	}
 	return
 }
