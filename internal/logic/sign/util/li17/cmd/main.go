@@ -32,24 +32,24 @@ package cmd
 
 // 	// context
 // 	var p1_context = li17.GenContextP1(private_key1_, "")
-// 	var p2_context = li17.GenContextP2(private_key2_, "")
+// 	var context_p2 = li17.GenContextP2(private_key2_, "")
 
 // 	// keygen
 // 	var p1_hash_proof = li17.KeygenSendHashProofP1(p1_context)
 // 	// p2 need p1_hash_proof
-// 	p2_context = li17.KeygenRecvHashProofP2(p2_context, p1_hash_proof)
+// 	context_p2 = li17.KeygenRecvHashProofP2(context_p2, p1_hash_proof)
 
-// 	var p2_zk_proof = li17.KeygenSendZkProofP2(p2_context)
+// 	var p2_zk_proof = li17.KeygenSendZkProofP2(context_p2)
 // 	// p1 need p2_zk_proof
 // 	p1_context = li17.KeygenRecvZkProofP1(p1_context, p2_zk_proof)
 
 // 	var p1_zk_proof = li17.KeygenSendZkProofP1(p1_context)
 // 	// p2 need p1_zk_proof
-// 	p2_context = li17.KeygenRecvZkProofP2(p2_context, p1_zk_proof)
+// 	context_p2 = li17.KeygenRecvZkProofP2(context_p2, p1_zk_proof)
 
 // 	///pubkey
 // 	var v1_public_key = li17.PublicKeyP1(p1_context)
-// 	var v2_public_key = li17.PublicKeyP2(p2_context)
+// 	var v2_public_key = li17.PublicKeyP2(context_p2)
 
 // 	if v1_public_key == v2_public_key {
 // 		if public_key == v1_public_key {
@@ -67,10 +67,10 @@ package cmd
 // 		var request = li17.SignSendRequestP1(p1_context)
 
 // 		// p2 need request and msg
-// 		// p2_context = li17.li17_p2_signature_recv_signature_request(p2_context, request)
-// 		p2_context = li17.SignRecvRequestP2(p2_context, request)
-// 		// var p2_signature = li17.li17_p2_signature_send_signature_partial(p2_context, c_msg32)
-// 		p2_sign := li17.SignSendPartialP2(p2_context, msg32)
+// 		// context_p2 = li17.li17_p2_signature_recv_signature_request(context_p2, request)
+// 		context_p2 = li17.SignRecvRequestP2(context_p2, request)
+// 		// var p2_signature = li17.li17_p2_signature_send_signature_partial(context_p2, c_msg32)
+// 		p2_sign := li17.SignSendPartialP2(context_p2, msg32)
 // 		// var signature = li17.li17_p1_signature_recv_signature_partial(p1_context, p2_sign, c_msg32)
 // 		var signature = li17.SignSendPartialP1(p1_context, p2_sign, msg32)
 

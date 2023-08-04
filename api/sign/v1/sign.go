@@ -21,26 +21,7 @@ type GetStateReq struct {
 }
 type GetStateRes struct {
 	State string `json:"state"`
-	Data  string `json:"data"`
-}
-
-// //
-type SendZKProof1Req struct {
-	g.Meta    `path:"/SendZKProof1" tags:"SendZKProof1" method:"post" summary:"SendZKProof1"`
-	SessionId string `json:"sessionId"`
-	ZKProof1  string `json:"ZKProof1"`
-}
-type SendZKProof1Res struct {
-	// g.Meta `mime:"text/html" example:"string"`
-}
-
-// ///
-type GetZKProof2Req struct {
-	g.Meta    `path:"/GetZKProof2" tags:"GetZKProof2" method:"post" summary:"GetZKProof2"`
-	SessionId string `json:"sessionId"`
-}
-type GetZKProof2Res struct {
-	Proof2 string `json:"proof2"`
+	Data  string `json:"data,omitempty"`
 }
 
 // ///
@@ -58,34 +39,27 @@ type GetZKProofP2Req struct {
 	SessionId string `json:"sessionId"`
 }
 type GetZKProofP2Res struct {
-	ZKProofP2 string `json:"ZKProofP2"`
+	ZKProofP2 string `json:"zkProofP2"`
 }
 
 // ///
-type SendZKProofReq struct {
-	g.Meta    `path:"/SendZKProof" tags:"SendZKProof" method:"post" summary:"SendZKProof"`
-	SessionId string `json:"sessionId"`
-	ZKProof   string `json:"ZKProof"`
+type SendZKProofP1Req struct {
+	g.Meta      `path:"/SendZKProof" tags:"SendZKProof" method:"post" summary:"SendZKProof"`
+	SessionId   string `json:"sessionId"`
+	ZKProofP1   string `json:"zkProofP1"`
+	PublicKeyV1 string `json:"publicKeyV1"`
 }
-type SendZKProofRes struct {
-}
-
-// ///
-type SendRequestReq struct {
-	g.Meta    `path:"/SendRequest" tags:"SendRequest" method:"post" summary:"SendRequest"`
-	SessionId string `json:"sessionId"`
-	Request   string `json:"request"`
-}
-type SendRequestRes struct {
+type SendZKProofP1Res struct {
 }
 
 // ///
-type SendMsgReq struct {
-	g.Meta    `path:"/SendMsg" tags:"SendMsg" method:"post" summary:"SendMsg"`
+type SignMsgReq struct {
+	g.Meta    `path:"/SignMsg" tags:"SendMsg" method:"post" summary:"SendMsg"`
 	SessionId string `json:"sessionId"`
 	Msg       string `json:"msg"`
+	Request   string `json:"request,omitempty"`
 }
-type SendMsgRes struct {
+type SignMsgRes struct {
 }
 
 // ///

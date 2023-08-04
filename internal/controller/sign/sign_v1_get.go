@@ -9,18 +9,10 @@ import (
 
 func (c *ControllerV1) GetState(ctx context.Context, req *v1.GetStateReq) (res *v1.GetStateRes, err error) {
 	state, err := service.Generator().GetGeneratorState(ctx, req.SessionId)
-	data, err := service.Generator().GetStateData(ctx, req.SessionId, state)
+	// data, err := service.Generator().GetStateData(ctx, req.SessionId, state)
 	res = &v1.GetStateRes{
 		State: state,
-		Data:  data,
-	}
-	return
-}
-
-func (c *ControllerV1) GetZKProof2(ctx context.Context, req *v1.GetZKProof2Req) (res *v1.GetZKProof2Res, err error) {
-	ZKProof2, err := service.Generator().FetchZKProof2(ctx, req.SessionId)
-	res = &v1.GetZKProof2Res{
-		Proof2: ZKProof2,
+		// Data:  data,
 	}
 	return
 }

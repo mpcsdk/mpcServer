@@ -9,20 +9,41 @@ import (
 	"context"
 )
 
+const (
+	STATE_None int = iota
+	STATE_Auth
+	STATE_HandShake
+	// STATE_ContextP2
+	// STATE_ZKProof2
+	// STATE_ZKProofP2
+	// STATE_PublicKey2
+	// STATE_Request
+	STATE_Signature
+	STATE_Done
+	STATE_Err
+	
+)
+
 type (
 	IGenerator interface {
 		// GenContextP2
 		GenContextP2(ctx context.Context, sid string, private_key2, public_key string) error
-		// 1.2.3 cal zk_proof2 by zk_proof1, need recal private_key2_ and p2_context
+		// 1.2.3 cal zk_proof2 by zk_proof1, need recal private_key2_ and context_p2
 		CalZKProof2(ctx context.Context, sid string, zk_proof1 string) (err error)
-		// 4.5.calculate p2_zk_proof by p1_hash_proof, need recal p2_context by p1_hash_proof
+		// 4.5.calculate p2_zk_proof by p1_hash_proof, need recal context_p2 by p1_hash_proof
 		CalZKProofP2(ctx context.Context, sid string, p1_hash_proof string) error
-		// 6.7.calculate v2_public_key by p1_zk_proof, recal p2_context by p1_zk_proof
+		// 6.7.calculate v2_public_key by p1_zk_proof, recal context_p2 by p1_zk_proof
 		CalPublicKey2(ctx context.Context, sid string, p1_zk_proof string) error
-		// 8.calculate request, recal p2_context
+		// 8.calculate request, recal context_p2
 		CalRequest(ctx context.Context, sid string, request string) error
 		// 9.signature
-		CalSign(ctx context.Context, sid string, msg string) error
+		CalSign(ctx context.Context, sid string, msg string, request string) error
+		StateNext(state int) int
+		StatePrivate(state int) int
+		StateInt(state string) int
+		StateString(state int) string
+		StateIs(state string, istate int) bool
+		NextStateIs(curstate string) int
 		UpGeneratorState(ctx context.Context, sid string, state string, err error) error
 		GetGeneratorState(ctx context.Context, sid string) (string, error)
 		GetStateData(ctx context.Context, sid, state string) (string, error)
@@ -41,8 +62,8 @@ type (
 		// //zk_proof2
 		RecordZKProof2(ctx context.Context, sid string, zkproof2 string) error
 		FetchZKProof2(ctx context.Context, sid string) (string, error)
-		// //p2_context
-		RecordContextp2(ctx context.Context, sid string, p2_context string) error
+		// //context_p2
+		RecordContextp2(ctx context.Context, sid string, context_p2 string) error
 		FetchContextp2(ctx context.Context, sid string) (string, error)
 		// //p1_hash_proof
 		RecordHashProofP1(ctx context.Context, sid string, hashproofp1 string) error

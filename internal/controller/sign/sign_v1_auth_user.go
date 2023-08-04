@@ -28,6 +28,8 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 	//
 	service.Generator().GenContextP2(ctx, sid, tmp_privkey2, req.PubKey)
 	///
+	service.Generator().UpGeneratorState(ctx, sid, service.Generator().StateString(service.STATE_None), err)
+
 	if err == nil {
 		res = &v1.AuthUserRes{
 			SessionId: sid,

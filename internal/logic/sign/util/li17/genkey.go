@@ -25,8 +25,8 @@ func KeygenSendHashProofP1(context1 string) string {
 func KeygenRecvHashProofP2(context2, proof1 string) string {
 	c_context2 := C.CString(context2)
 	c_proof1 := C.CString(proof1)
-	p2_context := C.li17_p2_keygen_recv_hash_proof(c_context2, c_proof1)
-	return C.GoString(p2_context)
+	context_p2 := C.li17_p2_keygen_recv_hash_proof(c_context2, c_proof1)
+	return C.GoString(context_p2)
 }
 
 func KeygenSendZKProofP1(context1 string) string {
@@ -58,8 +58,8 @@ func KeygenSendZKProofP2(context1 string) string {
 func KeygenRecvZKProofP2(context2, proof1 string) string {
 	c_context := C.CString(context2)
 	proof := C.CString(proof1)
-	p2_context := C.li17_p2_keygen_recv_zk_proof(c_context, proof)
-	return C.GoString(p2_context)
+	context_p2 := C.li17_p2_keygen_recv_zk_proof(c_context, proof)
+	return C.GoString(context_p2)
 }
 
 func PublicKeyP1(context1 string) string {

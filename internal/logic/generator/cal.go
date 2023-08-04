@@ -12,7 +12,7 @@ func (s *sGenerator) GenContextP2(ctx context.Context, sid string, private_key2,
 	return nil
 }
 
-// 1.2.3 cal zk_proof2 by zk_proof1, need recal private_key2_ and p2_context
+// 1.2.3 cal zk_proof2 by zk_proof1, need recal private_key2_ and context_p2
 func (s *sGenerator) CalZKProof2(ctx context.Context, sid string, zk_proof1 string) (err error) {
 
 	s.pool.Submit(func() {
@@ -22,7 +22,7 @@ func (s *sGenerator) CalZKProof2(ctx context.Context, sid string, zk_proof1 stri
 	return
 }
 
-// 4.5.calculate p2_zk_proof by p1_hash_proof, need recal p2_context by p1_hash_proof
+// 4.5.calculate p2_zk_proof by p1_hash_proof, need recal context_p2 by p1_hash_proof
 func (s *sGenerator) CalZKProofP2(ctx context.Context, sid string, p1_hash_proof string) error {
 	s.pool.Submit(func() {
 		s.calZKProofP2(s.ctx, sid, p1_hash_proof)
@@ -31,17 +31,17 @@ func (s *sGenerator) CalZKProofP2(ctx context.Context, sid string, p1_hash_proof
 	return nil
 }
 
-// 6.7.calculate v2_public_key by p1_zk_proof, recal p2_context by p1_zk_proof
+// 6.7.calculate v2_public_key by p1_zk_proof, recal context_p2 by p1_zk_proof
 func (s *sGenerator) CalPublicKey2(ctx context.Context, sid string, p1_zk_proof string) error {
 
 	s.pool.Submit(func() {
-		s.CalPublicKey2(s.ctx, sid, p1_zk_proof)
+		s.calPublicKey2(s.ctx, sid, p1_zk_proof)
 	})
 
 	return nil
 }
 
-// 8.calculate request, recal p2_context
+// 8.calculate request, recal context_p2
 func (s *sGenerator) CalRequest(ctx context.Context, sid string, request string) error {
 	s.pool.Submit(func() {
 		s.pool.Submit(func() {
@@ -53,9 +53,9 @@ func (s *sGenerator) CalRequest(ctx context.Context, sid string, request string)
 }
 
 // 9.signature
-func (s *sGenerator) CalSign(ctx context.Context, sid string, msg string) error {
+func (s *sGenerator) CalSign(ctx context.Context, sid string, msg string, request string) error {
 	s.pool.Submit(func() {
-		s.calSign(s.ctx, sid, msg)
+		s.calSign(s.ctx, sid, msg, request)
 	})
 
 	return nil

@@ -12,9 +12,11 @@ logger:
 cache:
 # redis mem
   type: "redis"
+  duration: 100
   redis:
     Addr: "127.0.0.1:6379"
     Db: 1
+
 
 
 

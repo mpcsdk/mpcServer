@@ -56,23 +56,19 @@ func (s *sGenerator) RecordPrivateKey(ctx context.Context, sid string, privateke
 
 // //p2
 func (s *sGenerator) FetchP2(ctx context.Context, sid string) (string, error) {
-	p2, err := service.Cache().Get(ctx, sid+"p2")
+	p2, err := service.Cache().Get(ctx, sid+"context_p2")
 	return p2.String(), err
 }
 func (s *sGenerator) RecordP2(ctx context.Context, sid string, p2 string) error {
-	err := service.Cache().Set(ctx, sid+"p2", p2, duration)
-	if err == nil {
-		service.Generator().UpGeneratorState(ctx, sid, "p2", err)
-	}
+	err := service.Cache().Set(ctx, sid+"context_p2", p2, duration)
+
 	return err
 }
 
 // //private_key2_
 func (s *sGenerator) RecordPrivateKey2(ctx context.Context, sid string, pkey string) error {
 	err := service.Cache().Set(ctx, sid+"pkey2", pkey, duration)
-	if err == nil {
-		service.Generator().UpGeneratorState(ctx, sid, "pkey2", err)
-	}
+
 	return err
 }
 func (s *sGenerator) FetchPrivateKey2(ctx context.Context, sid string) (string, error) {
@@ -83,9 +79,7 @@ func (s *sGenerator) FetchPrivateKey2(ctx context.Context, sid string) (string, 
 // //zk_proof2
 func (s *sGenerator) RecordZKProof2(ctx context.Context, sid string, zkproof2 string) error {
 	err := service.Cache().Set(ctx, sid+"zk_proof2", zkproof2, duration)
-	if err == nil {
-		service.Generator().UpGeneratorState(ctx, sid, "zk_proof2", err)
-	}
+
 	return err
 }
 func (s *sGenerator) FetchZKProof2(ctx context.Context, sid string) (string, error) {
@@ -93,25 +87,21 @@ func (s *sGenerator) FetchZKProof2(ctx context.Context, sid string) (string, err
 	return p2.String(), err
 }
 
-// //p2_context
-func (s *sGenerator) RecordContextp2(ctx context.Context, sid string, p2_context string) error {
-	err := service.Cache().Set(ctx, sid+"p2_context", p2_context, duration)
-	if err == nil {
-		service.Generator().UpGeneratorState(ctx, sid, "p2_context", err)
-	}
+// //context_p2
+func (s *sGenerator) RecordContextp2(ctx context.Context, sid string, context_p2 string) error {
+	err := service.Cache().Set(ctx, sid+"context_p2", context_p2, duration)
+
 	return err
 }
 func (s *sGenerator) FetchContextp2(ctx context.Context, sid string) (string, error) {
-	p2, err := service.Cache().Get(ctx, sid+"p2_context")
+	p2, err := service.Cache().Get(ctx, sid+"context_p2")
 	return p2.String(), err
 }
 
 // //p1_hash_proof
 func (s *sGenerator) RecordHashProofP1(ctx context.Context, sid string, hashproofp1 string) error {
 	err := service.Cache().Set(ctx, sid+"p1_hash_proof", hashproofp1, duration)
-	if err == nil {
-		service.Generator().UpGeneratorState(ctx, sid, "p1_hash_proof", err)
-	}
+
 	return err
 }
 func (s *sGenerator) FetchHashProofP1(ctx context.Context, sid string) (string, error) {
@@ -122,9 +112,7 @@ func (s *sGenerator) FetchHashProofP1(ctx context.Context, sid string) (string, 
 // //p2_zk_proof
 func (s *sGenerator) RecordZKProofP2(ctx context.Context, sid string, p2_zk_proof string) error {
 	err := service.Cache().Set(ctx, sid+"p2_zk_proof", p2_zk_proof, duration)
-	if err == nil {
-		service.Generator().UpGeneratorState(ctx, sid, "p2_zk_proof", err)
-	}
+
 	return err
 }
 func (s *sGenerator) FetchZKProofP2(ctx context.Context, sid string) (string, error) {
@@ -135,9 +123,7 @@ func (s *sGenerator) FetchZKProofP2(ctx context.Context, sid string) (string, er
 // //p1_zk_proof
 func (s *sGenerator) RecordZKProofP1(ctx context.Context, sid string, p1_zk_proof string) error {
 	err := service.Cache().Set(ctx, sid+"p1_zk_proof", p1_zk_proof, duration)
-	if err == nil {
-		service.Generator().UpGeneratorState(ctx, sid, "p1_zk_proof", err)
-	}
+
 	return err
 }
 func (s *sGenerator) FetchZKProofP1(ctx context.Context, sid string) (string, error) {
@@ -149,9 +135,7 @@ func (s *sGenerator) FetchZKProofP1(ctx context.Context, sid string) (string, er
 // v2_public_key
 func (s *sGenerator) RecordPublicKey2(ctx context.Context, sid string, v2_public_key string) error {
 	err := service.Cache().Set(ctx, sid+"v2_public_key", v2_public_key, duration)
-	if err == nil {
-		service.Generator().UpGeneratorState(ctx, sid, "v2_public_key", err)
-	}
+
 	return err
 }
 func (s *sGenerator) FetchPublicKey2(ctx context.Context, sid string) (string, error) {
@@ -162,9 +146,7 @@ func (s *sGenerator) FetchPublicKey2(ctx context.Context, sid string) (string, e
 // //request
 func (s *sGenerator) RecordRequest(ctx context.Context, sid string, request string) error {
 	err := service.Cache().Set(ctx, sid+"request", request, duration)
-	if err == nil {
-		service.Generator().UpGeneratorState(ctx, sid, "request", err)
-	}
+
 	return err
 }
 func (s *sGenerator) FetchRequest(ctx context.Context, sid string) (string, error) {
@@ -175,9 +157,7 @@ func (s *sGenerator) FetchRequest(ctx context.Context, sid string) (string, erro
 // //msg
 func (s *sGenerator) RecordMsg(ctx context.Context, sid string, msg string) error {
 	err := service.Cache().Set(ctx, sid+"msg", msg, duration)
-	if err == nil {
-		service.Generator().UpGeneratorState(ctx, sid, "msg", err)
-	}
+
 	return err
 }
 func (s *sGenerator) FetchMsg(ctx context.Context, sid string) (string, error) {
@@ -188,9 +168,7 @@ func (s *sGenerator) FetchMsg(ctx context.Context, sid string) (string, error) {
 // //msg
 func (s *sGenerator) RecordSignature(ctx context.Context, sid string, signature string) error {
 	err := service.Cache().Set(ctx, sid+"signature", signature, duration)
-	if err == nil {
-		service.Generator().UpGeneratorState(ctx, sid, "signature", err)
-	}
+
 	return err
 }
 func (s *sGenerator) FetchSignature(ctx context.Context, sid string) (string, error) {
