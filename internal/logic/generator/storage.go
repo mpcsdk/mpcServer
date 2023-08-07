@@ -2,6 +2,7 @@ package generator
 
 import (
 	"context"
+	"errors"
 	"li17server/internal/service"
 	"time"
 
@@ -11,6 +12,7 @@ import (
 )
 
 var duration time.Duration = 0
+var emptyErr error = errors.New("empty value")
 
 func (s *sGenerator) UpGeneratorState(ctx context.Context, sid string, state string, err error) error {
 	stat := string(state)
@@ -24,17 +26,26 @@ func (s *sGenerator) UpGeneratorState(ctx context.Context, sid string, state str
 
 func (s *sGenerator) GetGeneratorState(ctx context.Context, sid string) (string, error) {
 	stat, err := service.Cache().Get(ctx, sid)
+	if stat.IsEmpty() {
+		return "", emptyErr
+	}
 	return stat.String(), err
 }
 
 func (s *sGenerator) GetStateData(ctx context.Context, sid, state string) (string, error) {
 	data, err := service.Cache().Get(ctx, sid+state)
+	if data.IsEmpty() {
+		return "", emptyErr
+	}
 	return data.String(), err
 }
 
 // pubkey
 func (s *sGenerator) FetchPubKey(ctx context.Context, sid string) (string, error) {
 	p2, err := service.Cache().Get(ctx, sid+"pubkey")
+	if p2.IsEmpty() {
+		return "", emptyErr
+	}
 	return p2.String(), err
 }
 func (s *sGenerator) RecordPubKey(ctx context.Context, sid string, pubkey string) error {
@@ -48,6 +59,9 @@ func (s *sGenerator) RecordPubKey(ctx context.Context, sid string, pubkey string
 // privatekey
 func (s *sGenerator) FetchPrivateKey(ctx context.Context, sid string) (string, error) {
 	p2, err := service.Cache().Get(ctx, sid+"privatekey")
+	if p2.IsEmpty() {
+		return "", emptyErr
+	}
 	return p2.String(), err
 }
 func (s *sGenerator) RecordPrivateKey(ctx context.Context, sid string, privatekey string) error {
@@ -61,11 +75,13 @@ func (s *sGenerator) RecordPrivateKey(ctx context.Context, sid string, privateke
 // //p2
 func (s *sGenerator) FetchP2(ctx context.Context, sid string) (string, error) {
 	p2, err := service.Cache().Get(ctx, sid+"context_p2")
+	if p2.IsEmpty() {
+		return "", emptyErr
+	}
 	return p2.String(), err
 }
 func (s *sGenerator) RecordP2(ctx context.Context, sid string, p2 string) error {
 	err := service.Cache().Set(ctx, sid+"context_p2", p2, duration)
-
 	return err
 }
 
@@ -77,6 +93,9 @@ func (s *sGenerator) RecordPrivateKey2(ctx context.Context, sid string, pkey str
 }
 func (s *sGenerator) FetchPrivateKey2(ctx context.Context, sid string) (string, error) {
 	p2, err := service.Cache().Get(ctx, sid+"pkey2")
+	if p2.IsEmpty() {
+		return "", emptyErr
+	}
 	return p2.String(), err
 }
 
@@ -88,6 +107,9 @@ func (s *sGenerator) RecordZKProof2(ctx context.Context, sid string, zkproof2 st
 }
 func (s *sGenerator) FetchZKProof2(ctx context.Context, sid string) (string, error) {
 	p2, err := service.Cache().Get(ctx, sid+"zk_proof2")
+	if p2.IsEmpty() {
+		return "", emptyErr
+	}
 	return p2.String(), err
 }
 
@@ -99,6 +121,9 @@ func (s *sGenerator) RecordContextp2(ctx context.Context, sid string, context_p2
 }
 func (s *sGenerator) FetchContextp2(ctx context.Context, sid string) (string, error) {
 	p2, err := service.Cache().Get(ctx, sid+"context_p2")
+	if p2.IsEmpty() {
+		return "", emptyErr
+	}
 	return p2.String(), err
 }
 
@@ -110,6 +135,9 @@ func (s *sGenerator) RecordHashProofP1(ctx context.Context, sid string, hashproo
 }
 func (s *sGenerator) FetchHashProofP1(ctx context.Context, sid string) (string, error) {
 	p2, err := service.Cache().Get(ctx, sid+"p1_hash_proof")
+	if p2.IsEmpty() {
+		return "", emptyErr
+	}
 	return p2.String(), err
 }
 
@@ -121,6 +149,9 @@ func (s *sGenerator) RecordZKProofP2(ctx context.Context, sid string, p2_zk_proo
 }
 func (s *sGenerator) FetchZKProofP2(ctx context.Context, sid string) (string, error) {
 	p2, err := service.Cache().Get(ctx, sid+"p2_zk_proof")
+	if p2.IsEmpty() {
+		return "", emptyErr
+	}
 	return p2.String(), err
 }
 
@@ -132,6 +163,9 @@ func (s *sGenerator) RecordZKProofP1(ctx context.Context, sid string, p1_zk_proo
 }
 func (s *sGenerator) FetchZKProofP1(ctx context.Context, sid string) (string, error) {
 	p2, err := service.Cache().Get(ctx, sid+"p1_zk_proof")
+	if p2.IsEmpty() {
+		return "", emptyErr
+	}
 	return p2.String(), err
 }
 
@@ -144,6 +178,9 @@ func (s *sGenerator) RecordPublicKey2(ctx context.Context, sid string, v2_public
 }
 func (s *sGenerator) FetchPublicKey2(ctx context.Context, sid string) (string, error) {
 	p2, err := service.Cache().Get(ctx, sid+"v2_public_key")
+	if p2.IsEmpty() {
+		return "", emptyErr
+	}
 	return p2.String(), err
 }
 
@@ -155,6 +192,9 @@ func (s *sGenerator) RecordRequest(ctx context.Context, sid string, request stri
 }
 func (s *sGenerator) FetchRequest(ctx context.Context, sid string) (string, error) {
 	p2, err := service.Cache().Get(ctx, sid+"request")
+	if p2.IsEmpty() {
+		return "", emptyErr
+	}
 	return p2.String(), err
 }
 
@@ -166,6 +206,9 @@ func (s *sGenerator) RecordMsg(ctx context.Context, sid string, msg string) erro
 }
 func (s *sGenerator) FetchMsg(ctx context.Context, sid string) (string, error) {
 	p2, err := service.Cache().Get(ctx, sid+"msg")
+	if p2.IsEmpty() {
+		return "", emptyErr
+	}
 	return p2.String(), err
 }
 
@@ -177,6 +220,9 @@ func (s *sGenerator) RecordSignature(ctx context.Context, sid string, signature 
 }
 func (s *sGenerator) FetchSignature(ctx context.Context, sid string) (string, error) {
 	p2, err := service.Cache().Get(ctx, sid+"signature")
+	if p2.IsEmpty() {
+		return "", emptyErr
+	}
 	return p2.String(), err
 }
 
@@ -197,5 +243,8 @@ func (s *sGenerator) GenNewSid(ctx context.Context, userToken string) (string, e
 
 func (s *sGenerator) Sid2Token(ctx context.Context, sid string) (string, error) {
 	token, err := service.Cache().Get(ctx, sid)
+	if token.IsEmpty() {
+		return "", emptyErr
+	}
 	return token.String(), err
 }
