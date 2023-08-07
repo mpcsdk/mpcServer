@@ -3,7 +3,6 @@ package sign
 import (
 	"context"
 
-	"github.com/gogf/gf/errors/gcode"
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/v2/container/gvar"
 	"github.com/gogf/gf/v2/frame/g"
@@ -29,8 +28,7 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 	err = service.Cache().Set(ctx, req.UserToken, sid, 0)
 	if err != nil {
 		glog.Warning(ctx, err)
-		// return nil, gerror.NewCode(CodeInternalError)
-		return nil, gerror.NewCode(gcode.CodeNotAuthorized)
+		return nil, gerror.NewCode(CodeInternalError)
 	}
 	// todo: tmp key
 	err = service.Generator().GenContextP2(ctx, sid, tmp_privkey2, tmp_publickey)
