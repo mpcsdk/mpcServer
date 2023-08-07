@@ -12,8 +12,13 @@ import (
 
 // recv p1_hash_proof for cal p2_zk_proof
 func (c *ControllerV1) SendHashProof(ctx context.Context, req *v1.SendHashProofReq) (res *v1.SendHashProofRes, err error) {
-	sid := req.SessionId
-	state, err := service.Generator().GetGeneratorState(ctx, sid)
+	token, err := service.Generator().Sid2Token(ctx, req.SessionId)
+	if err != nil {
+		glog.Warning(ctx, err)
+		return nil, gerror.NewCode(CodeInternalError)
+	}
+	////
+	state, err := service.Generator().GetGeneratorState(ctx, token)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CodeStateError(ErrSessionNotExist))
@@ -24,7 +29,7 @@ func (c *ControllerV1) SendHashProof(ctx context.Context, req *v1.SendHashProofR
 		return nil, gerror.NewCode(CodeStateError(ErrStateIncorrect))
 	}
 
-	err = service.Generator().CalZKProofP2(ctx, sid, req.HashProof)
+	err = service.Generator().CalZKProofP2(ctx, token, req.HashProof)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CalZKProofP2Error(""))
@@ -34,9 +39,14 @@ func (c *ControllerV1) SendHashProof(ctx context.Context, req *v1.SendHashProofR
 }
 
 func (c *ControllerV1) SendZKProofP1(ctx context.Context, req *v1.SendZKProofP1Req) (res *v1.SendZKProofP1Res, err error) {
+	token, err := service.Generator().Sid2Token(ctx, req.SessionId)
+	if err != nil {
+		glog.Warning(ctx, err)
+		return nil, gerror.NewCode(CodeInternalError)
+	}
+	////
 	// check sid and p2_zk_proof
-	sid := req.SessionId
-	state, err := service.Generator().GetGeneratorState(ctx, sid)
+	state, err := service.Generator().GetGeneratorState(ctx, token)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CodeStateError(ErrSessionNotExist))
@@ -47,18 +57,17 @@ func (c *ControllerV1) SendZKProofP1(ctx context.Context, req *v1.SendZKProofP1R
 		return nil, gerror.NewCode(CodeStateError(ErrStateIncorrect))
 	}
 
-	_, err = service.Generator().FetchZKProofP2(ctx, sid)
+	_, err = service.Generator().FetchZKProofP2(ctx, token)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CodeGetGeneratorError(ErrZKProofP2NotExist))
 	}
 
-	err = service.Generator().CalPublicKey2(ctx, sid, req.ZKProofP1)
+	err = service.Generator().CalPublicKey2(ctx, token, req.ZKProofP1)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CalPublicKey2Error(""))
 	}
-
-	/// todo: check publicKeyV1
+	////
 	return
 }

@@ -8,7 +8,6 @@ package service
 import (
 	"context"
 )
-
 const (
 	STATE_None int = iota
 	STATE_Auth
@@ -21,9 +20,8 @@ const (
 	STATE_Signature
 	STATE_Done
 	STATE_Err
-	
-)
 
+)
 type (
 	IGenerator interface {
 		// GenContextP2
@@ -87,6 +85,9 @@ type (
 		// //msg
 		RecordSignature(ctx context.Context, sid string, signature string) error
 		FetchSignature(ctx context.Context, sid string) (string, error)
+		// // sid
+		GenNewSid(ctx context.Context, userToken string) (string, error)
+		Sid2Token(ctx context.Context, sid string) (string, error)
 	}
 )
 

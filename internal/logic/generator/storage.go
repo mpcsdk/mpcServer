@@ -4,6 +4,10 @@ import (
 	"context"
 	"li17server/internal/service"
 	"time"
+
+	"github.com/gogf/gf/container/gvar"
+	"github.com/gogf/gf/os/glog"
+	"github.com/yitter/idgenerator-go/idgen"
 )
 
 var duration time.Duration = 0
@@ -174,4 +178,24 @@ func (s *sGenerator) RecordSignature(ctx context.Context, sid string, signature 
 func (s *sGenerator) FetchSignature(ctx context.Context, sid string) (string, error) {
 	p2, err := service.Cache().Get(ctx, sid+"signature")
 	return p2.String(), err
+}
+
+// // sid
+func (s *sGenerator) GenNewSid(ctx context.Context, userToken string) (string, error) {
+	var genid gvar.Var
+	genid.Set(idgen.NextId())
+	sid := genid.String()
+	// bind sid with token
+	//todo: duration
+	err := service.Cache().Set(ctx, sid, userToken, 0)
+	if err != nil {
+		glog.Warning(ctx, err)
+		return "", err
+	}
+	return sid, nil
+}
+
+func (s *sGenerator) Sid2Token(ctx context.Context, sid string) (string, error) {
+	token, err := service.Cache().Get(ctx, sid)
+	return token.String(), err
 }

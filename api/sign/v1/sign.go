@@ -43,7 +43,7 @@ type GetZKProofP2Res struct {
 
 // ///
 type SendZKProofP1Req struct {
-	g.Meta      `path:"/SendZKProof" tags:"SendZKProof" method:"post" summary:"SendZKProof"`
+	g.Meta      `path:"/SendZKProofP1" tags:"SendZKProofP1" method:"post" summary:"SendZKProofP1"`
 	SessionId   string `json:"sessionId"`
 	ZKProofP1   string `json:"zkProofP1"`
 	PublicKeyV1 string `json:"publicKeyV1"`
@@ -67,14 +67,5 @@ type GetSignatureReq struct {
 	SessionId string `json:"sessionId"`
 }
 type GetSignatureRes struct {
-	Signature string `json:"signature"`
-}
-
-// ///
-type GetSignatureaReq struct {
-	g.Meta    `path:"/GetSignaturea" tags:"GetSignature" method:"post" summary:"GetSignature"`
-	SessionId string `json:"sessionId"`
-}
-type GetSignatureaRes struct {
 	Signature string `json:"signature"`
 }
