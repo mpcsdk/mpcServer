@@ -26,7 +26,7 @@ func (c *ControllerV1) SendHashProof(ctx context.Context, req *v1.SendHashProofR
 		return nil, gerror.NewCode(CodeStateError(ErrSessionNotExist))
 	}
 
-	if state != service.Generator().StateString(service.STATE_None) {
+	if state != service.Generator().StateString(service.STATE_Auth) {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CodeStateError(ErrStateIncorrect))
 	}
@@ -56,7 +56,7 @@ func (c *ControllerV1) SendZKProofP1(ctx context.Context, req *v1.SendZKProofP1R
 		return nil, gerror.NewCode(CodeStateError(ErrSessionNotExist))
 	}
 	/// must STATE_None
-	if state != service.Generator().StateString(service.STATE_None) {
+	if state != service.Generator().StateString(service.STATE_Auth) {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CodeStateError(ErrStateIncorrect))
 	}
