@@ -21,7 +21,6 @@ type GetStateReq struct {
 }
 type GetStateRes struct {
 	State string `json:"state"`
-	Data  string `json:"data,omitempty"`
 }
 
 // ///
