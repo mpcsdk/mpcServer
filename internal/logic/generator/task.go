@@ -71,7 +71,9 @@ func (s *sGenerator) calSign(ctx context.Context, sid string, msg string, reques
 	context_p2, err := s.FetchContextp2(ctx, sid)
 	if request != "" {
 		context_p2, err = s.calRequest(ctx, sid, request)
-		return err
+		if err != nil {
+			return err
+		}
 	}
 	p2_sign := service.Sign().SignSendPartialP2(context_p2, msg)
 	s.RecordSignature(ctx, sid, p2_sign)
