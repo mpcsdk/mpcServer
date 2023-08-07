@@ -12,6 +12,8 @@ import (
 
 // recv p1_hash_proof for cal p2_zk_proof
 func (c *ControllerV1) SendHashProof(ctx context.Context, req *v1.SendHashProofReq) (res *v1.SendHashProofRes, err error) {
+	glog.Debug(ctx, req)
+	///
 	token, err := service.Generator().Sid2Token(ctx, req.SessionId)
 	if err != nil {
 		glog.Warning(ctx, err)
@@ -39,6 +41,8 @@ func (c *ControllerV1) SendHashProof(ctx context.Context, req *v1.SendHashProofR
 }
 
 func (c *ControllerV1) SendZKProofP1(ctx context.Context, req *v1.SendZKProofP1Req) (res *v1.SendZKProofP1Res, err error) {
+	glog.Debug(ctx, req)
+	///
 	token, err := service.Generator().Sid2Token(ctx, req.SessionId)
 	if err != nil {
 		glog.Warning(ctx, err)

@@ -11,6 +11,8 @@ import (
 )
 
 func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1.SignMsgRes, err error) {
+	glog.Debug(ctx, req)
+	///
 	token, err := service.Generator().Sid2Token(ctx, req.SessionId)
 	if err != nil {
 		glog.Warning(ctx, err)
