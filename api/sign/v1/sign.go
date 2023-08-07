@@ -69,3 +69,12 @@ type GetSignatureReq struct {
 type GetSignatureRes struct {
 	Signature string `json:"signature"`
 }
+
+// ///
+type GetSignatureaReq struct {
+	g.Meta    `path:"/GetSignaturea" tags:"GetSignature" method:"post" summary:"GetSignature"`
+	SessionId string `json:"sessionId"`
+}
+type GetSignatureaRes struct {
+	Signature string `json:"signature"`
+}

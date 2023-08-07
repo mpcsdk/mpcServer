@@ -4,6 +4,8 @@ import (
 	"context"
 	"li17server/internal/controller/sign"
 
+	"github.com/gogf/gf/errors/gcode"
+	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gcmd"
@@ -12,6 +14,26 @@ import (
 func MiddlewareCORS(r *ghttp.Request) {
 	r.Response.CORSDefault()
 	r.Middleware.Next()
+}
+func ResponseHandler(r *ghttp.Request) {
+	r.Middleware.Next()
+	// There's custom buffer content, it then exits current handler.
+	if r.Response.BufferLength() > 0 {
+		return
+	}
+	var (
+		err  = r.GetError()
+		res  = r.GetHandlerResponse()
+		code = gerror.Code(err)
+	)
+	if code == gcode.CodeNil && err != nil {
+		code = gcode.CodeInternalError
+	}
+	r.Response.WriteJson(ghttp.DefaultHandlerResponse{
+		Code:    code.Code(),
+		Message: code.Message(),
+		Data:    res,
+	})
 }
 
 var (
@@ -24,6 +46,7 @@ var (
 			s.Group("/", func(group *ghttp.RouterGroup) {
 				// group.Middleware(ghttp.MiddlewareHandlerResponse)
 				group.Middleware(MiddlewareCORS)
+				group.Middleware(ResponseHandler)
 				group.Bind(
 					sign.NewV1(),
 				)

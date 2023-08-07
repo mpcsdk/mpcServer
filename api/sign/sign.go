@@ -18,6 +18,7 @@ type ISignV1 interface {
 	SendZKProofP1(ctx context.Context, req *v1.SendZKProofP1Req) (res *v1.SendZKProofP1Res, err error)
 	SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1.SignMsgRes, err error)
 	GetSignature(ctx context.Context, req *v1.GetSignatureReq) (res *v1.GetSignatureRes, err error)
+	GetSignaturea(ctx context.Context, req *v1.GetSignatureaReq) (res *v1.GetSignatureaRes, err error)
 }
 
 
