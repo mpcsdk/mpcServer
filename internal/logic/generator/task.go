@@ -51,7 +51,7 @@ func (s *sGenerator) calPublicKey2(ctx context.Context, sid string, p1_zk_proof 
 	v2_public_key := service.Sign().PublicKeyP2(context_p2)
 	s.RecordZKProofP2(ctx, sid, v2_public_key)
 
-	s.UpGeneratorState(ctx, sid, s.StateString(service.STATE_HandShake_Request), err)
+	s.UpGeneratorState(ctx, sid, s.StateString(service.STATE_HandShake), err)
 	return err
 }
 
@@ -78,6 +78,6 @@ func (s *sGenerator) calSign(ctx context.Context, sid string, msg string, reques
 	p2_sign := service.Sign().SignSendPartialP2(context_p2, msg)
 	s.RecordSignature(ctx, sid, p2_sign)
 	///
-	s.UpGeneratorState(ctx, sid, s.StateString(service.STATE_HandShake_Request), err)
+	s.UpGeneratorState(ctx, sid, s.StateString(service.STATE_HandShake), err)
 	return err
 }
