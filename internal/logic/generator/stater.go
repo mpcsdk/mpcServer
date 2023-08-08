@@ -8,8 +8,7 @@ import (
 // const (
 // 	STATE_None int = iota
 // 	STATE_Auth
-// 	STATE_HandShake_Request
-// 	STATE_HandShake_NoRequest
+// 	STATE_HandShake
 // 	STATE_Done
 // 	STATE_Err
 // )
@@ -28,7 +27,7 @@ func (s *sGenerator) StateNext(state int) int {
 	return state + 1
 }
 func (s *sGenerator) StatePrivate(state int) int {
-	if state > service.STATE_HandShake_Request {
+	if state > service.STATE_HandShake {
 		return state - 1
 	}
 	return state
@@ -40,10 +39,10 @@ func (s *sGenerator) StateInt(state string) int {
 		return service.STATE_None
 	case "auth":
 		return service.STATE_Auth
-	case "handshake-request":
-		return service.STATE_HandShake_Request
-	case "handshake-norequest":
-		return service.STATE_HandShake_NoRequest
+	case "handshake":
+		return service.STATE_HandShake
+	// case "handshake-norequest":
+	// 	return service.STATE_HandShake_NoRequest
 	case "done":
 		return service.STATE_Done
 	case "error":
@@ -59,10 +58,8 @@ func (s *sGenerator) StateString(state int) string {
 		return "none"
 	case service.STATE_Auth:
 		return "auth"
-	case service.STATE_HandShake_Request:
-		return "handshake-request"
-	case service.STATE_HandShake_NoRequest:
-		return "handshake-norequest"
+	case service.STATE_HandShake:
+		return "handshake"
 	case service.STATE_Done:
 		return "done"
 	case service.STATE_Err:
