@@ -11,16 +11,10 @@ import (
 const (
 	STATE_None int = iota
 	STATE_Auth
-	STATE_HandShake
-	// STATE_ContextP2
-	// STATE_ZKProof2
-	// STATE_ZKProofP2
-	// STATE_PublicKey2
-	// STATE_Request
-	STATE_Signature
+	STATE_HandShake_Request
+	STATE_HandShake_NoRequest
 	STATE_Done
 	STATE_Err
-
 )
 type (
 	IGenerator interface {

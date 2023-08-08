@@ -8,16 +8,10 @@ import (
 // const (
 // 	STATE_None int = iota
 // 	STATE_Auth
-// 	STATE_HandShake
-// 	// STATE_ContextP2
-// 	// STATE_ZKProof2
-// 	// STATE_ZKProofP2
-// 	// STATE_PublicKey2
-// 	// STATE_Request
-// 	STATE_Signature
+// 	STATE_HandShake_Request
+// 	STATE_HandShake_NoRequest
 // 	STATE_Done
 // 	STATE_Err
-
 // )
 
 type Stater struct {
@@ -34,7 +28,7 @@ func (s *sGenerator) StateNext(state int) int {
 	return state + 1
 }
 func (s *sGenerator) StatePrivate(state int) int {
-	if state > service.STATE_HandShake {
+	if state > service.STATE_HandShake_Request {
 		return state - 1
 	}
 	return state
@@ -44,10 +38,12 @@ func (s *sGenerator) StateInt(state string) int {
 	switch state {
 	case "none":
 		return service.STATE_None
-	case "handshake":
-		return service.STATE_HandShake
-	case "signature":
-		return service.STATE_Signature
+	case "auth":
+		return service.STATE_Auth
+	case "handshake-request":
+		return service.STATE_HandShake_Request
+	case "handshake-norequest":
+		return service.STATE_HandShake_NoRequest
 	case "done":
 		return service.STATE_Done
 	case "error":
@@ -63,10 +59,10 @@ func (s *sGenerator) StateString(state int) string {
 		return "none"
 	case service.STATE_Auth:
 		return "auth"
-	case service.STATE_HandShake:
-		return "handshake"
-	case service.STATE_Signature:
-		return "signature"
+	case service.STATE_HandShake_Request:
+		return "handshake-request"
+	case service.STATE_HandShake_NoRequest:
+		return "handshake-norequest"
 	case service.STATE_Done:
 		return "done"
 	case service.STATE_Err:
