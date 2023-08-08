@@ -1,6 +1,6 @@
-package cmd
-
 // package main
+
+package cmd
 
 // //#cgo CFLAGS: -I../libs/
 // //#cgo LDFLAGS: -L${SRCDIR}/../libs -lli17
