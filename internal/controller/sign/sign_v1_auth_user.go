@@ -11,7 +11,7 @@ import (
 	"li17server/internal/service"
 )
 
-func (c *ControllerV1) hasUser(ctx context.Context, userToken string) bool {
+func (c *ControllerV1) isHandshakeUser(ctx context.Context, userToken string) bool {
 	///check if usertoken has authed
 
 	token, err := service.Cache().Get(ctx, userToken)
@@ -28,7 +28,7 @@ func (c *ControllerV1) prepareHandshake(ctx context.Context, userToken string) e
 	///
 	// todo: tmp key
 	///
-	err := service.Generator().GenContextP2(ctx, userToken, tmp_privkey2, "")
+	err := service.Generator().GenContextP2(ctx, userToken, tmp_privkey2, "", false)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return gerror.NewCode(CodeInternalError)
@@ -46,22 +46,32 @@ func (c *ControllerV1) prepareHandshake(ctx context.Context, userToken string) e
 
 func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *v1.AuthUserRes, err error) {
 
-	// todo: check usertoken
-	if req.UserToken == "a" {
-		g.RequestFromCtx(ctx).Response.WriteStatusExit(500)
+	state, err := service.Generator().GetGeneratorState(ctx, req.UserToken)
+	if err != nil {
+		// todo: check usertoken
+		/// unauth user
+		if req.UserToken == "a" {
+			g.RequestFromCtx(ctx).Response.WriteStatusExit(500)
+		}
 	}
-
 	////
-	sid, _ := service.Generator().GenNewSid(ctx, req.UserToken)
-	if c.hasUser(ctx, req.UserToken) {
-		// sid link usertoken
-		service.Cache().Set(ctx, sid, req.UserToken, 0)
-
-	} else {
-		//build relationship
-		service.Cache().Set(ctx, req.UserToken, req.UserToken, 0)
-		c.prepareHandshake(ctx, req.UserToken)
+	sid, err := service.Generator().GenNewSid(ctx, req.UserToken)
+	if err != nil {
+		glog.Warning(ctx, err)
+		return nil, gerror.NewCode(CodeInternalError)
 	}
+	switch state {
+	case service.Generator().StateString(service.STATE_HandShake):
+		//
+	case service.Generator().StateString(service.STATE_Auth),
+		service.Generator().StateString(service.STATE_None):
+		//
+		c.prepareHandshake(ctx, req.UserToken)
+	default:
+		glog.Warning(ctx, err)
+		return nil, gerror.NewCode(CodeInternalError)
+	}
+	////
 	res = &v1.AuthUserRes{
 		SessionId: sid,
 	}

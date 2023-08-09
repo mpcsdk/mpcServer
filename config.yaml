@@ -1,6 +1,6 @@
 base: li17server
 server:
-  address:     ":8000"
+  address:     ":10010"
   workId: 1
   openapiPath: "/api.json"
   swaggerPath: "/swagger"
@@ -10,9 +10,10 @@ logger:
   stdout: true
 
 cache:
+  sessionDur: 100
+  contextDur: 0
 # redis mem
   type: "redis"
-  duration: 100
   redis:
     Addr: "127.0.0.1:6379"
     Db: 1
