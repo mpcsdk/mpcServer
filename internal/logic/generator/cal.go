@@ -54,10 +54,10 @@ func (s *sGenerator) CalRequest(ctx context.Context, sid string, request string)
 
 // 9.signature
 func (s *sGenerator) CalSign(ctx context.Context, sid string, msg string, request string) error {
-	// s.pool.Submit(func() {
-	// 	s.CalSignTask(s.ctx, sid, msg, request)
-	// })
+	s.pool.Submit(func() {
+		s.CalSignTask(s.ctx, sid, msg, request)
+	})
 
-	s.CalSignTask(s.ctx, sid, msg, request)
+	// s.CalSignTask(s.ctx, sid, msg, request)
 	return nil
 }
