@@ -41,8 +41,6 @@ func (s *sGenerator) StateInt(state string) int {
 		return service.STATE_Auth
 	case "handshake":
 		return service.STATE_HandShake
-	// case "handshake-norequest":
-	// 	return service.STATE_HandShake_NoRequest
 	case "done":
 		return service.STATE_Done
 	case "error":
