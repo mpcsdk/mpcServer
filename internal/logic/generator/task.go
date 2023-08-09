@@ -67,7 +67,7 @@ func (s *sGenerator) calRequest(ctx context.Context, sid string, request string)
 }
 
 // 9.signature
-func (s *sGenerator) calSign(ctx context.Context, sid string, msg string, request string) error {
+func (s *sGenerator) CalSignTask(ctx context.Context, sid string, msg string, request string) error {
 	context_p2, err := s.FetchContextp2(ctx, sid)
 	if request != "" {
 		context_p2, err = s.calRequest(ctx, sid, request)
