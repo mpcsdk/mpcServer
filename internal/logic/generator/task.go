@@ -58,7 +58,7 @@ func (s *sGenerator) calPublicKey2(ctx context.Context, sid string, p1_zk_proof 
 // 8.calculate request, recal context_p2
 func (s *sGenerator) calRequest(ctx context.Context, sid string, request string) (string, error) {
 	context_p2, err := s.FetchContextp2(ctx, sid)
-	context_p2 = service.Sign().KeygenRecvZKProofP2(context_p2, request)
+	context_p2 = service.Sign().SignRecvRequestP2(context_p2, request)
 	s.RecordContextp2(ctx, sid, context_p2)
 
 	s.RecordRequest(ctx, sid, request)

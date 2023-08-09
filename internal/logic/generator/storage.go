@@ -190,13 +190,14 @@ func (s *sGenerator) RecordRequest(ctx context.Context, sid string, request stri
 
 	return err
 }
-func (s *sGenerator) FetchRequest(ctx context.Context, sid string) (string, error) {
-	p2, err := service.Cache().Get(ctx, sid+"request")
-	if p2.IsEmpty() {
-		return "", emptyErr
-	}
-	return p2.String(), err
-}
+
+// func (s *sGenerator) FetchRequest(ctx context.Context, sid string) (string, error) {
+// 	p2, err := service.Cache().Get(ctx, sid+"request")
+// 	if p2.IsEmpty() {
+// 		return "", emptyErr
+// 	}
+// 	return p2.String(), err
+// }
 
 // //msg
 func (s *sGenerator) RecordMsg(ctx context.Context, sid string, msg string) error {

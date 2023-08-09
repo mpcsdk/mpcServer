@@ -72,7 +72,7 @@ type (
 		FetchPublicKey2(ctx context.Context, sid string) (string, error)
 		// //request
 		RecordRequest(ctx context.Context, sid string, request string) error
-		FetchRequest(ctx context.Context, sid string) (string, error)
+		// FetchRequest(ctx context.Context, sid string) (string, error)
 		// //msg
 		RecordMsg(ctx context.Context, sid string, msg string) error
 		FetchMsg(ctx context.Context, sid string) (string, error)
