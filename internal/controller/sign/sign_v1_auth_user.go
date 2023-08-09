@@ -28,7 +28,7 @@ func (c *ControllerV1) prepareHandshake(ctx context.Context, userToken string) e
 	///
 	// todo: tmp key
 	///
-	err := service.Generator().GenContextP2(ctx, userToken, tmp_privkey2, tmp_publickey)
+	err := service.Generator().GenContextP2(ctx, userToken, tmp_privkey2, "")
 	if err != nil {
 		glog.Warning(ctx, err)
 		return gerror.NewCode(CodeInternalError)
