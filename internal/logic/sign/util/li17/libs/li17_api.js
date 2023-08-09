@@ -1,7 +1,6 @@
-function li17_p1_context(private_key, public_key)
+function li17_p1_context(private_key)
 {
     var v1 = private_key;
-    var v2 = public_key;
 
     var arg1 = null;
     if (v1)
@@ -11,15 +10,7 @@ function li17_p1_context(private_key, public_key)
         stringToUTF8(v1, arg1, len1);
     }
 
-    var arg2 = null;
-    if (v2)
-    {
-        var len2 = lengthBytesUTF8(v2) * 4 + 1;
-        arg2 = stackAlloc(len2);
-        stringToUTF8(v2, arg2, len2);
-    }
-
-    return UTF8ToString(_li17_p1_context(arg1, arg2));
+    return UTF8ToString(_li17_p1_context(arg1));
 }
 
 function li17_p1_public_key(p1_context)

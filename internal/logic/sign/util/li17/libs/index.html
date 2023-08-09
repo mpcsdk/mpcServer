@@ -33,7 +33,7 @@
                 var public_key    = "045ae6d14d4934eeb004b818d687a1ea6efff0946d043dfb9338c0601a1ae0387fd00bfcefeff11961a48edc66f62ad87feed8a9ef157efa294c91466c70039bbe";
 
                 // refresh
-                var p1            = li17_p1_context(private_key1, public_key);
+                var p1            = li17_p1_context(private_key1);
                 var p2            = li17_p2_context(private_key2, public_key);
                 var zk_proof1     = li17_p1_refresh_send_zk_proof(p1);
                 var private_key2_ = li17_p2_refresh_recv_zk_proof(p2, zk_proof1);
@@ -41,7 +41,7 @@
                 var private_key1_ = li17_p1_refresh_recv_zk_proof(p1, zk_proof2);
 
                 // context
-                var p1_context    = li17_p1_context(private_key1_, null);
+                var p1_context    = li17_p1_context(private_key1_);
                 var p2_context    = li17_p2_context(private_key2_, null);
 
                 // keygen
