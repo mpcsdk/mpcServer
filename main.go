@@ -6,6 +6,7 @@ import (
 
 	_ "li17server/internal/logic"
 
+	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/v2/os/gcfg"
 	"github.com/gogf/gf/v2/os/gctx"
 
@@ -16,6 +17,10 @@ import (
 
 func main() {
 
+	g.Log().SetAsync(true)
+	g.Log().SetWriterColorEnable(true)
+	///
+	///
 	ctx := gctx.GetInitCtx()
 	cfg := gcfg.Instance()
 

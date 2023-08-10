@@ -114,6 +114,6 @@ func (s *sGenerator) CalSignTask(ctx context.Context, sid string, msg string, re
 	// s.RecordSignature(ctx, key, p2_sign)
 	s.RecordSid(ctx, sid, KEY_signature, p2_sign)
 	///
-	s.UpState(ctx, token, s.StateString(service.STATE_HandShake), nil)
+	// s.UpState(ctx, token, s.StateString(service.STATE_HandShake), nil)
 	return err
 }
