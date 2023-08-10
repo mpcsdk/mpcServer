@@ -8,7 +8,6 @@ import (
 type AuthUserReq struct {
 	g.Meta    `path:"/AuthUser" tags:"AuthUser" method:"post" summary:"AuthUser"`
 	UserToken string `json:"userToken"`
-	PubKey    string `json:"pubKey"`
 }
 type AuthUserRes struct {
 	SessionId string `json:"sessionId"`
@@ -43,10 +42,9 @@ type GetZKProofP2Res struct {
 
 // ///
 type SendZKProofP1Req struct {
-	g.Meta      `path:"/SendZKProofP1" tags:"SendZKProofP1" method:"post" summary:"SendZKProofP1"`
-	SessionId   string `json:"sessionId"`
-	ZKProofP1   string `json:"zkProofP1"`
-	PublicKeyV1 string `json:"publicKeyV1"`
+	g.Meta    `path:"/SendZKProofP1" tags:"SendZKProofP1" method:"post" summary:"SendZKProofP1"`
+	SessionId string `json:"sessionId"`
+	ZKProofP1 string `json:"zkProofP1"`
 }
 type SendZKProofP1Res struct {
 }

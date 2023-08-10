@@ -2,12 +2,12 @@ base: li17server
 server:
   address:     ":8000"
   workId: 1
-  openapiPath: "/api.json"
-  swaggerPath: "/swagger"
 
 logger:
   level : "all"
-  stdout: true
+  stdout: false 
+  rotateExpire: "1d"
+  path: "./"
 
 cache:
   sessionDur: 100
