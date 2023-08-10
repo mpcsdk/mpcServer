@@ -3,7 +3,6 @@ package sign
 import (
 	"context"
 
-	"github.com/gogf/gf/v2/errors/gcode"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/os/glog"
 
@@ -27,5 +26,5 @@ func (c *ControllerV1) GetInfo(ctx context.Context, req *v1.GetInfoReq) (res *v1
 	res = &v1.GetInfoRes{
 		PublicKey: pubkey,
 	}
-	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+	return
 }
