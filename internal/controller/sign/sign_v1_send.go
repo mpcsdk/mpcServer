@@ -20,7 +20,7 @@ func (c *ControllerV1) SendHashProof(ctx context.Context, req *v1.SendHashProofR
 		return nil, gerror.NewCode(CodeInternalError)
 	}
 	////
-	state, err := service.Generator().GetGeneratorState(ctx, token)
+	state, err := service.Generator().GetState(ctx, token)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CodeStateError(ErrSessionNotExist))
@@ -31,7 +31,7 @@ func (c *ControllerV1) SendHashProof(ctx context.Context, req *v1.SendHashProofR
 		return nil, gerror.NewCode(CodeStateError(ErrStateIncorrect))
 	}
 
-	err = service.Generator().CalZKProofP2(ctx, token, req.HashProof)
+	err = service.Generator().CalZKProofP2(ctx, req.SessionId, req.HashProof)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CalZKProofP2Error(""))
@@ -50,7 +50,7 @@ func (c *ControllerV1) SendZKProofP1(ctx context.Context, req *v1.SendZKProofP1R
 	}
 	////
 	// check sid and p2_zk_proof
-	state, err := service.Generator().GetGeneratorState(ctx, token)
+	state, err := service.Generator().GetState(ctx, token)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CodeStateError(ErrSessionNotExist))
@@ -61,13 +61,14 @@ func (c *ControllerV1) SendZKProofP1(ctx context.Context, req *v1.SendZKProofP1R
 		return nil, gerror.NewCode(CodeStateError(ErrStateIncorrect))
 	}
 
-	_, err = service.Generator().FetchZKProofP2(ctx, token)
+	// _, err = service.Generator().FetchZKProofP2(ctx, token)
+	_, err = service.Generator().FetchSid(ctx, req.SessionId, service.KEY_zkproof2)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CodeGetGeneratorError(ErrZKProofP2NotExist))
 	}
 
-	err = service.Generator().CalPublicKey2(ctx, token, req.ZKProofP1)
+	err = service.Generator().CalPublicKey2(ctx, req.SessionId, req.ZKProofP1)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CalPublicKey2Error(""))

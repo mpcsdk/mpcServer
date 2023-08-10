@@ -11,31 +11,31 @@ import (
 	"li17server/internal/service"
 )
 
-func (c *ControllerV1) isHandshakeUser(ctx context.Context, userToken string) bool {
-	///check if usertoken has authed
+// func (c *ControllerV1) isHandshakeUser(ctx context.Context, userToken string) bool {
+// 	///check if usertoken has authed
 
-	token, err := service.Cache().Get(ctx, userToken)
-	if err != nil {
-		return false
-	}
-	if token.IsEmpty() {
-		return false
-	}
-	return true
-}
-func (c *ControllerV1) prepareHandshake(ctx context.Context, userToken string) error {
+//		token, err := service.Cache().Get(ctx, userToken)
+//		if err != nil {
+//			return false
+//		}
+//		if token.IsEmpty() {
+//			return false
+//		}
+//		return true
+//	}
+func (c *ControllerV1) prepareHandshake(ctx context.Context, userToken, sid string) error {
 
 	///
 	// todo: tmp key
 	///
-	err := service.Generator().GenContextP2(ctx, userToken, tmp_privkey2, "", false)
+	err := service.Generator().GenContextP2(ctx, sid, tmp_privkey2, "", false)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return gerror.NewCode(CodeInternalError)
 	}
 	///
 	///
-	err = service.Generator().UpGeneratorState(ctx, userToken, service.Generator().StateString(service.STATE_Auth), err)
+	err = service.Generator().UpState(ctx, userToken, service.Generator().StateString(service.STATE_Auth), err)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return gerror.NewCode(CodeInternalError)
@@ -46,7 +46,7 @@ func (c *ControllerV1) prepareHandshake(ctx context.Context, userToken string) e
 
 func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *v1.AuthUserRes, err error) {
 
-	state, err := service.Generator().GetGeneratorState(ctx, req.UserToken)
+	state, err := service.Generator().GetState(ctx, req.UserToken)
 	if err != nil {
 		// todo: check usertoken
 		/// unauth user
@@ -66,7 +66,7 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 	case service.Generator().StateString(service.STATE_Auth),
 		service.Generator().StateString(service.STATE_None):
 		//
-		c.prepareHandshake(ctx, req.UserToken)
+		c.prepareHandshake(ctx, req.UserToken, sid)
 	default:
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CodeInternalError)

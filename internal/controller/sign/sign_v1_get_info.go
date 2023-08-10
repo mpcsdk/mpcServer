@@ -17,7 +17,7 @@ func (c *ControllerV1) GetInfo(ctx context.Context, req *v1.GetInfoReq) (res *v1
 		return nil, gerror.NewCode(CodeInternalError)
 	}
 	///
-	pubkey, err := service.Generator().FetchPublicKey2(ctx, token)
+	pubkey, err := service.Generator().FetchToken(ctx, token, service.KEY_publickey2)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CodeStateError(ErrSessionNotExist))
