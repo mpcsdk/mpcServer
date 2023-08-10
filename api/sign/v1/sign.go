@@ -69,3 +69,12 @@ type GetSignatureReq struct {
 type GetSignatureRes struct {
 	Signature string `json:"signature"`
 }
+
+// ///
+type GetInfoReq struct {
+	g.Meta    `path:"/GetInfo" tags:"GetInfo" method:"post" summary:"GetInfo"`
+	SessionId string `json:"sessionId"`
+}
+type GetInfoRes struct {
+	PublicKey string `json:"publicKey"`
+}
