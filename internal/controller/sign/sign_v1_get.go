@@ -11,6 +11,9 @@ import (
 )
 
 func (c *ControllerV1) GetState(ctx context.Context, req *v1.GetStateReq) (res *v1.GetStateRes, err error) {
+
+	glog.Debug(ctx, req)
+	///
 	token, err := service.Generator().Sid2Token(ctx, req.SessionId)
 	if err != nil {
 		glog.Warning(ctx, err)
@@ -30,13 +33,9 @@ func (c *ControllerV1) GetState(ctx context.Context, req *v1.GetStateReq) (res *
 }
 
 func (c *ControllerV1) GetZKProofP2(ctx context.Context, req *v1.GetZKProofP2Req) (res *v1.GetZKProofP2Res, err error) {
-	// token, err := service.Generator().Sid2Token(ctx, req.SessionId)
-	// if err != nil {
-	// 	glog.Warning(ctx, err)
-	// 	return nil, gerror.NewCode(CodeInternalError)
-	// }
-	////
-	// ZKProofp2, err := service.Generator().FetchZKProofP2(ctx, token)
+
+	glog.Debug(ctx, req)
+	///
 	ZKProofp2, err := service.Generator().FetchSid(ctx, req.SessionId, service.KEY_zkproof2)
 	if err != nil {
 		glog.Warning(ctx, err)

@@ -264,7 +264,7 @@ func (s *sGenerator) GenNewSid(ctx context.Context, userToken string) (string, e
 		glog.Warning(ctx, err)
 		return "", err
 	}
-	s.UpState(ctx, userToken, service.Generator().StateString(service.STATE_None), nil)
+	// s.UpState(ctx, userToken, service.Generator().StateString(service.STATE_None), nil)
 	return sid, nil
 }
 

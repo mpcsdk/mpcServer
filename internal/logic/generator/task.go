@@ -71,15 +71,25 @@ func (s *sGenerator) calPublicKey2(ctx context.Context, sid string, p1_zk_proof 
 
 // 8.calculate request, recal context_p2
 func (s *sGenerator) calRequest(ctx context.Context, sid string, request string) (string, error) {
-	// context_p2, err := s.FetchContextp2(ctx, sid)
-	context_p2, err := s.FetchSid(ctx, sid, KEY_context)
-	if err != nil {
-		return "", err
+	token, err := s.Sid2Token(ctx, sid)
+	state, err := s.GetState(ctx, token)
+	context_p2 := ""
+	if state == s.StateString(service.STATE_HandShake) {
+		context_p2, err = s.FetchToken(ctx, token, KEY_context)
+	} else {
+		// context_p2, err := s.FetchContextp2(ctx, sid)
+		context_p2, err = s.FetchSid(ctx, sid, KEY_context)
+		if err != nil {
+			return "", err
+		}
 	}
 	context_p2 = service.Sign().SignRecvRequestP2(context_p2, request)
 	// s.RecordContextp2(ctx, key, context_p2)
 	//
-	token, err := s.Sid2Token(ctx, sid)
+	// token, err := s.Sid2Token(ctx, sid)
+	// if err != nil {
+	// 	return "", err
+	// }
 	s.RecordToken(ctx, token, KEY_context, context_p2)
 	s.RecordSid(ctx, sid, KEY_request, request)
 
@@ -95,7 +105,7 @@ func (s *sGenerator) CalSignTask(ctx context.Context, sid string, msg string, re
 	// context_p2, err := s.FetchContextp2(ctx, key)
 	context_p2, err := s.FetchToken(ctx, token, KEY_context)
 	if request != "" {
-		context_p2, err = s.calRequest(ctx, token, request)
+		context_p2, err = s.calRequest(ctx, sid, request)
 		if err != nil {
 			return err
 		}

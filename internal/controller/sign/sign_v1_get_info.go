@@ -11,6 +11,9 @@ import (
 )
 
 func (c *ControllerV1) GetInfo(ctx context.Context, req *v1.GetInfoReq) (res *v1.GetInfoRes, err error) {
+
+	glog.Debug(ctx, req)
+	///
 	token, err := service.Generator().Sid2Token(ctx, req.SessionId)
 	if err != nil {
 		glog.Warning(ctx, err)
