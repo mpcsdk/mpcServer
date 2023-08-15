@@ -4,41 +4,29 @@ import (
 	"context"
 
 	"github.com/gogf/gf/errors/gerror"
-	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/os/glog"
+	"github.com/gogf/gf/frame/g"
 
 	v1 "li17server/api/sign/v1"
 	"li17server/internal/consts"
 	"li17server/internal/service"
 )
 
-// func (c *ControllerV1) isHandshakeUser(ctx context.Context, userToken string) bool {
-// 	///check if usertoken has authed
-
-//		token, err := service.Cache().Get(ctx, userToken)
-//		if err != nil {
-//			return false
-//		}
-//		if token.IsEmpty() {
-//			return false
-//		}
-//		return true
-//	}
 func (c *ControllerV1) prepareHandshake(ctx context.Context, userToken, sid string) error {
 
 	///
 	// todo: tmp key
+	g.Log().Debug("prepareHandshake:", userToken, sid)
 	///
 	err := service.Generator().GenContextP2(ctx, sid, tmp_privkey2, "", false)
 	if err != nil {
-		glog.Warning(ctx, err)
+		g.Log().Warning("prepareHandshake:", err)
 		return gerror.NewCode(CodeInternalError)
 	}
 	///
 	///
 	err = service.Generator().UpState(ctx, userToken, service.Generator().StateString(consts.STATE_Auth), err)
 	if err != nil {
-		glog.Warning(ctx, err)
+		g.Log().Warning(err)
 		return gerror.NewCode(CodeInternalError)
 	}
 
@@ -47,7 +35,7 @@ func (c *ControllerV1) prepareHandshake(ctx context.Context, userToken, sid stri
 
 func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *v1.AuthUserRes, err error) {
 
-	glog.Debug(ctx, req)
+	g.Log().Debug("AuthUser:", req)
 	///
 	state, err := service.Generator().GetState(ctx, req.UserToken)
 	if err != nil {
@@ -60,7 +48,7 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 	////
 	sid, err := service.Generator().GenNewSid(ctx, req.UserToken)
 	if err != nil {
-		glog.Warning(ctx, err)
+		g.Log().Warning("AuthUser:", err)
 		return nil, gerror.NewCode(CodeInternalError)
 	}
 	switch state {
@@ -71,7 +59,7 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 		//
 		c.prepareHandshake(ctx, req.UserToken, sid)
 	default:
-		glog.Warning(ctx, err)
+		g.Log().Warning("AuthUser:", err)
 		return nil, gerror.NewCode(CodeInternalError)
 	}
 	////

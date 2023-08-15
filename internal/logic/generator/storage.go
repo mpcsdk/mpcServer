@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/gogf/gf/container/gvar"
-	"github.com/gogf/gf/os/glog"
+	"github.com/gogf/gf/frame/g"
 	"github.com/yitter/idgenerator-go/idgen"
 )
 
@@ -262,7 +262,7 @@ func (s *sGenerator) GenNewSid(ctx context.Context, userToken string) (string, e
 	sid := genid.String()
 	err := service.Cache().Set(ctx, sid, userToken, time.Duration(sessionDur))
 	if err != nil {
-		glog.Warning(ctx, err)
+		g.Log().Warning(ctx, err)
 		return "", err
 	}
 	// s.UpState(ctx, userToken, service.Generator().StateString(consts.STATE_None), nil)

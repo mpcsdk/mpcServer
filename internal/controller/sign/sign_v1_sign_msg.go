@@ -7,18 +7,18 @@ import (
 	"li17server/internal/service"
 
 	"github.com/gogf/gf/errors/gerror"
-	"github.com/gogf/gf/v2/os/glog"
+	"github.com/gogf/gf/frame/g"
 )
 
 func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1.SignMsgRes, err error) {
-	glog.Debug(ctx, req)
+	g.Log().Debug("SignMsg:", req)
 	///
 
 	////
 
 	err = service.Generator().CalSign(ctx, req.SessionId, req.Msg, req.Request, req.Tx, req.SMS)
 	if err != nil {
-		glog.Warning(ctx, err)
+		g.Log().Warning("SignMsg:", err)
 		return nil, gerror.NewCode(CalSignError(""))
 	}
 

@@ -7,12 +7,12 @@ import (
 	"time"
 
 	_ "github.com/gogf/gf/contrib/nosql/redis/v2"
+	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/v2/container/gvar"
 	"github.com/gogf/gf/v2/database/gredis"
 
 	"github.com/gogf/gf/v2/os/gcache"
 	"github.com/gogf/gf/v2/os/gcfg"
-	"github.com/gogf/gf/v2/os/glog"
 )
 
 type sCache struct {
@@ -53,7 +53,7 @@ func init() {
 			}
 			cache.c.SetAdapter(gcache.NewAdapterRedis(redis))
 		} else {
-			glog.Error(context.Background(), "have no redis config")
+			g.Log().Error(context.Background(), "have no redis config")
 			return
 		}
 

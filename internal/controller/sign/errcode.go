@@ -38,7 +38,7 @@ func CodeStateError(msg string) *errCode {
 // //
 func CodeGetGeneratorError(msg string) *errCode {
 
-	return &errCode{2, "failed to get data", nil}
+	return &errCode{2, msg, nil}
 }
 
 // //
