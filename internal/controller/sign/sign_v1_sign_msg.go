@@ -16,7 +16,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 
 	////
 
-	err = service.Generator().CalSign(ctx, req.SessionId, req.Msg, req.Request)
+	err = service.Generator().CalSign(ctx, req.SessionId, req.Msg, req.Request, req.Tx, req.SMS)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CalSignError(""))

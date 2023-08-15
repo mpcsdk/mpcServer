@@ -3,6 +3,7 @@ package generator
 import (
 	"context"
 	"errors"
+	"li17server/internal/consts"
 	"li17server/internal/service"
 	"time"
 
@@ -29,7 +30,7 @@ func (s *sGenerator) UpState(ctx context.Context, token string, state string, er
 func (s *sGenerator) GetState(ctx context.Context, token string) (string, error) {
 	stat, err := service.Cache().Get(ctx, token)
 	if stat.IsEmpty() {
-		return service.Generator().StateString(service.STATE_None), nil
+		return service.Generator().StateString(consts.STATE_None), nil
 	}
 	return stat.String(), err
 }
@@ -264,7 +265,7 @@ func (s *sGenerator) GenNewSid(ctx context.Context, userToken string) (string, e
 		glog.Warning(ctx, err)
 		return "", err
 	}
-	// s.UpState(ctx, userToken, service.Generator().StateString(service.STATE_None), nil)
+	// s.UpState(ctx, userToken, service.Generator().StateString(consts.STATE_None), nil)
 	return sid, nil
 }
 

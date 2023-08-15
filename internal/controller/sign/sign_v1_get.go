@@ -4,6 +4,7 @@ import (
 	"context"
 
 	v1 "li17server/api/sign/v1"
+	"li17server/internal/consts"
 	"li17server/internal/service"
 
 	"github.com/gogf/gf/errors/gerror"
@@ -36,7 +37,7 @@ func (c *ControllerV1) GetZKProofP2(ctx context.Context, req *v1.GetZKProofP2Req
 
 	glog.Debug(ctx, req)
 	///
-	ZKProofp2, err := service.Generator().FetchSid(ctx, req.SessionId, service.KEY_zkproof2)
+	ZKProofp2, err := service.Generator().FetchSid(ctx, req.SessionId, consts.KEY_zkproof2)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CodeGetGeneratorError(ErrZKProofP2NotExist))
@@ -51,7 +52,7 @@ func (c *ControllerV1) GetZKProofP2(ctx context.Context, req *v1.GetZKProofP2Req
 func (c *ControllerV1) GetSignature(ctx context.Context, req *v1.GetSignatureReq) (res *v1.GetSignatureRes, err error) {
 	////
 	// signature, err := service.Generator().FetchSignature(ctx, token)
-	signature, err := service.Generator().FetchSid(ctx, req.SessionId, service.KEY_signature)
+	signature, err := service.Generator().FetchSid(ctx, req.SessionId, consts.KEY_signature)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CodeGetGeneratorError(ErrSignatureNotExist))

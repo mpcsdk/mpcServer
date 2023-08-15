@@ -4,6 +4,7 @@ import (
 	"context"
 
 	v1 "li17server/api/sign/v1"
+	"li17server/internal/consts"
 	"li17server/internal/service"
 
 	"github.com/gogf/gf/errors/gerror"
@@ -26,7 +27,7 @@ func (c *ControllerV1) SendHashProof(ctx context.Context, req *v1.SendHashProofR
 		return nil, gerror.NewCode(CodeStateError(ErrSessionNotExist))
 	}
 
-	if state != service.Generator().StateString(service.STATE_Auth) {
+	if state != service.Generator().StateString(consts.STATE_Auth) {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CodeStateError(ErrStateIncorrect))
 	}
@@ -56,13 +57,13 @@ func (c *ControllerV1) SendZKProofP1(ctx context.Context, req *v1.SendZKProofP1R
 		return nil, gerror.NewCode(CodeStateError(ErrSessionNotExist))
 	}
 	/// must STATE_None
-	if state != service.Generator().StateString(service.STATE_Auth) {
+	if state != service.Generator().StateString(consts.STATE_Auth) {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CodeStateError(ErrStateIncorrect))
 	}
 
 	// _, err = service.Generator().FetchZKProofP2(ctx, token)
-	_, err = service.Generator().FetchSid(ctx, req.SessionId, service.KEY_zkproof2)
+	_, err = service.Generator().FetchSid(ctx, req.SessionId, consts.KEY_zkproof2)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CodeGetGeneratorError(ErrZKProofP2NotExist))

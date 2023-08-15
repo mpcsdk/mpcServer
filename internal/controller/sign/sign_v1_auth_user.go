@@ -8,6 +8,7 @@ import (
 	"github.com/gogf/gf/v2/os/glog"
 
 	v1 "li17server/api/sign/v1"
+	"li17server/internal/consts"
 	"li17server/internal/service"
 )
 
@@ -35,7 +36,7 @@ func (c *ControllerV1) prepareHandshake(ctx context.Context, userToken, sid stri
 	}
 	///
 	///
-	err = service.Generator().UpState(ctx, userToken, service.Generator().StateString(service.STATE_Auth), err)
+	err = service.Generator().UpState(ctx, userToken, service.Generator().StateString(consts.STATE_Auth), err)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return gerror.NewCode(CodeInternalError)
@@ -63,10 +64,10 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 		return nil, gerror.NewCode(CodeInternalError)
 	}
 	switch state {
-	case service.Generator().StateString(service.STATE_HandShake):
+	case service.Generator().StateString(consts.STATE_HandShake):
 		//
-	case service.Generator().StateString(service.STATE_Auth),
-		service.Generator().StateString(service.STATE_None):
+	case service.Generator().StateString(consts.STATE_Auth),
+		service.Generator().StateString(consts.STATE_None):
 		//
 		c.prepareHandshake(ctx, req.UserToken, sid)
 	default:

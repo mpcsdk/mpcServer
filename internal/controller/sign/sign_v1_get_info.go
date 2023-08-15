@@ -7,6 +7,7 @@ import (
 	"github.com/gogf/gf/v2/os/glog"
 
 	v1 "li17server/api/sign/v1"
+	"li17server/internal/consts"
 	"li17server/internal/service"
 )
 
@@ -20,7 +21,7 @@ func (c *ControllerV1) GetInfo(ctx context.Context, req *v1.GetInfoReq) (res *v1
 		return nil, gerror.NewCode(CodeInternalError)
 	}
 	///
-	pubkey, err := service.Generator().FetchToken(ctx, token, service.KEY_publickey2)
+	pubkey, err := service.Generator().FetchToken(ctx, token, consts.KEY_publickey2)
 	if err != nil {
 		glog.Warning(ctx, err)
 		return nil, gerror.NewCode(CodeStateError(ErrSessionNotExist))

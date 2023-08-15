@@ -57,6 +57,8 @@ type SignMsgReq struct {
 	SessionId string `json:"sessionId"`
 	Msg       string `json:"msg"`
 	Request   string `json:"request,omitempty"`
+	SMS       string `json:"sms,omitempty"`
+	Tx        string `json:"tx,omitempty"`
 }
 type SignMsgRes struct {
 }
