@@ -34,28 +34,22 @@ func (s *sGenerator) genContextP2(ctx context.Context, sid string, private_key2,
 
 // 4.5.calculate p2_zk_proof by p1_hash_proof, need recal context_p2 by p1_hash_proof
 func (s *sGenerator) calZKProofP2(ctx context.Context, sid string, p1_hash_proof string) error {
-	// context_p2, err := s.FetchContextp2(ctx, key)
 	context_p2, err := s.FetchSid(ctx, sid, consts.KEY_context)
 	context_p2 = service.Sign().KeygenRecvHashProofP2(context_p2, p1_hash_proof)
 	s.RecordSid(ctx, sid, consts.KEY_context, context_p2)
 	///
 	p2_zk_proof := service.Sign().KeygenSendZKProofP2(context_p2)
-	// s.RecordZKProofP2(ctx, key, p2_zk_proof)
 	s.RecordSid(ctx, sid, consts.KEY_zkproof2, p2_zk_proof)
-	// s.UpGeneratorState(ctx, key, s.StateString(consts.STATE_HandShake), err)
 	return err
 }
 
 // 6.7.calculate v2_public_key by p1_zk_proof, recal context_p2 by p1_zk_proof
 func (s *sGenerator) calPublicKey2(ctx context.Context, sid string, p1_zk_proof string) error {
-	// context_p2, err := s.FetchContextp2(ctx, key)
 	context_p2, err := s.FetchSid(ctx, sid, consts.KEY_context)
 	if err != nil {
 		return nil
 	}
 	context_p2 = service.Sign().KeygenRecvZKProofP2(context_p2, p1_zk_proof)
-	// s.RecordContextp2(ctx, key, context_p2)
-	// s.RecordSid(ctx, sid, consts.KEY_context, context_p2)
 	token, err := s.Sid2Token(ctx, sid)
 	if err != nil {
 		return nil
@@ -63,7 +57,6 @@ func (s *sGenerator) calPublicKey2(ctx context.Context, sid string, p1_zk_proof 
 	///
 	s.RecordToken(ctx, token, consts.KEY_context, context_p2)
 	v2_public_key := service.Sign().PublicKeyP2(context_p2)
-	// s.RecordPublicKey2(ctx, key, v2_public_key)
 	s.RecordToken(ctx, token, consts.KEY_publickey2, v2_public_key)
 	//
 	s.UpState(ctx, token, s.StateString(consts.STATE_HandShake), nil)
@@ -73,8 +66,14 @@ func (s *sGenerator) calPublicKey2(ctx context.Context, sid string, p1_zk_proof 
 // 8.calculate request, recal context_p2
 func (s *sGenerator) calRequest(ctx context.Context, sid string, request string) (string, error) {
 	token, err := s.Sid2Token(ctx, sid)
+	if err != nil {
+		return "", err
+	}
 	state, err := s.GetState(ctx, token)
 	context_p2 := ""
+	if err != nil {
+		return "", err
+	}
 	if state == s.StateString(consts.STATE_HandShake) {
 		context_p2, err = s.FetchToken(ctx, token, consts.KEY_context)
 	} else {
@@ -85,12 +84,7 @@ func (s *sGenerator) calRequest(ctx context.Context, sid string, request string)
 		}
 	}
 	context_p2 = service.Sign().SignRecvRequestP2(context_p2, request)
-	// s.RecordContextp2(ctx, key, context_p2)
-	//
-	// token, err := s.Sid2Token(ctx, sid)
-	// if err != nil {
-	// 	return "", err
-	// }
+
 	s.RecordToken(ctx, token, consts.KEY_context, context_p2)
 	s.RecordSid(ctx, sid, consts.KEY_request, request)
 
@@ -112,7 +106,6 @@ func (s *sGenerator) CalSignTask(ctx context.Context, sid string, msg string, re
 		}
 	}
 	p2_sign := service.Sign().SignSendPartialP2(context_p2, msg)
-	// s.RecordSignature(ctx, key, p2_sign)
 	s.RecordSid(ctx, sid, consts.KEY_signature, p2_sign)
 	///
 	return err
