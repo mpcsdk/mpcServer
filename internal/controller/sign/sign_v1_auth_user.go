@@ -3,8 +3,8 @@ package sign
 import (
 	"context"
 
-	"github.com/gogf/gf/errors/gerror"
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/gogf/gf/v2/frame/g"
 
 	v1 "li17server/api/sign/v1"
 	"li17server/internal/consts"
@@ -15,18 +15,18 @@ func (c *ControllerV1) prepareHandshake(ctx context.Context, userToken, sid stri
 
 	///
 	// todo: tmp key
-	g.Log().Debug("prepareHandshake:", userToken, sid)
+	g.Log().Debug(ctx, "prepareHandshake:", userToken, sid)
 	///
 	err := service.Generator().GenContextP2(ctx, sid, tmp_privkey2, "", false)
 	if err != nil {
-		g.Log().Warning("prepareHandshake:", err)
+		g.Log().Warning(ctx, "prepareHandshake:", err)
 		return gerror.NewCode(CodeInternalError)
 	}
 	///
 	///
 	err = service.Generator().UpState(ctx, userToken, service.Generator().StateString(consts.STATE_Auth), err)
 	if err != nil {
-		g.Log().Warning(err)
+		g.Log().Warning(ctx, err)
 		return gerror.NewCode(CodeInternalError)
 	}
 
@@ -35,7 +35,7 @@ func (c *ControllerV1) prepareHandshake(ctx context.Context, userToken, sid stri
 
 func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *v1.AuthUserRes, err error) {
 
-	g.Log().Debug("AuthUser:", req)
+	g.Log().Debug(ctx, "AuthUser:", req)
 	///
 	state, err := service.Generator().GetState(ctx, req.UserToken)
 	if err != nil {
@@ -48,7 +48,7 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 	////
 	sid, err := service.Generator().GenNewSid(ctx, req.UserToken)
 	if err != nil {
-		g.Log().Warning("AuthUser:", err)
+		g.Log().Warning(ctx, "AuthUser:", err)
 		return nil, gerror.NewCode(CodeInternalError)
 	}
 	switch state {
@@ -59,7 +59,7 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 		//
 		c.prepareHandshake(ctx, req.UserToken, sid)
 	default:
-		g.Log().Warning("AuthUser:", err)
+		g.Log().Warning(ctx, "AuthUser:", err)
 		return nil, gerror.NewCode(CodeInternalError)
 	}
 	////
