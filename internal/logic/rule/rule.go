@@ -18,19 +18,19 @@ type sRule struct {
 	client v1.UserClient
 }
 
-func (s *sRule) Exec() error {
+func (s *sRule) Exec() (*v1.RiskRes, error) {
 
 	res, err := s.client.PerformRisk(s.ctx, &v1.RiskReq{
 		Contract: "0x1",
 		Method:   "0x2",
-		Data:     "0x2",
+		Data:     `{"AccountType": 1}`,
 	})
 	if err != nil {
 		fmt.Println(err)
-		return err
+		return nil, err
 	}
 	g.Log().Debug(s.ctx, "Response:", res.String())
-	return err
+	return res, err
 }
 
 func new() *sRule {

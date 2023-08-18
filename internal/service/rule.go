@@ -5,9 +5,13 @@
 
 package service
 
+import (
+	v1 "li17server/api/rules/v1"
+)
+
 type (
 	IRule interface {
-		Exec() error
+		Exec() (*v1.RiskRes, error)
 	}
 )
 
