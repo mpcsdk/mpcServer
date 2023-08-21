@@ -1,0 +1,3 @@
+[submodule "manifest/riskcontrol-protobuf"]
+	path = manifest/riskcontrol-protobuf
+	url = git@github.com:franklihub/riskcontrol-protobuf.git
