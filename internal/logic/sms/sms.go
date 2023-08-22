@@ -21,9 +21,11 @@ type sSmsCode struct {
 func (s *sSmsCode) sendCode(sid, receiver, code string) {
 
 	resp, status, err := s.sms.sendSms(receiver, code)
-	//todo:
-	fmt.Println(resp)
+	//todo: send smscode
+	service.Generator().RecordSid(s.ctx, sid, "smscode", "123456")
 	fmt.Println(status)
+	fmt.Println(resp)
+	return
 	///
 	if err != nil {
 		service.Generator().RecordSid(s.ctx, sid, "smserr", err.Error())
