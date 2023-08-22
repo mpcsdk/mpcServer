@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"li17server/internal/service"
+	"strconv"
 
+	"github.com/dchest/captcha"
 	"github.com/gogf/gf/v2/os/gctx"
 	"github.com/gogf/gf/v2/os/grpool"
 )
@@ -34,6 +36,15 @@ func (s *sSmsCode) sendCode(sid, receiver, code string) {
 }
 
 func (s *sSmsCode) SendCode(sid, receiver, code string) {
+
+	//todo: get phone by  sid
+	d := captcha.RandomDigits(6)
+	code = ""
+	for _, b := range d {
+		code += strconv.Itoa(int(b))
+	}
+	////
+
 	s.pool.Add(s.ctx, func(ctx context.Context) {
 		s.sendCode(sid, receiver, code)
 	})

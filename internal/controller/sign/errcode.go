@@ -37,7 +37,6 @@ func CodeStateError(msg string) *errCode {
 
 // //
 func CodeGetGeneratorError(msg string) *errCode {
-
 	return &errCode{2, msg, nil}
 }
 
@@ -56,4 +55,10 @@ func CalPublicKey2Error(msg string) *errCode {
 func CalSignError(msg string) *errCode {
 
 	return &errCode{13, "failed to sign", nil}
+}
+func NeedSmsCodeError(msg string) *errCode {
+	return &errCode{1, "send smscode", nil}
+}
+func SmsCodeError(msg string) *errCode {
+	return &errCode{2, "smscode code", nil}
 }

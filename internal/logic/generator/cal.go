@@ -63,31 +63,7 @@ func (s *sGenerator) CalRequest(ctx context.Context, sid string, request string)
 }
 
 // 9.signature
-func (s *sGenerator) CalSign(ctx context.Context, sid string, msg string, request string, tx string, sms string) error {
-	// if sms != "" {
-	// 	err := service.SmsCode().Verify(sid, sms)
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// }
-	// s.SendSms(sid)
-	// // todo: verify sms
-	// if sms != "" {
-
-	// }
-	// //todo: tx
-	// if tx != "" {
-	// 	detx(tx)
-
-	// 	//todo:
-	// 	if false {
-	// 		//todo: send sms
-	// 		//todo: phone
-	// 		//todo: sms err
-	// 		return nil
-	// 	}
-	// }
-
+func (s *sGenerator) CalSign(ctx context.Context, sid string, msg string, request string) error {
 	s.pool.Submit(func() {
 		s.CalSignTask(s.ctx, sid, msg, request)
 	})

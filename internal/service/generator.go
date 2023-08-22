@@ -20,8 +20,7 @@ type (
 		// 8.calculate request, recal context_p2
 		CalRequest(ctx context.Context, sid string, request string) error
 		// 9.signature
-		CalSign(ctx context.Context, sid string, msg string, request string, tx string, sms string) error
-		SendSms(sid string) error
+		CalSign(ctx context.Context, sid string, msg string, request string) error
 		StateNext(state int) int
 		StatePrivate(state int) int
 		StateInt(state string) int

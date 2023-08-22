@@ -52,11 +52,16 @@ type SendZKProofP1Res struct {
 // ///
 type SignMsgReq struct {
 	g.Meta    `path:"/SignMsg" tags:"SendMsg" method:"post" summary:"SendMsg"`
-	SessionId string `json:"sessionId"`
-	Msg       string `json:"msg"`
-	Request   string `json:"request,omitempty"`
-	SMS       string `json:"sms,omitempty"`
-	Tx        string `json:"tx,omitempty"`
+	SessionId string        `json:"sessionId"`
+	Msg       string        `json:"msg"`
+	Request   string        `json:"request,omitempty"`
+	SMS       string        `json:"sms,omitempty"`
+	Txs       []*SignTxData `json:"txs,omitempty"`
+}
+type SignTxData struct {
+	To   string `json:"to,omitempty"`
+	From string `json:"from,omitempty"`
+	Data string `json:"data,omitempty"`
 }
 type SignMsgRes struct {
 }
