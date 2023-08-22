@@ -50,6 +50,7 @@ var sendHashProof = &gcmd.Command{
 		}
 		nb := data2json(s)
 		res, err := g.Client().Post(
+			ctx,
 			"http://123.60.148.168:8000/SendHashProof",
 			nb,
 		)
@@ -82,6 +83,7 @@ var sendZKProofP1 = &gcmd.Command{
 		}
 		nb := data2json(s)
 		res, err := g.Client().Post(
+			ctx,
 			"http://123.60.148.168:8000/SendZKProofP1",
 			nb,
 		)
@@ -119,6 +121,7 @@ var signMsg = &gcmd.Command{
 		}
 		nb := data2json(s)
 		res, err := g.Client().Post(
+			ctx,
 			"http://123.60.148.168:8000/SignMsg",
 			nb,
 		)
