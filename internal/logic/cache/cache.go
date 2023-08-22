@@ -7,9 +7,9 @@ import (
 	"time"
 
 	_ "github.com/gogf/gf/contrib/nosql/redis/v2"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/v2/container/gvar"
 	"github.com/gogf/gf/v2/database/gredis"
+	"github.com/gogf/gf/v2/frame/g"
 
 	"github.com/gogf/gf/v2/os/gcache"
 	"github.com/gogf/gf/v2/os/gcfg"

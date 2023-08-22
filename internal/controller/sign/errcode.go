@@ -6,6 +6,9 @@ type errCode struct {
 	detail  interface{}
 }
 
+func (e *errCode) Error() string {
+	return e.message
+}
 func (e *errCode) Message() string {
 	return e.message
 }

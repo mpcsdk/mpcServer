@@ -7,8 +7,8 @@ import (
 	"li17server/internal/service"
 	"time"
 
-	"github.com/gogf/gf/container/gvar"
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/container/gvar"
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/yitter/idgenerator-go/idgen"
 )
 

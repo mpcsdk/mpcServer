@@ -8,9 +8,9 @@ import (
 	v1 "li17server/api/sign/v1"
 	"strings"
 
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/os/gctx"
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gcmd"
+	"github.com/gogf/gf/v2/os/gctx"
 )
 
 func data2json(data interface{}) string {

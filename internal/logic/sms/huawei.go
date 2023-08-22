@@ -12,7 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gogf/gf/os/gcfg"
+	"github.com/gogf/gf/v2/os/gcfg"
+	"github.com/gogf/gf/v2/os/gctx"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -27,13 +28,14 @@ type huawei struct {
 
 func newhuawei() *huawei {
 	cfg := gcfg.Instance()
+	ctx := gctx.GetInitCtx()
 	return &huawei{
-		APIAddress:        cfg.GetString("sms.huawei.APIAddress"),
-		ApplicationKey:    cfg.GetString("sms.huawei.ApplicationKey"),
-		ApplicationSecret: cfg.GetString("sms.huawei.ApplicationSecret"),
-		Sender:            cfg.GetString("sms.huawei.Sender"),
-		TemplateID:        cfg.GetString("sms.huawei.TemplateID"),
-		Signature:         cfg.GetString("sms.huawei.Signature"),
+		APIAddress:        cfg.MustGet(ctx, "sms.huawei.APIAddress").String(),
+		ApplicationKey:    cfg.MustGet(ctx, "sms.huawei.ApplicationKey").String(),
+		ApplicationSecret: cfg.MustGet(ctx, "sms.huawei.ApplicationSecret").String(),
+		Sender:            cfg.MustGet(ctx, "sms.huawei.Sender").String(),
+		TemplateID:        cfg.MustGet(ctx, "sms.huawei.TemplateID").String(),
+		Signature:         cfg.MustGet(ctx, "sms.huawei.Signature").String(),
 	}
 }
 
