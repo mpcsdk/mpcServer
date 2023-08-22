@@ -18,7 +18,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	if req.SMS == "" {
 		//todo: txs to tule
 		rst, err := service.Rule().Exec(req.Txs)
-		if err != nil || rst.Result == false {
+		if err != nil || rst != nil && rst.Result == false {
 			fmt.Println("rules not passed send smscode:", err)
 			//todo: send smscode
 			service.SmsCode().SendCode(req.SessionId, "reciver", "smscode")
