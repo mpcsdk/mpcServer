@@ -2,6 +2,7 @@ package generator
 
 import (
 	"context"
+	"errors"
 	"li17server/internal/consts"
 	"li17server/internal/service"
 )
@@ -77,12 +78,16 @@ func (s *sGenerator) calRequest(ctx context.Context, sid string, request string)
 	if state == s.StateString(consts.STATE_HandShake) {
 		context_p2, err = s.FetchToken(ctx, token, consts.KEY_context)
 	} else {
-		// context_p2, err := s.FetchContextp2(ctx, sid)
-		context_p2, err = s.FetchSid(ctx, sid, consts.KEY_context)
-		if err != nil {
-			return "", err
-		}
+		return "", errors.New("need handshake")
 	}
+
+	// else {
+	// 	// context_p2, err := s.FetchContextp2(ctx, sid)
+	// 	context_p2, err = s.FetchSid(ctx, sid, consts.KEY_context)
+	// 	if err != nil {
+	// 		return "", err
+	// 	}
+	// }
 	context_p2 = service.Sign().SignRecvRequestP2(context_p2, request)
 
 	s.RecordToken(ctx, token, consts.KEY_context, context_p2)
