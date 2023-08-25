@@ -16,5 +16,6 @@ const (
 	KEY_publickey2  string = "public_key_v2"
 	KEY_request     string = "request"
 	KEY_msg         string = "msg"
+	KEY_txs         string = "txs"
 	KEY_signature   string = "signature"
 )

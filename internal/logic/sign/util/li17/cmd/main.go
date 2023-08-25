@@ -1,6 +1,6 @@
-// package main
-
 package cmd
+
+// package main
 
 // //#cgo CFLAGS: -I../libs/
 // //#cgo LDFLAGS: -L${SRCDIR}/../libs -lli17
@@ -10,7 +10,6 @@ package cmd
 // import "C"
 // import (
 // 	"fmt"
-// 	li17 "li17server/internal/logic/li17/util/li17"
 // )
 
 // func main() {

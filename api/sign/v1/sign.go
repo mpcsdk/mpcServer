@@ -55,7 +55,6 @@ type SignMsgReq struct {
 	SessionId string        `json:"sessionId"`
 	Msg       string        `json:"msg"`
 	Request   string        `json:"request,omitempty"`
-	SMS       string        `json:"sms,omitempty"`
 	Txs       []*SignTxData `json:"txs,omitempty"`
 }
 type SignTxData struct {
@@ -82,4 +81,21 @@ type GetInfoReq struct {
 }
 type GetInfoRes struct {
 	PublicKey string `json:"publicKey"`
+}
+
+// //
+type SendSmsCodeReq struct {
+	g.Meta    `path:"/SendSmsCode" tags:"SendSmsCode" method:"post" summary:"SendSmsCode"`
+	SessionId string `json:"sessionId"`
+}
+type SendSmsCodeRes struct {
+}
+
+// /
+type VerifySmsCodeReq struct {
+	g.Meta    `path:"/VerifySmsCode" tags:"VerifySmsCode" method:"post" summary:"VerifySmsCode"`
+	SessionId string `json:"sessionId"`
+	Code      string `json:"code"`
+}
+type VerifySmsCodeRes struct {
 }
