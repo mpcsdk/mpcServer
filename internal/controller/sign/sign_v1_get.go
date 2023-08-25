@@ -54,7 +54,7 @@ func (c *ControllerV1) GetSignature(ctx context.Context, req *v1.GetSignatureReq
 	g.Log().Debug(ctx, "GetSignature", req)
 	// signature, err := service.Generator().FetchSignature(ctx, token)
 	signature, err := service.Generator().FetchSid(ctx, req.SessionId, consts.KEY_signature)
-	if err != nil {
+	if err != nil || signature == "" {
 		g.Log().Warning(ctx, "getsignature:", err)
 		return nil, gerror.NewCode(CodeGetGeneratorError(ErrSignatureNotExist))
 	}
