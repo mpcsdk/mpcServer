@@ -17,7 +17,7 @@ import (
 
 func (c *ControllerV1) checkMsg(ctx context.Context, req *v1.SignMsgReq) bool {
 	// txHash: digestTxHash(chainId, this.address, nonce.toNumber(), rawExecute.txs)
-	hash := crypto.Keccak256([]byte(req.SignTx))
+	hash := crypto.Keccak256([]byte(req.SignData))
 	msg := common.Bytes2Hex(hash)
 	fmt.Println(msg)
 	if msg != req.Msg {
@@ -32,7 +32,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		return nil, gerror.NewCode(CodeInternalError)
 	}
 	txs := []*v1.SignTxData{}
-	json.Unmarshal([]byte(req.SignTx), txs)
+	json.Unmarshal([]byte(req.SignData), txs)
 	//todo: txs
 	rst, err := service.Rule().Exec(txs)
 	fmt.Println(rst)

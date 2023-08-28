@@ -55,14 +55,14 @@ type SignMsgReq struct {
 	SessionId string `json:"sessionId"`
 	Msg       string `json:"msg"`
 	Request   string `json:"request,omitempty"`
-	SignTx    string `json:"txs,omitempty"`
+	SignData  string `json:"SignData,omitempty"`
 }
 type SignTx struct {
 	ChainId string        `json:"chainId,omitempty"`
 	Address string        `json:"address,omitempty"`
 	Number  string        `json:"number,omitempty"`
 	Txs     []*SignTxData `json:"txs,omitempty"`
-	// TxHash  string        `json:"txHash,omitempty"`
+	TxHash  string        `json:"txHash,omitempty"`
 }
 type SignTxData struct {
 	To   string `json:"taget,omitempty"`
