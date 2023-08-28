@@ -19,3 +19,4 @@ bin
 **/config/config.yaml
 __debug_bin*
 *.log
+config.yaml

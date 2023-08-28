@@ -7,8 +7,6 @@ require (
 	github.com/dchest/captcha v1.0.0
 	github.com/ethereum/go-ethereum v1.12.0
 	github.com/fatih/color v1.15.0 // indirect
-	github.com/go-sql-driver/mysql v1.7.1 // indirect
-	github.com/gogf/gf v1.16.9
 	github.com/gogf/gf/contrib/nosql/redis/v2 v2.5.1
 	github.com/gogf/gf/contrib/registry/etcd/v2 v2.5.1
 	github.com/gogf/gf/contrib/rpc/grpcx/v2 v2.5.1
