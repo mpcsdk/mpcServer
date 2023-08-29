@@ -66,6 +66,7 @@ type SignTx struct {
 }
 type SignTxData struct {
 	To   string `json:"target,omitempty"`
+	From string `json:"from,omitempty"`
 	Data string `json:"data,omitempty"`
 }
 type SignMsgRes struct {

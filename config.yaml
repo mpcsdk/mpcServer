@@ -10,7 +10,7 @@ logger:
   path: "./"
 
 cache:
-  sessionDur: 100
+  sessionDur: 10000
   contextDur: 0
 # redis mem
   type: "redis"
@@ -18,7 +18,7 @@ cache:
     Addr: "127.0.0.1:6379"
     Db: 1
 etcd:
-  address: "192.168.121.203:2379"
+  address: "127.0.0.1:2379"
 sms:
   huawei:
     APIAddress: "https://smsapi.cn-south-1.myhuaweicloud.com:443/sms/batchSendSms/v1"

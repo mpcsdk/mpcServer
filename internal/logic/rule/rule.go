@@ -61,9 +61,8 @@ func (s *sRule) Exec(txs []*signv1.SignTxData) (*v1.RiskRes, error) {
 		//todo: tx argx
 		fmt.Println(args)
 		res, err := s.client.PerformRisk(s.ctx, &v1.RiskReq{
-			To: tx.To,
-			// From: tx.From,
-			//todo: data,
+			To:   tx.To,
+			From: tx.From,
 			Data: tx.Data,
 		})
 		if err != nil {
