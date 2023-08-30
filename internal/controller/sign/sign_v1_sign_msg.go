@@ -11,6 +11,8 @@ import (
 
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	///
+	// "github.com/ethereum/go-ethereum/signer/core/apitypes"
 )
 
 func (c *ControllerV1) checkMsg(ctx context.Context, SignData string) string {
@@ -24,10 +26,13 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	if hash != req.Msg {
 		return nil, gerror.NewCode(CodeInternalError)
 	}
-	txs := []*v1.SignTxData{}
-	json.Unmarshal([]byte(req.SignData), txs)
+	signtx := &v1.SignTx{}
+	json.Unmarshal([]byte(req.SignData), signtx)
+	for i, _ := range signtx.Txs {
+		signtx.Txs[i].From = signtx.Address
+	}
 	//todo: txs
-	rst, err := service.Rule().Exec(txs)
+	rst, err := service.Rule().Exec(signtx.Txs)
 	fmt.Println(rst)
 	if err != nil || rst != nil && rst.Result == false {
 		//todo:

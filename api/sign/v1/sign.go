@@ -55,17 +55,18 @@ type SignMsgReq struct {
 	SessionId string `json:"sessionId"`
 	Msg       string `json:"msg"`
 	Request   string `json:"request,omitempty"`
-	SignData  string `json:"SignData,omitempty"`
+	SignData  string `json:"signData,omitempty"`
 }
 type SignTx struct {
-	ChainId string        `json:"chainId,omitempty"`
+	ChainId uint64        `json:"chainId,omitempty"`
 	Address string        `json:"address,omitempty"`
-	Number  string        `json:"number,omitempty"`
+	Number  uint64        `json:"number,omitempty"`
 	Txs     []*SignTxData `json:"txs,omitempty"`
 	TxHash  string        `json:"txHash,omitempty"`
 }
 type SignTxData struct {
-	To   string `json:"taget,omitempty"`
+	To   string `json:"target,omitempty"`
+	From string `json:"from,omitempty"`
 	Data string `json:"data,omitempty"`
 }
 type SignMsgRes struct {
