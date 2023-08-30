@@ -1,0 +1,4 @@
+#! /bin/bash
+go env -w GOPROXY=https://proxy.golang.org,direct
+cd /src
+make ||  exit

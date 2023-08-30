@@ -1,0 +1,29 @@
+base: li17server
+server:
+  address:     ":8000"
+  workId: 1
+
+logger:
+  level : "all"
+  stdout: false 
+  rotateExpire: "1d"
+  path: "./"
+
+cache:
+  sessionDur: 10000
+  contextDur: 0
+# redis mem
+  type: "redis"
+redis:
+    Addr: "192.168.1.50:6379"
+    Db: 1
+etcd:
+  address: "192.168.1.50:2379"
+sms:
+  huawei:
+    APIAddress: "https://smsapi.cn-south-1.myhuaweicloud.com:443/sms/batchSendSms/v1"
+    ApplicationKey: "DZcZWoIauKdHY1wD0179m4Jk5N9V"
+    ApplicationSecret: "1GSPX8WyCwJbTfwEohqsBlOzbcam"
+    Sender: "cs106900001477"
+    TemplateID: "4ea904bd91ad47b690573aa6be183952"
+    Signature: "华为云测试签名"

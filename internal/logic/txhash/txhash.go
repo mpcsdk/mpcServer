@@ -9,7 +9,6 @@ import (
 	proto "li17server/api/txhash/v1"
 
 	"github.com/gogf/gf/v2/os/gctx"
-	"github.com/gogf/gf/v2/os/glog"
 	"google.golang.org/grpc"
 )
 
@@ -36,7 +35,7 @@ func (s *sTxHash) start() {
 	s.connhash()
 	err = s.cmd.Wait()
 	//todo: exit
-	glog.Error(s.ctx, err)
+	panic(err)
 }
 
 func (s *sTxHash) connhash() {
