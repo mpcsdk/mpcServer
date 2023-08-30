@@ -1,4 +1,1 @@
-# GoFrame Template For SingleRepo
-
-Quick Start: 
-- https://goframe.org/pages/viewpage.action?pageId=1114399
+docker run -it -v /path/config.yaml:/server/config.yaml -p 8000:8000 apiserver
