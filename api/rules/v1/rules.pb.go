@@ -28,9 +28,9 @@ type RiskReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	From string `protobuf:"bytes,1,opt,name=From,proto3" json:"From,omitempty" v:"required"` // v: required
-	To   string `protobuf:"bytes,2,opt,name=To,proto3" json:"To,omitempty" v:"required"`     // v: required
-	Data string `protobuf:"bytes,3,opt,name=Data,proto3" json:"Data,omitempty" v:"required"` // v: required
+	From string `protobuf:"bytes,1,opt,name=From,proto3" json:"From,omitempty" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required"` // v: required
+	To   string `protobuf:"bytes,2,opt,name=To,proto3" json:"To,omitempty" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required"`     // v: required
+	Data string `protobuf:"bytes,3,opt,name=Data,proto3" json:"Data,omitempty" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required" v:"required"` // v: required
 }
 
 func (x *RiskReq) Reset() {

@@ -9,26 +9,19 @@ import (
 	"li17server/internal/consts"
 	"li17server/internal/service"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-func (c *ControllerV1) checkMsg(ctx context.Context, req *v1.SignMsgReq) bool {
-	// txHash: digestTxHash(chainId, this.address, nonce.toNumber(), rawExecute.txs)
-	hash := crypto.Keccak256([]byte(req.SignData))
-	msg := common.Bytes2Hex(hash)
-	fmt.Println(msg)
-	if msg != req.Msg {
-		return false
-	}
-	return true
+func (c *ControllerV1) checkMsg(ctx context.Context, SignData string) string {
+	hash := service.TxHash().DigestTxHash(ctx, SignData)
+	return hash
 }
 func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1.SignMsgRes, err error) {
 	g.Log().Debug(ctx, "SignMsg:", req)
 
-	if !c.checkMsg(ctx, req) {
+	hash := c.checkMsg(ctx, req.SignData)
+	if hash != req.Msg {
 		return nil, gerror.NewCode(CodeInternalError)
 	}
 	txs := []*v1.SignTxData{}

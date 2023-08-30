@@ -20,3 +20,4 @@ bin
 __debug_bin*
 *.log
 config.yaml
+node_modules

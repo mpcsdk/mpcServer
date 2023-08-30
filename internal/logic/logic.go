@@ -10,4 +10,5 @@ import (
 	_ "li17server/internal/logic/rule"
 	_ "li17server/internal/logic/sign"
 	_ "li17server/internal/logic/sms"
+	_ "li17server/internal/logic/txhash"
 )

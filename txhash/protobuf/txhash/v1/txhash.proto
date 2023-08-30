@@ -1,0 +1,19 @@
+// protoc --go_out=plugins=grpc:. *.proto
+
+syntax = "proto3";
+
+package txhash;
+
+option go_package = "/txhash/v1";
+
+service Transaction {
+  rpc DigestTxHash (TxRequest) returns (TxReply) {}
+}
+
+message TxRequest {
+  string message = 1;
+}
+
+message TxReply {
+  string message = 1;
+}
