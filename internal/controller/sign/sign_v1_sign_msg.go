@@ -22,12 +22,13 @@ func (c *ControllerV1) checkMsg(ctx context.Context, SignData string) string {
 func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1.SignMsgRes, err error) {
 	g.Log().Debug(ctx, "SignMsg:", req)
 
-	hash := c.checkMsg(ctx, req.SignData)
-	if hash != req.Msg {
-		return nil, gerror.NewCode(CodeInternalError)
-	}
 	signtx := &v1.SignTx{}
 	json.Unmarshal([]byte(req.SignData), signtx)
+	///
+	hash := c.checkMsg(ctx, req.SignData)
+	if hash != signtx.TxHash {
+		return nil, gerror.NewCode(CodeInternalError)
+	}
 	for i, _ := range signtx.Txs {
 		signtx.Txs[i].From = signtx.Address
 	}
