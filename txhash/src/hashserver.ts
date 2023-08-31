@@ -17,13 +17,11 @@ function DigestTxHash(call: any, callback: any) {
     callback(null, { message: hash })
 }
 
-// function main() {
+export function createServer() {
 var server = new grpc.Server()
 server.addService(txhash_proto.Transaction.service, { DigestTxHash: DigestTxHash })
 server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
     server.start()
     console.log('grpc server started')
 })
-// }
-
-// main()
+}

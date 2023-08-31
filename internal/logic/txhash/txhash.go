@@ -27,7 +27,7 @@ func (s *sTxHash) DigestTxHash(ctx context.Context, msg string) string {
 
 func (s *sTxHash) start() {
 	// hashserver
-	s.cmd = exec.Command("node", "./txhash/src/hashserver.js")
+	s.cmd = exec.Command("node", "./txhash/dist/main.js")
 	err := s.cmd.Start()
 	if err != nil {
 		panic(err)

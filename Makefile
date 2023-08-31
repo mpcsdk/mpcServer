@@ -19,6 +19,7 @@ all: apiserver
 
 prebuild:
 	@mkdir -p $(MODULE_ROOT)
+	@mkdir -p $(GOBIN)/txhash
 	# @ln -sf $(PWD) $(MODULE_ROOT)
 
 apiserver: prebuild hashts
@@ -27,8 +28,8 @@ apiserver: prebuild hashts
 	@echo "server done"
 	@echo "Run \"$(GOBIN)/$@\" to launch $@."
 hashts:prebuild 
-	@cp txhash $(GOBIN)/ -r
-	@npm run --prefix $(GOBIN)/txhash/ build
+	@npm run --prefix ./txhash/ build
+	@cp ./txhash/dist $(GOBIN)/txhash -r
 	@echo "hashts done"
 
 test:
