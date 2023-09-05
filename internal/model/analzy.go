@@ -9,7 +9,8 @@ type AnalzyTxData struct {
 	MethodId   string
 	MethodName string
 	Sig        string
-	Data       map[string]interface{}
+	Data       string
+	Args       map[string]interface{}
 }
 
 // //

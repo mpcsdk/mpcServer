@@ -65,7 +65,8 @@ func (s *sEthTx) analzyTx(ctx context.Context, tx *model.SignTxData) (*model.Ana
 		MethodId:   hex.EncodeToString(method.ID),
 		MethodName: method.RawName,
 		Sig:        method.Sig,
-		Data:       args,
+		Data:       data,
+		Args:       args,
 	}
 	return atx, nil
 }

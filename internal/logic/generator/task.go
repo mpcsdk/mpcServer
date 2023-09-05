@@ -2,9 +2,7 @@ package generator
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
-	"fmt"
 	"li17server/internal/consts"
 	"li17server/internal/model"
 	"li17server/internal/service"
@@ -112,11 +110,7 @@ func (s *sGenerator) CalSignTask(ctx context.Context, sid string, msg string, re
 	if err != nil {
 		return err
 	}
-	jdata, err := json.Marshal(data)
-	fmt.Println(jdata)
-	if err != nil {
-		return err
-	}
+
 	// recordtx
 	service.DB().RecordTxs(ctx, data)
 	return err

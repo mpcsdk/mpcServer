@@ -912,6 +912,8 @@ github.com/godbus/dbus/v5 v5.0.4/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5x
 github.com/gofrs/flock v0.8.1 h1:+gYjHKf32LDeiEEFhQaotPbLuUXjY5ZqxKgXy7n59aw=
 github.com/gofrs/flock v0.8.1/go.mod h1:F1TvTiK9OcQqauNUHlbJvyl9Qa1QvF/gOUDKA14jxHU=
 github.com/gofrs/uuid v3.3.0+incompatible/go.mod h1:b2aQJv3Z4Fp6yNu3cdSllBxTCLRxnplIgP/c0N/04lM=
+github.com/gogf/gf/contrib/drivers/pgsql/v2 v2.5.2 h1:+ZUmxkVicSzW9y86qMOF1jNBmC4LdR5DsEuMVjud2A0=
+github.com/gogf/gf/contrib/drivers/pgsql/v2 v2.5.2/go.mod h1:i9N4GgSYNtafZfOZjqUyNn1o9quW/a0/LFLccca8NPQ=
 github.com/gogf/gf/contrib/nosql/redis/v2 v2.5.2 h1:JzRIXB5J6vvnJGJmh7RfT8ntjXsn2jYXJf1+Q6oFe+A=
 github.com/gogf/gf/contrib/nosql/redis/v2 v2.5.2/go.mod h1:vLNtPgfInF5cXlcjLhVZxijIXD30+IiVjN6hP9sjjhY=
 github.com/gogf/gf/contrib/registry/etcd/v2 v2.5.2 h1:q47V1L1J4TGc1nvyIADJ0w5d6kmJZxvrImppkpqcyUI=
@@ -1216,6 +1218,8 @@ github.com/labstack/gommon v0.3.1/go.mod h1:uW6kP17uPlLJsD3ijUYn3/M5bAxtlZhMI6m3
 github.com/leanovate/gopter v0.2.9/go.mod h1:U2L/78B+KVFIx2VmW6onHJQzXtFb+p5y3y2Sh+Jxxv8=
 github.com/leodido/go-urn v1.2.1/go.mod h1:zt4jvISO2HfUBqxjfIshjdMTYS56ZS/qv49ictyFfxY=
 github.com/lib/pq v1.0.0/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
+github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=
+github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
 github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0/go.mod h1:zJYVVT2jmtg6P3p1VtQj7WsuWi/y4VnjVBn7F8KPB3I=
 github.com/lyft/protoc-gen-star v0.6.0/go.mod h1:TGAoBVkt8w7MPG72TrKIu85MIdXwDuzJYeZuUPFPNwA=
 github.com/lyft/protoc-gen-star v0.6.1/go.mod h1:TGAoBVkt8w7MPG72TrKIu85MIdXwDuzJYeZuUPFPNwA=

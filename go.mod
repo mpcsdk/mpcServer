@@ -5,6 +5,7 @@ go 1.15
 require (
 	github.com/dchest/captcha v1.0.0
 	github.com/ethereum/go-ethereum v1.12.0
+	github.com/gogf/gf/contrib/drivers/pgsql/v2 v2.5.2
 	github.com/gogf/gf/contrib/nosql/redis/v2 v2.5.2
 	github.com/gogf/gf/contrib/registry/etcd/v2 v2.5.2
 	github.com/gogf/gf/contrib/rpc/grpcx/v2 v2.5.2

@@ -25,6 +25,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	g.Log().Debug(ctx, "SignMsg:", req)
 
 	///checkmsg hash
+	//todo: checkmsghash
 	hash := c.checkMsg(ctx, req.SignData)
 	hash = strings.Replace(hash, "0x", "", -1)
 	if hash != req.Msg {
@@ -37,7 +38,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	if req.Check {
 		//todo: exec txs rules
 		rst, err := service.Rule().Exec(signtx.Address, signtx.Txs)
-		fmt.Println(rst)
+		g.Log().Info(ctx, "Rule().Exec:", rst, signtx.Address, signtx.Txs)
 		///
 		if err != nil || rst != nil && rst.Result == false {
 			//todo:
@@ -52,7 +53,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 			return nil, gerror.NewCode(NeedSmsCodeError(""))
 		}
 	}
-	/////sign
+	// /////sign
 	err = service.Generator().CalSign(ctx, req.SessionId, req.Msg, req.Request, signtx)
 	if err != nil {
 		g.Log().Warning(ctx, "SignMsg:", err)
