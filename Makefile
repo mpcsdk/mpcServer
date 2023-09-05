@@ -6,7 +6,7 @@ BUILD_IMAGE_WEB     = node:18
 
 GOBIN = $(PWD)/.build/bin
 GOPATH = $(PWD)/.build
-GOBUILD = env GO111MODULE=on GOPROXY="https://goproxy.cn,direct" GOOS=linux GOARCH=amd64 go build
+GOBUILD = env CGO_ENABLED=1 GO111MODULE=on GOPROXY="https://goproxy.cn,direct" GOOS=linux GOARCH=amd64 go build
 GOTEST = env GO111MODULE=on GOPROXY="https://goproxy.cn,direct" go test
 
 MODULE = $(shell sed 's/module //1p;d' go.mod)

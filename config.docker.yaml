@@ -27,3 +27,18 @@ sms:
     Sender: "cs106900001477"
     TemplateID: "4ea904bd91ad47b690573aa6be183952"
     Signature: "华为云测试签名"
+
+emailOTP:
+  Mail: "xinwei.li@mixmarvel.com"
+  Password: "Kkj7pJAdUpLpjgYE"
+  Host: "smtp.exmail.qq.com"
+  Port: 465
+  Subject: "Subject"
+  Body: "Body"
+
+gfcli:
+  gen:
+    dao:
+    - link:     "pgsql:postgres:123456@tcp(127.0.0.1:10100)/riskcontrol"
+      tables:   "contract_abi"
+      jsonCase: "CamelLower"
