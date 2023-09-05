@@ -1,8 +1,6 @@
 package sign
 
-import (
-	"li17server/internal/logic/sign/util/li17"
-)
+import "li17server/internal/logic/sign/util/li17"
 
 func (a *sSign) KeygenSendHashProofP1(context1 string) string {
 	defer func() {
