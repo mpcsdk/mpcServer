@@ -2,8 +2,11 @@ package generator
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"li17server/internal/consts"
+	"li17server/internal/model"
 	"li17server/internal/service"
 )
 
@@ -81,13 +84,6 @@ func (s *sGenerator) calRequest(ctx context.Context, sid string, request string)
 		return "", errors.New("need handshake")
 	}
 
-	// else {
-	// 	// context_p2, err := s.FetchContextp2(ctx, sid)
-	// 	context_p2, err = s.FetchSid(ctx, sid, consts.KEY_context)
-	// 	if err != nil {
-	// 		return "", err
-	// 	}
-	// }
 	context_p2 = service.Sign().SignRecvRequestP2(context_p2, request)
 
 	s.RecordToken(ctx, token, consts.KEY_context, context_p2)
@@ -97,12 +93,11 @@ func (s *sGenerator) calRequest(ctx context.Context, sid string, request string)
 }
 
 // 9.signature
-func (s *sGenerator) CalSignTask(ctx context.Context, sid string, msg string, request string) error {
+func (s *sGenerator) CalSignTask(ctx context.Context, sid string, msg string, request string, signtxs *model.SignTx) error {
 	token, err := s.Sid2Token(ctx, sid)
 	if err != nil {
 		return err
 	}
-	// context_p2, err := s.FetchContextp2(ctx, key)
 	context_p2, err := s.FetchToken(ctx, token, consts.KEY_context)
 	if request != "" {
 		context_p2, err = s.calRequest(ctx, sid, request)
@@ -112,6 +107,17 @@ func (s *sGenerator) CalSignTask(ctx context.Context, sid string, msg string, re
 	}
 	p2_sign := service.Sign().SignSendPartialP2(context_p2, msg)
 	s.RecordSid(ctx, sid, consts.KEY_signature, p2_sign)
-	///
+	///analzy tx
+	data, err := service.EthTx().AnalzyTxs(ctx, signtxs)
+	if err != nil {
+		return err
+	}
+	jdata, err := json.Marshal(data)
+	fmt.Println(jdata)
+	if err != nil {
+		return err
+	}
+	// recordtx
+	service.DB().RecordTxs(ctx, data)
 	return err
 }

@@ -14,11 +14,12 @@ import (
 )
 
 func (c *ControllerV1) SendSmsCode(ctx context.Context, req *v1.SendSmsCodeReq) (res *v1.SendSmsCodeRes, err error) {
+	g.Log().Info(ctx, "SendSmsCode:", req)
 	sid := req.SessionId
 	//todo: check userinfo
 	token, err := service.Generator().Sid2Token(ctx, sid)
-	fmt.Println(token)
 	if err != nil {
+		g.Log().Error(ctx, "unexist token:", sid, token)
 		return nil, err
 	}
 	///todo: get phone
@@ -44,7 +45,9 @@ func (c *ControllerV1) VerifySms(ctx context.Context, req *v1.VerifySmsCodeReq) 
 		return nil, gerror.NewCode(CodeInternalError)
 	}
 	///sign msg
-	err = service.Generator().CalSign(ctx, req.SessionId, txreq.Msg, txreq.Request)
+	txreq.Check = false
+	_, err = c.SignMsg(ctx, txreq)
+	// err = service.ControllerV1().SignMsg(ctx, txreq)
 	if err != nil {
 		g.Log().Warning(ctx, "SignMsg:", err)
 		return nil, gerror.NewCode(CalSignError(""))

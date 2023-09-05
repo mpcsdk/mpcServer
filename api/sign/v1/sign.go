@@ -56,19 +56,9 @@ type SignMsgReq struct {
 	Msg       string `json:"msg"`
 	Request   string `json:"request,omitempty"`
 	SignData  string `json:"signData,omitempty"`
+	Check     bool   `json:"check,omitempty" d:"true"`
 }
-type SignTx struct {
-	ChainId uint64        `json:"chainId,omitempty"`
-	Address string        `json:"address,omitempty"`
-	Number  uint64        `json:"number,omitempty"`
-	Txs     []*SignTxData `json:"txs,omitempty"`
-	TxHash  string        `json:"txHash,omitempty"`
-}
-type SignTxData struct {
-	To   string `json:"target,omitempty"`
-	From string `json:"from,omitempty"`
-	Data string `json:"data,omitempty"`
-}
+
 type SignMsgRes struct {
 }
 

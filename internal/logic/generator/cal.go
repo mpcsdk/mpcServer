@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"li17server/internal/consts"
+	"li17server/internal/model"
 	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -64,10 +65,10 @@ func (s *sGenerator) CalRequest(ctx context.Context, sid string, request string)
 }
 
 // 9.signature
-func (s *sGenerator) CalSign(ctx context.Context, sid string, msg string, request string) error {
+func (s *sGenerator) CalSign(ctx context.Context, sid string, msg string, request string, signtxs *model.SignTx) error {
 	s.RecordSid(ctx, sid, consts.KEY_signature, "")
 	s.pool.Submit(func() {
-		s.CalSignTask(s.ctx, sid, msg, request)
+		s.CalSignTask(s.ctx, sid, msg, request, signtxs)
 	})
 
 	return nil

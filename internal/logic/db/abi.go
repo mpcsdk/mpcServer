@@ -42,5 +42,5 @@ func new() *sDB {
 
 // 初始化
 func init() {
-	service.RegisterDb(new())
+	service.RegisterDB(new())
 }

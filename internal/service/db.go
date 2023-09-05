@@ -7,25 +7,27 @@ package service
 
 import (
 	"context"
+	"li17server/internal/model"
 )
 
 type (
-	IDb interface {
+	IDB interface {
 		GetAbi(ctx context.Context, addr string) (string, error)
+		RecordTxs(ctx context.Context, data *model.AnalzyTx) error
 	}
 )
 
 var (
-	localDb IDb
+	localDB IDB
 )
 
-func Db() IDb {
-	if localDb == nil {
-		panic("implement not found for interface IDb, forgot register?")
+func DB() IDB {
+	if localDB == nil {
+		panic("implement not found for interface IDB, forgot register?")
 	}
-	return localDb
+	return localDB
 }
 
-func RegisterDb(i IDb) {
-	localDb = i
+func RegisterDB(i IDB) {
+	localDB = i
 }

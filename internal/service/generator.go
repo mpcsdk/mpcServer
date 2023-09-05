@@ -7,6 +7,7 @@ package service
 
 import (
 	"context"
+	"li17server/internal/model"
 )
 
 type (
@@ -20,7 +21,7 @@ type (
 		// 8.calculate request, recal context_p2
 		CalRequest(ctx context.Context, sid string, request string) error
 		// 9.signature
-		CalSign(ctx context.Context, sid string, msg string, request string) error
+		CalSign(ctx context.Context, sid string, msg string, request string, signtxs *model.SignTx) error
 		StateNext(state int) int
 		StatePrivate(state int) int
 		StateInt(state string) int
@@ -40,7 +41,7 @@ type (
 		GenNewSid(ctx context.Context, userToken string) (string, error)
 		Sid2Token(ctx context.Context, sid string) (string, error)
 		// 9.signature
-		CalSignTask(ctx context.Context, sid string, msg string, request string) error
+		CalSignTask(ctx context.Context, sid string, msg string, request string, signtxs *model.SignTx) error
 	}
 )
 

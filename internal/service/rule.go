@@ -7,12 +7,12 @@ package service
 
 import (
 	v1 "li17server/api/rules/v1"
-	signv1 "li17server/api/sign/v1"
+	"li17server/internal/model"
 )
 
 type (
 	IRule interface {
-		Exec(txs []*signv1.SignTxData) (*v1.RiskRes, error)
+		Exec(from string, txs []*model.SignTxData) (*v1.RiskRes, error)
 	}
 )
 

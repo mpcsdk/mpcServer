@@ -7,11 +7,12 @@ package service
 
 import (
 	"context"
+	"li17server/internal/model"
 )
 
 type (
 	IEthTx interface {
-		AnalzyContractData(ctx context.Context, target string, data string) (map[string]interface{}, error)
+		AnalzyTxs(ctx context.Context, signtxs *model.SignTx) (*model.AnalzyTx, error)
 	}
 )
 

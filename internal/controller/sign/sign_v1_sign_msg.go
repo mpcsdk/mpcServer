@@ -8,6 +8,7 @@ import (
 
 	v1 "li17server/api/sign/v1"
 	"li17server/internal/consts"
+	"li17server/internal/model"
 	"li17server/internal/service"
 
 	"github.com/gogf/gf/v2/errors/gerror"
@@ -23,39 +24,39 @@ func (c *ControllerV1) checkMsg(ctx context.Context, SignData string) string {
 func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1.SignMsgRes, err error) {
 	g.Log().Debug(ctx, "SignMsg:", req)
 
-	///
+	///checkmsg hash
 	hash := c.checkMsg(ctx, req.SignData)
 	hash = strings.Replace(hash, "0x", "", -1)
 	if hash != req.Msg {
 		return nil, gerror.NewCode(CodeInternalError)
 	}
 	///
-	signtx := &v1.SignTx{}
+	signtx := &model.SignTx{}
 	json.Unmarshal([]byte(req.SignData), signtx)
-	for i, _ := range signtx.Txs {
-		signtx.Txs[i].From = signtx.Address
+	///
+	if req.Check {
+		//todo: exec txs rules
+		rst, err := service.Rule().Exec(signtx.Address, signtx.Txs)
+		fmt.Println(rst)
+		///
+		if err != nil || rst != nil && rst.Result == false {
+			//todo:
+			fmt.Println("rules not passed send smscode:", err)
+			//cache req
+			val, err := json.Marshal(req)
+			if err != nil {
+				return nil, gerror.NewCode(CodeInternalError)
+			}
+			service.Generator().RecordSid(ctx, req.SessionId, consts.KEY_txs, string(val))
+			///
+			return nil, gerror.NewCode(NeedSmsCodeError(""))
+		}
 	}
-	//todo: txs
-	rst, err := service.Rule().Exec(signtx.Txs)
-	fmt.Println(rst)
-	if err != nil || rst != nil && rst.Result == false {
-		//todo:
-		fmt.Println("rules not passed send smscode:", err)
-		//cache req
-		val, err := json.Marshal(req)
-		if err != nil {
-			return nil, gerror.NewCode(CodeInternalError)
-		}
-		service.Generator().RecordSid(ctx, req.SessionId, consts.KEY_txs, string(val))
-		///
-		return nil, gerror.NewCode(NeedSmsCodeError(""))
-	} else {
-		///
-		err = service.Generator().CalSign(ctx, req.SessionId, req.Msg, req.Request)
-		if err != nil {
-			g.Log().Warning(ctx, "SignMsg:", err)
-			return nil, gerror.NewCode(CalSignError(""))
-		}
+	/////sign
+	err = service.Generator().CalSign(ctx, req.SessionId, req.Msg, req.Request, signtx)
+	if err != nil {
+		g.Log().Warning(ctx, "SignMsg:", err)
+		return nil, gerror.NewCode(CalSignError(""))
 	}
 
 	return
