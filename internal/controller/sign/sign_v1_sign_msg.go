@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	v1 "li17server/api/sign/v1"
 	"li17server/internal/consts"
@@ -26,11 +25,11 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 
 	///checkmsg hash
 	//todo: checkmsghash
-	hash := c.checkMsg(ctx, req.SignData)
-	hash = strings.Replace(hash, "0x", "", -1)
-	if hash != req.Msg {
-		return nil, gerror.NewCode(CodeInternalError)
-	}
+	// hash := c.checkMsg(ctx, req.SignData)
+	// hash = strings.Replace(hash, "0x", "", -1)
+	// if hash != req.Msg {
+	// 	return nil, gerror.NewCode(CodeInternalError)
+	// }
 	///
 	signtx := &model.SignTx{}
 	json.Unmarshal([]byte(req.SignData), signtx)
