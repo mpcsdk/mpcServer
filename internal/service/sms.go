@@ -5,10 +5,14 @@
 
 package service
 
+import (
+	"context"
+)
+
 type (
 	ISmsCode interface {
-		SendCode(sid, receiver, code string)
-		Verify(sid, code string) error
+		SendCode(ctx context.Context, sid, receiver, code string) error
+		Verify(ctx context.Context, sid, code string) error
 	}
 )
 

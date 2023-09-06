@@ -23,12 +23,12 @@ func (c *ControllerV1) SendSmsCode(ctx context.Context, req *v1.SendSmsCodeReq) 
 		return nil, err
 	}
 	///todo: get phone
-	service.SmsCode().SendCode(req.SessionId, "reciver", "smscode")
-	return nil, nil
+	err = service.SmsCode().SendCode(ctx, req.SessionId, "reciver", "smscode")
+	return nil, err
 }
 func (c *ControllerV1) VerifySms(ctx context.Context, req *v1.VerifySmsCodeReq) (res *v1.VerifySmsCodeRes, err error) {
 
-	err = service.SmsCode().Verify(req.SessionId, req.Code)
+	err = service.SmsCode().Verify(ctx, req.SessionId, req.Code)
 	if err != nil {
 		//todo: err smscode
 		fmt.Println(err)
