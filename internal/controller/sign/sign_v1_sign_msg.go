@@ -52,7 +52,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	hash = strings.TrimPrefix(hash, "0x")
 	if hash != req.Msg {
 		g.Log().Error(ctx, "SignMsg signMsg unmath", req.SessionId, err)
-		return nil, nil
+		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	///
 
