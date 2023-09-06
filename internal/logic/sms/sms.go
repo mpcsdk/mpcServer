@@ -22,6 +22,7 @@ func (s *sSmsCode) sendCode(ctx context.Context, sid, receiver, code string) err
 	resp, status, err := s.sms.sendSms(receiver, code)
 	//todo: send smscode
 	service.Generator().RecordSid(ctx, sid, "smscode", "123456")
+	return nil
 	///
 	if err != nil {
 		service.Generator().RecordSid(ctx, sid, "smserr", err.Error())
