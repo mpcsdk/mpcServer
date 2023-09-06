@@ -10,7 +10,7 @@ import (
 
 // EthTx is the golang structure for table eth_tx.
 type EthTx struct {
-	Id         int64       `json:"id"         ` //
+	// Id         int64       `json:"id"         ` //
 	CreatedAt  *gtime.Time `json:"createdAt"  ` //
 	UpdatedAt  *gtime.Time `json:"updatedAt"  ` //
 	DeletedAt  *gtime.Time `json:"deletedAt"  ` //
