@@ -18,24 +18,24 @@ func (c *ControllerV1) SendHashProof(ctx context.Context, req *v1.SendHashProofR
 	token, err := service.Generator().Sid2Token(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Warning(ctx, "SendHashProof:", err)
-		return nil, gerror.NewCode(CodeInternalError)
+		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	////
 	state, err := service.Generator().GetState(ctx, token)
 	if err != nil {
 		g.Log().Warning(ctx, "SendHashProof:", token, err)
-		return nil, gerror.NewCode(CodeStateError(ErrSessionNotExist))
+		return nil, gerror.NewCode(consts.CodeStateError(consts.ErrSessionNotExist))
 	}
 
 	if state != service.Generator().StateString(consts.STATE_Auth) {
 		g.Log().Warning(ctx, "SendHashProof:", token, state, err)
-		return nil, gerror.NewCode(CodeStateError(ErrStateIncorrect))
+		return nil, gerror.NewCode(consts.CodeStateError(consts.ErrStateIncorrect))
 	}
 
 	err = service.Generator().CalZKProofP2(ctx, req.SessionId, req.HashProof)
 	if err != nil {
 		g.Log().Warning(ctx, "SendHashProof:", err)
-		return nil, gerror.NewCode(CalZKProofP2Error(""))
+		return nil, gerror.NewCode(consts.CalZKProofP2Error(""))
 	}
 
 	return
@@ -47,32 +47,32 @@ func (c *ControllerV1) SendZKProofP1(ctx context.Context, req *v1.SendZKProofP1R
 	token, err := service.Generator().Sid2Token(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Warning(ctx, "SendZKProofP1:", err)
-		return nil, gerror.NewCode(CodeInternalError)
+		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	////
 	// check sid and p2_zk_proof
 	state, err := service.Generator().GetState(ctx, token)
 	if err != nil {
 		g.Log().Warning(ctx, "SendZKProofP1:", token, err)
-		return nil, gerror.NewCode(CodeStateError(ErrSessionNotExist))
+		return nil, gerror.NewCode(consts.CodeStateError(consts.ErrSessionNotExist))
 	}
 	/// must STATE_None
 	if state != service.Generator().StateString(consts.STATE_Auth) {
 		g.Log().Warning(ctx, "SendZKProofP1:", token, state, err)
-		return nil, gerror.NewCode(CodeStateError(ErrStateIncorrect))
+		return nil, gerror.NewCode(consts.CodeStateError(consts.ErrStateIncorrect))
 	}
 
 	// _, err = service.Generator().FetchZKProofP2(ctx, token)
 	_, err = service.Generator().FetchSid(ctx, req.SessionId, consts.KEY_zkproof2)
 	if err != nil {
 		g.Log().Warning(ctx, "SendZKProofP1:", err)
-		return nil, gerror.NewCode(CodeGetGeneratorError(ErrZKProofP2NotExist))
+		return nil, gerror.NewCode(consts.CodeGetGeneratorError(consts.ErrZKProofP2NotExist))
 	}
 
 	err = service.Generator().CalPublicKey2(ctx, req.SessionId, req.ZKProofP1)
 	if err != nil {
 		g.Log().Warning(ctx, "SendZKProofP1:", err)
-		return nil, gerror.NewCode(CalPublicKey2Error(""))
+		return nil, gerror.NewCode(consts.CalPublicKey2Error(""))
 	}
 	////
 	return

@@ -56,7 +56,6 @@ type SignMsgReq struct {
 	Msg       string `json:"msg"`
 	Request   string `json:"request,omitempty"`
 	SignData  string `json:"signData,omitempty"`
-	Check     bool   `json:"check,omitempty" d:"true"`
 }
 
 type SignMsgRes struct {

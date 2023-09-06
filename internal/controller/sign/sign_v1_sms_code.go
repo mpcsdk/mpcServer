@@ -32,25 +32,23 @@ func (c *ControllerV1) VerifySms(ctx context.Context, req *v1.VerifySmsCodeReq) 
 	if err != nil {
 		//todo: err smscode
 		fmt.Println(err)
-		return nil, gerror.NewCode(SmsCodeError(""))
+		return nil, gerror.NewCode(consts.SmsCodeError(""))
 	}
 	//fetch txs
 	val, err := service.Generator().FetchSid(ctx, req.SessionId, consts.KEY_txs)
 	if err != nil {
-		return nil, gerror.NewCode(CodeInternalError)
+		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	txreq := &v1.SignMsgReq{}
 	err = json.Unmarshal([]byte(val), txreq)
 	if err != nil {
-		return nil, gerror.NewCode(CodeInternalError)
+		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	///sign msg
-	txreq.Check = false
-	_, err = c.SignMsg(ctx, txreq)
-	// err = service.ControllerV1().SignMsg(ctx, txreq)
+	err = service.Generator().CalSign(ctx, txreq, false)
 	if err != nil {
 		g.Log().Warning(ctx, "SignMsg:", err)
-		return nil, gerror.NewCode(CalSignError(""))
+		return nil, gerror.NewCode(consts.CalSignError(""))
 	}
 	return nil, nil
 }

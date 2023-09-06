@@ -7,6 +7,7 @@ package service
 
 import (
 	"context"
+	v1 "li17server/api/sign/v1"
 	"li17server/internal/model"
 )
 
@@ -21,7 +22,7 @@ type (
 		// 8.calculate request, recal context_p2
 		CalRequest(ctx context.Context, sid string, request string) error
 		// 9.signature
-		CalSign(ctx context.Context, sid string, msg string, request string, signtxs *model.SignTx) error
+		CalSign(ctx context.Context, req *v1.SignMsgReq, checkRule bool) error
 		StateNext(state int) int
 		StatePrivate(state int) int
 		StateInt(state string) int

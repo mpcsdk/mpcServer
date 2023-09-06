@@ -3,13 +3,18 @@ package generator
 import (
 	"context"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
+	v1 "li17server/api/sign/v1"
 	"li17server/internal/consts"
 	"li17server/internal/model"
+	"li17server/internal/service"
 	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 // GenContextP2
@@ -65,10 +70,34 @@ func (s *sGenerator) CalRequest(ctx context.Context, sid string, request string)
 }
 
 // 9.signature
-func (s *sGenerator) CalSign(ctx context.Context, sid string, msg string, request string, signtxs *model.SignTx) error {
-	s.RecordSid(ctx, sid, consts.KEY_signature, "")
+func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq, checkRule bool) error {
+	// , sid string, msg string, request string, signData string, checkRule bool) error {
+
+	signtx := &model.SignTx{}
+	json.Unmarshal([]byte(req.SignData), signtx)
+	///
+	if checkRule {
+		//todo: exec txs rules
+		rst, err := service.Rule().Exec(signtx.Address, signtx.Txs)
+		g.Log().Info(ctx, "Rule().Exec:", rst, signtx.Address, signtx.Txs)
+		///
+		if err != nil || rst != nil && rst.Result == false {
+			//todo:
+			fmt.Println("rules not passed send smscode:", err)
+			//cache req
+			val, err := json.Marshal(req)
+			if err != nil {
+				return gerror.NewCode(consts.CodeInternalError)
+			}
+			service.Generator().RecordSid(ctx, req.SessionId, consts.KEY_txs, string(val))
+			///
+			return gerror.NewCode(consts.NeedSmsCodeError(""))
+		}
+	}
+	// /////sign
+	s.RecordSid(ctx, req.SessionId, consts.KEY_signature, "")
 	s.pool.Submit(func() {
-		s.CalSignTask(s.ctx, sid, msg, request, signtxs)
+		s.CalSignTask(s.ctx, req.SessionId, req.Msg, req.Request, signtx)
 	})
 
 	return nil

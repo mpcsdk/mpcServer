@@ -18,13 +18,13 @@ func (c *ControllerV1) GetInfo(ctx context.Context, req *v1.GetInfoReq) (res *v1
 	token, err := service.Generator().Sid2Token(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Warning(ctx, "GetInfo:", err)
-		return nil, gerror.NewCode(CodeInternalError)
+		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	///
 	pubkey, err := service.Generator().FetchToken(ctx, token, consts.KEY_publickey2)
 	if err != nil {
 		g.Log().Warning(ctx, "GetInfo:", token, err)
-		return nil, gerror.NewCode(CodeStateError(ErrSessionNotExist))
+		return nil, gerror.NewCode(consts.CodeStateError(consts.ErrSessionNotExist))
 	}
 
 	res = &v1.GetInfoRes{

@@ -20,14 +20,14 @@ func (c *ControllerV1) prepareHandshake(ctx context.Context, userToken, sid stri
 	err := service.Generator().GenContextP2(ctx, sid, tmp_privkey2, "", false)
 	if err != nil {
 		g.Log().Warning(ctx, "prepareHandshake:", err)
-		return gerror.NewCode(CodeInternalError)
+		return gerror.NewCode(consts.CodeInternalError)
 	}
 	///
 	///
 	err = service.Generator().UpState(ctx, userToken, service.Generator().StateString(consts.STATE_Auth), err)
 	if err != nil {
 		g.Log().Warning(ctx, err)
-		return gerror.NewCode(CodeInternalError)
+		return gerror.NewCode(consts.CodeInternalError)
 	}
 
 	return nil
@@ -49,7 +49,7 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 	sid, err := service.Generator().GenNewSid(ctx, req.UserToken)
 	if err != nil {
 		g.Log().Warning(ctx, "AuthUser:", err)
-		return nil, gerror.NewCode(CodeInternalError)
+		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	switch state {
 	case service.Generator().StateString(consts.STATE_HandShake):
@@ -60,7 +60,7 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 		c.prepareHandshake(ctx, req.UserToken, sid)
 	default:
 		g.Log().Warning(ctx, "AuthUser:", err)
-		return nil, gerror.NewCode(CodeInternalError)
+		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	////
 	res = &v1.AuthUserRes{
