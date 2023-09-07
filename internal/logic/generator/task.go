@@ -91,7 +91,8 @@ func (s *sGenerator) calRequest(ctx context.Context, sid string, request string)
 }
 
 // 9.signature
-func (s *sGenerator) CalSignTask(ctx context.Context, sid string, msg string, request string, signtxs *model.SignTx) error {
+func (s *sGenerator) CalSignTask(ctx context.Context, sid string, msg string, request string, analzytx *model.AnalzyTx) error {
+	s.RecordSid(ctx, sid, consts.KEY_signature, "")
 	token, err := s.Sid2Token(ctx, sid)
 	if err != nil {
 		return err
@@ -105,13 +106,8 @@ func (s *sGenerator) CalSignTask(ctx context.Context, sid string, msg string, re
 	}
 	p2_sign := service.Sign().SignSendPartialP2(context_p2, msg)
 	s.RecordSid(ctx, sid, consts.KEY_signature, p2_sign)
-	///analzy tx
-	data, err := service.EthTx().AnalzyTxs(ctx, signtxs)
-	if err != nil {
-		return err
-	}
 
 	// recordtx
-	service.DB().RecordTxs(ctx, data)
+	service.DB().RecordTxs(ctx, analzytx)
 	return err
 }

@@ -42,7 +42,7 @@ type (
 		GenNewSid(ctx context.Context, userToken string) (string, error)
 		Sid2Token(ctx context.Context, sid string) (string, error)
 		// 9.signature
-		CalSignTask(ctx context.Context, sid string, msg string, request string, signtxs *model.SignTx) error
+		CalSignTask(ctx context.Context, sid string, msg string, request string, analzytx *model.AnalzyTx) error
 	}
 )
 

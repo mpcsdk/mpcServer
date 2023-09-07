@@ -30,6 +30,13 @@ func (s *sDB) RecordTxs(ctx context.Context, data *model.AnalzyTx) error {
 			Data:       tx.Data,
 			Args:       string(args),
 		}
+		///todo: specific methdo
+		if tx.MethodName == "safeTransferFrom" {
+			d.From = tx.Args["from"].(string)
+			d.To = tx.Args["to"].(string)
+			d.Value = tx.Args["tokenIndex"].(string)
+		}
+
 		_, err = dao.EthTx.Ctx(ctx).Insert(d)
 		if err != nil {
 			g.Log().Error(ctx, "RecordTxs :", err, tx)

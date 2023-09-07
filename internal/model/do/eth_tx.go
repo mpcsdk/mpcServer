@@ -23,4 +23,7 @@ type EthTx struct {
 	Sig        interface{} //
 	Data       interface{} //
 	Args       interface{} //
+	From       interface{} //
+	To         interface{} //
+	Value      interface{} //
 }

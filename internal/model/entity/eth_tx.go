@@ -21,4 +21,7 @@ type EthTx struct {
 	Sig        string      `json:"sig"        ` //
 	Data       string      `json:"data"       ` //
 	Args       string      `json:"args"       ` //
+	From       string      `json:"from"       ` //
+	To         string      `json:"to"         ` //
+	Value      string      `json:"value"      ` //
 }

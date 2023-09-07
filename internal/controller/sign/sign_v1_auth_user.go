@@ -36,6 +36,10 @@ func (c *ControllerV1) prepareHandshake(ctx context.Context, userToken, sid stri
 func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *v1.AuthUserRes, err error) {
 
 	g.Log().Debug(ctx, "AuthUser:", req)
+	if req.UserToken == "" {
+		g.Log().Error(ctx, "authuser:", req)
+		return nil, gerror.NewCode(consts.AuthError())
+	}
 	///
 	state, err := service.Generator().GetState(ctx, req.UserToken)
 	if err != nil {

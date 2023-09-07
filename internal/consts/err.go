@@ -43,6 +43,10 @@ func CodeGetGeneratorError(msg string) *errCode {
 	return &errCode{2, msg, nil}
 }
 
+func AuthError() *errCode {
+	return &errCode{3, "auth failed", nil}
+}
+
 // //
 // /
 func CalZKProofP2Error(msg string) *errCode {

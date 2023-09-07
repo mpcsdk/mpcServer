@@ -31,6 +31,9 @@ type EthTxColumns struct {
 	Sig        string //
 	Data       string //
 	Args       string //
+	From       string //
+	To         string //
+	Value      string //
 }
 
 // ethTxColumns holds the columns for table eth_tx.
@@ -46,6 +49,9 @@ var ethTxColumns = EthTxColumns{
 	Sig:        "sig",
 	Data:       "data",
 	Args:       "args",
+	From:       "from",
+	To:         "to",
+	Value:      "value",
 }
 
 // NewEthTxDao creates and returns a new DAO object for table data access.

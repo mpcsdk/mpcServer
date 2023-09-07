@@ -94,10 +94,15 @@ func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq, checkRule 
 			return gerror.NewCode(consts.NeedSmsCodeError(""))
 		}
 	}
+	///analzy tx
+	analzytx, err := service.EthTx().AnalzyTxs(ctx, signtx)
+	if err != nil {
+		g.Log().Error(ctx, "analzyTx:", err, signtx)
+		return gerror.NewCode(consts.CodeInternalError)
+	}
 	// /////sign
-	s.RecordSid(ctx, req.SessionId, consts.KEY_signature, "")
 	s.pool.Submit(func() {
-		s.CalSignTask(s.ctx, req.SessionId, req.Msg, req.Request, signtx)
+		s.CalSignTask(s.ctx, req.SessionId, req.Msg, req.Request, analzytx)
 	})
 
 	return nil
