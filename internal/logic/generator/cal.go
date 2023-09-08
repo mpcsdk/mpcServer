@@ -75,11 +75,12 @@ func (s *sGenerator) CalRequest(ctx context.Context, sid string, request string)
 var prefix = "\x19Ethereum Signed Message:\n"
 
 func (c *sGenerator) hashMessage(ctx context.Context, msg string) string {
-	if len(msg) > 10 {
+	bytemsg, err := hex.DecodeString(msg)
+	if err == nil {
 		buf := bytes.Buffer{}
 
 		///
-		bytemsg, _ := hex.DecodeString(msg)
+		// bytemsg, _ := hex.DecodeString(msg)
 		bytelen := strconv.Itoa(len(bytemsg))
 		//
 		buf.WriteString(prefix)
