@@ -54,7 +54,6 @@ var (
 					sign.NewV1(),
 				)
 			})
-			s.EnableHTTPS("/home/li/li17server/manifest/crt", "/home/li/li17server/manifest/crt/mixmarvel-sdk.key")
 			s.Run()
 			return nil
 		},
