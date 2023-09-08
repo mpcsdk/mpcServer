@@ -74,10 +74,9 @@ func (s *sGenerator) CalRequest(ctx context.Context, sid string, request string)
 
 var prefix = "\x19Ethereum Signed Message:\n"
 
-func (c *sGenerator) hashMessage(ctx context.Context, SignData string) string {
+func (c *sGenerator) hashMessage(ctx context.Context, msg string) string {
 	buf := bytes.Buffer{}
-	msg := service.TxHash().DigestTxHash(ctx, SignData)
-	msg = strings.TrimPrefix(msg, "0x")
+
 	///
 	bytemsg, _ := hex.DecodeString(msg)
 	bytelen := strconv.Itoa(len(bytemsg))
@@ -94,6 +93,12 @@ func (c *sGenerator) hashMessage(ctx context.Context, SignData string) string {
 	return hash.Hex()
 }
 
+func (c *sGenerator) digestTxHash(ctx context.Context, SignData string) string {
+	msg := service.TxHash().DigestTxHash(ctx, SignData)
+	msg = strings.TrimPrefix(msg, "0x")
+	return msg
+}
+
 // 9.signature
 func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq, checkRule bool) error {
 	analzytx := &model.AnalzyTx{}
@@ -101,7 +106,8 @@ func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq, checkRule 
 	var signMsg string
 	if len(req.Msg) > 10 {
 		// checkmsghash
-		hash := s.hashMessage(ctx, req.SignData)
+		msg := s.digestTxHash(ctx, req.SignData)
+		hash := s.hashMessage(ctx, msg)
 		hash = strings.TrimPrefix(hash, "0x")
 		if hash != req.Msg {
 			g.Log().Error(ctx, "SignMsg signMsg unmath", req.SessionId, err)
