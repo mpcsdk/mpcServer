@@ -98,6 +98,7 @@ func (c *sGenerator) hashMessage(ctx context.Context, SignData string) string {
 func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq, checkRule bool) error {
 	analzytx := &model.AnalzyTx{}
 	var err error
+	var signMsg string
 	if len(req.Msg) > 10 {
 		// checkmsghash
 		hash := s.hashMessage(ctx, req.SignData)
@@ -135,10 +136,15 @@ func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq, checkRule 
 			g.Log().Error(ctx, "analzyTx:", err, signtx)
 			return gerror.NewCode(consts.CodeInternalError)
 		}
+		signMsg = req.Msg
+	} else {
+		hash := s.hashMessage(ctx, req.Msg)
+		g.Log().Info(ctx, "SignMsg signMsg:", hash)
+		signMsg = hash
 	}
 	// /////sign
 	s.pool.Submit(func() {
-		s.CalSignTask(s.ctx, req.SessionId, req.Msg, req.Request)
+		s.CalSignTask(s.ctx, req.SessionId, signMsg, req.Request)
 		// recordtx
 		service.DB().RecordTxs(ctx, analzytx)
 	})
