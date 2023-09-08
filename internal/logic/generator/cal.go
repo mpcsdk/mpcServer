@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"bytes"
 	"context"
 	"encoding/hex"
 	"encoding/json"
@@ -9,10 +10,12 @@ import (
 	"li17server/internal/consts"
 	"li17server/internal/model"
 	"li17server/internal/service"
+	"strconv"
 	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 )
@@ -69,11 +72,41 @@ func (s *sGenerator) CalRequest(ctx context.Context, sid string, request string)
 	return nil
 }
 
+var prefix = "\x19Ethereum Signed Message:\n"
+
+func (c *sGenerator) hashMessage(ctx context.Context, SignData string) string {
+	buf := bytes.Buffer{}
+	msg := service.TxHash().DigestTxHash(ctx, SignData)
+	msg = strings.TrimPrefix(msg, "0x")
+	///
+	bytemsg, _ := hex.DecodeString(msg)
+	bytelen := strconv.Itoa(len(bytemsg))
+	//
+	buf.WriteString(prefix)
+	buf.WriteString(bytelen)
+	buf.WriteString(string(bytemsg))
+
+	// msg = fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(bytemsg), string(bytemsg))
+	// hasher := sha3.NewLegacyKeccak256()
+	// hasher.Write([]byte(msg))
+	hash := crypto.Keccak256Hash(buf.Bytes())
+
+	return hash.Hex()
+}
+
 // 9.signature
 func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq, checkRule bool) error {
 	analzytx := &model.AnalzyTx{}
 	var err error
 	if len(req.Msg) > 10 {
+		// checkmsghash
+		hash := s.hashMessage(ctx, req.SignData)
+		hash = strings.TrimPrefix(hash, "0x")
+		if hash != req.Msg {
+			g.Log().Error(ctx, "SignMsg signMsg unmath", req.SessionId, err)
+			return gerror.NewCode(consts.CodeInternalError)
+		}
+		///
 		// , sid string, msg string, request string, signData string, checkRule bool) error {
 		signtx := &model.SignTx{}
 		json.Unmarshal([]byte(req.SignData), signtx)
