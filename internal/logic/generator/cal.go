@@ -71,38 +71,43 @@ func (s *sGenerator) CalRequest(ctx context.Context, sid string, request string)
 
 // 9.signature
 func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq, checkRule bool) error {
-	// , sid string, msg string, request string, signData string, checkRule bool) error {
-
-	signtx := &model.SignTx{}
-	json.Unmarshal([]byte(req.SignData), signtx)
-	///
-	if checkRule {
-		//todo: exec txs rules
-		rst, err := service.Rule().Exec(signtx.Address, signtx.Txs)
-		g.Log().Info(ctx, "Rule().Exec:", rst, signtx.Address, signtx.Txs)
+	analzytx := &model.AnalzyTx{}
+	var err error
+	if len(req.Msg) > 10 {
+		// , sid string, msg string, request string, signData string, checkRule bool) error {
+		signtx := &model.SignTx{}
+		json.Unmarshal([]byte(req.SignData), signtx)
 		///
-		if err != nil || rst != nil && rst.Result == false {
-			//todo:
-			fmt.Println("rules not passed send smscode:", err)
-			//cache req
-			val, err := json.Marshal(req)
-			if err != nil {
-				return gerror.NewCode(consts.CodeInternalError)
-			}
-			service.Generator().RecordSid(ctx, req.SessionId, consts.KEY_txs, string(val))
+		if checkRule {
+			//todo: exec txs rules
+			rst, err := service.Rule().Exec(signtx.Address, signtx.Txs)
+			g.Log().Info(ctx, "Rule().Exec:", rst, signtx.Address, signtx.Txs)
 			///
-			return gerror.NewCode(consts.NeedSmsCodeError(""))
+			if err != nil || rst != nil && rst.Result == false {
+				//todo:
+				fmt.Println("rules not passed send smscode:", err)
+				//cache req
+				val, err := json.Marshal(req)
+				if err != nil {
+					return gerror.NewCode(consts.CodeInternalError)
+				}
+				service.Generator().RecordSid(ctx, req.SessionId, consts.KEY_txs, string(val))
+				///
+				return gerror.NewCode(consts.NeedSmsCodeError(""))
+			}
 		}
-	}
-	///analzy tx
-	analzytx, err := service.EthTx().AnalzyTxs(ctx, signtx)
-	if err != nil {
-		g.Log().Error(ctx, "analzyTx:", err, signtx)
-		return gerror.NewCode(consts.CodeInternalError)
+		///analzy tx
+		analzytx, err = service.EthTx().AnalzyTxs(ctx, signtx)
+		if err != nil {
+			g.Log().Error(ctx, "analzyTx:", err, signtx)
+			return gerror.NewCode(consts.CodeInternalError)
+		}
 	}
 	// /////sign
 	s.pool.Submit(func() {
-		s.CalSignTask(s.ctx, req.SessionId, req.Msg, req.Request, analzytx)
+		s.CalSignTask(s.ctx, req.SessionId, req.Msg, req.Request)
+		// recordtx
+		service.DB().RecordTxs(ctx, analzytx)
 	})
 
 	return nil

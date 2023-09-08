@@ -8,7 +8,6 @@ package service
 import (
 	"context"
 	v1 "li17server/api/sign/v1"
-	"li17server/internal/model"
 )
 
 type (
@@ -42,7 +41,7 @@ type (
 		GenNewSid(ctx context.Context, userToken string) (string, error)
 		Sid2Token(ctx context.Context, sid string) (string, error)
 		// 9.signature
-		CalSignTask(ctx context.Context, sid string, msg string, request string, analzytx *model.AnalzyTx) error
+		CalSignTask(ctx context.Context, sid string, msg string, request string) error
 	}
 )
 
