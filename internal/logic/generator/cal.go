@@ -75,22 +75,40 @@ func (s *sGenerator) CalRequest(ctx context.Context, sid string, request string)
 var prefix = "\x19Ethereum Signed Message:\n"
 
 func (c *sGenerator) hashMessage(ctx context.Context, msg string) string {
-	buf := bytes.Buffer{}
+	if len(msg) > 10 {
+		buf := bytes.Buffer{}
 
-	///
-	bytemsg, _ := hex.DecodeString(msg)
-	bytelen := strconv.Itoa(len(bytemsg))
-	//
-	buf.WriteString(prefix)
-	buf.WriteString(bytelen)
-	buf.WriteString(string(bytemsg))
+		///
+		bytemsg, _ := hex.DecodeString(msg)
+		bytelen := strconv.Itoa(len(bytemsg))
+		//
+		buf.WriteString(prefix)
+		buf.WriteString(bytelen)
+		buf.WriteString(string(bytemsg))
 
-	// msg = fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(bytemsg), string(bytemsg))
-	// hasher := sha3.NewLegacyKeccak256()
-	// hasher.Write([]byte(msg))
-	hash := crypto.Keccak256Hash(buf.Bytes())
+		// msg = fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(bytemsg), string(bytemsg))
+		// hasher := sha3.NewLegacyKeccak256()
+		// hasher.Write([]byte(msg))
+		hash := crypto.Keccak256Hash(buf.Bytes())
 
-	return hash.Hex()
+		return hash.Hex()
+	} else {
+		buf := bytes.Buffer{}
+
+		///
+		bytelen := strconv.Itoa(len(msg))
+		//
+		buf.WriteString(prefix)
+		buf.WriteString(bytelen)
+		buf.WriteString(msg)
+
+		// msg = fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(bytemsg), string(bytemsg))
+		// hasher := sha3.NewLegacyKeccak256()
+		// hasher.Write([]byte(msg))
+		hash := crypto.Keccak256Hash(buf.Bytes())
+
+		return hash.Hex()
+	}
 }
 
 func (c *sGenerator) digestTxHash(ctx context.Context, SignData string) string {
@@ -145,7 +163,8 @@ func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq, checkRule 
 		signMsg = req.Msg
 	} else {
 		hash := s.hashMessage(ctx, req.Msg)
-		g.Log().Info(ctx, "SignMsg signMsg:", hash)
+		hash = strings.TrimPrefix(hash, "0x")
+		g.Log().Info(ctx, "SignMsg signMsg:", hash, req.Msg)
 		signMsg = hash
 	}
 	// /////sign
