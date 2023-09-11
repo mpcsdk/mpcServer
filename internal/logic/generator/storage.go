@@ -15,20 +15,20 @@ import (
 // var duration time.Duration = 0
 var emptyErr error = errors.New("empty value")
 
-func (s *sGenerator) UpState(ctx context.Context, token string, state string, err error) error {
+func (s *sGenerator) UpState(ctx context.Context, userId string, state string, err error) error {
 	stat := string(state)
 	if err != nil {
 		stat = stat + ":err:"
 		stat += err.Error()
 	}
-	service.Cache().Set(ctx, token, stat, tokenDur)
+	service.Cache().Set(ctx, userId, stat, tokenDur)
 	return nil
 }
 
 // /
 // /
-func (s *sGenerator) GetState(ctx context.Context, token string) (string, error) {
-	stat, err := service.Cache().Get(ctx, token)
+func (s *sGenerator) GetState(ctx context.Context, userId string) (string, error) {
+	stat, err := service.Cache().Get(ctx, userId)
 	if stat.IsEmpty() {
 		return service.Generator().StateString(consts.STATE_None), nil
 	}
@@ -48,12 +48,12 @@ func (s *sGenerator) FetchSid(ctx context.Context, sid string, key string) (stri
 	return val.String(), err
 }
 
-func (s *sGenerator) RecordToken(ctx context.Context, token string, key string, val string) error {
-	err := service.Cache().Set(ctx, token+key, val, tokenDur)
+func (s *sGenerator) RecordUserId(ctx context.Context, userId string, key string, val string) error {
+	err := service.Cache().Set(ctx, userId+key, val, tokenDur)
 	return err
 }
-func (s *sGenerator) FetchToken(ctx context.Context, token string, key string) (string, error) {
-	val, err := service.Cache().Get(ctx, token+key)
+func (s *sGenerator) FetchUserId(ctx context.Context, userId string, key string) (string, error) {
+	val, err := service.Cache().Get(ctx, userId+key)
 	if val.IsEmpty() {
 		return "", emptyErr
 	}
@@ -256,20 +256,20 @@ func (s *sGenerator) FetchToken(ctx context.Context, token string, key string) (
 // }
 
 // // key
-func (s *sGenerator) GenNewSid(ctx context.Context, userToken string) (string, error) {
+func (s *sGenerator) GenNewSid(ctx context.Context, userId string) (string, error) {
 	var genid gvar.Var
 	genid.Set(idgen.NextId())
 	sid := genid.String()
-	err := service.Cache().Set(ctx, sid, userToken, time.Duration(sessionDur))
+	err := service.Cache().Set(ctx, sid, userId, time.Duration(sessionDur))
 	if err != nil {
 		g.Log().Warning(ctx, err)
 		return "", err
 	}
-	// s.UpState(ctx, userToken, service.Generator().StateString(consts.STATE_None), nil)
 	return sid, nil
 }
 
-func (s *sGenerator) Sid2Token(ctx context.Context, sid string) (string, error) {
+func (s *sGenerator) Sid2UserId(ctx context.Context, sid string) (string, error) {
+	////
 	key, err := service.Cache().Get(ctx, sid)
 	if key.IsEmpty() {
 		return "", emptyErr

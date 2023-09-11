@@ -15,15 +15,17 @@ func (c *ControllerV1) GetInfo(ctx context.Context, req *v1.GetInfoReq) (res *v1
 
 	g.Log().Debug(ctx, "GetInfo:", req)
 	///
-	token, err := service.Generator().Sid2Token(ctx, req.SessionId)
+	userId, err := service.Generator().Sid2UserId(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Warning(ctx, "GetInfo:", err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
+	////
+
 	///
-	pubkey, err := service.Generator().FetchToken(ctx, token, consts.KEY_publickey2)
+	pubkey, err := service.Generator().FetchUserId(ctx, userId, consts.KEY_publickey2)
 	if err != nil {
-		g.Log().Warning(ctx, "GetInfo:", token, err)
+		g.Log().Warning(ctx, "GetInfo:", userId, err)
 		return nil, gerror.NewCode(consts.CodeStateError(consts.ErrSessionNotExist))
 	}
 

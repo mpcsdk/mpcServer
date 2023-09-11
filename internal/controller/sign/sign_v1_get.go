@@ -15,15 +15,16 @@ func (c *ControllerV1) GetState(ctx context.Context, req *v1.GetStateReq) (res *
 
 	g.Log().Debug(ctx, "GetState:", req)
 	///
-	token, err := service.Generator().Sid2Token(ctx, req.SessionId)
+	userId, err := service.Generator().Sid2UserId(ctx, req.SessionId)
 	if err != nil {
-		g.Log().Warning(ctx, "GetState:", token, err)
+		g.Log().Warning(ctx, "GetState:", req.SessionId, err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
+	////
 	///
-	state, err := service.Generator().GetState(ctx, token)
+	state, err := service.Generator().GetState(ctx, userId)
 	if err != nil {
-		g.Log().Warning(ctx, "GetState:", token, err)
+		g.Log().Warning(ctx, "GetState:", userId, err)
 		return nil, gerror.NewCode(consts.CodeStateError(consts.ErrSessionNotExist))
 	}
 

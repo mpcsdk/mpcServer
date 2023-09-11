@@ -21,6 +21,10 @@ cache:
   redis:
     Addr: "127.0.0.1:6379"
     Db: 1
+
+# rpc
+userToken: "https://auth-dev.mixmarvel-sdk.com/info"
+# ?token=xxxxxxxxx
 etcd:
   address: "127.0.0.1:2379"
 

@@ -51,39 +51,39 @@ func (s *sGenerator) calPublicKey2(ctx context.Context, sid string, p1_zk_proof 
 		return nil
 	}
 	context_p2 = service.Sign().KeygenRecvZKProofP2(context_p2, p1_zk_proof)
-	token, err := s.Sid2Token(ctx, sid)
+	userId, err := s.Sid2UserId(ctx, sid)
 	if err != nil {
 		return nil
 	}
 	///
-	s.RecordToken(ctx, token, consts.KEY_context, context_p2)
+	s.RecordUserId(ctx, userId, consts.KEY_context, context_p2)
 	v2_public_key := service.Sign().PublicKeyP2(context_p2)
-	s.RecordToken(ctx, token, consts.KEY_publickey2, v2_public_key)
+	s.RecordUserId(ctx, userId, consts.KEY_publickey2, v2_public_key)
 	//
-	s.UpState(ctx, token, s.StateString(consts.STATE_HandShake), nil)
+	s.UpState(ctx, userId, s.StateString(consts.STATE_HandShake), nil)
 	return err
 }
 
 // 8.calculate request, recal context_p2
 func (s *sGenerator) calRequest(ctx context.Context, sid string, request string) (string, error) {
-	token, err := s.Sid2Token(ctx, sid)
+	userId, err := s.Sid2UserId(ctx, sid)
 	if err != nil {
 		return "", err
 	}
-	state, err := s.GetState(ctx, token)
+	state, err := s.GetState(ctx, userId)
 	context_p2 := ""
 	if err != nil {
 		return "", err
 	}
 	if state == s.StateString(consts.STATE_HandShake) {
-		context_p2, err = s.FetchToken(ctx, token, consts.KEY_context)
+		context_p2, err = s.FetchUserId(ctx, userId, consts.KEY_context)
 	} else {
 		return "", errors.New("need handshake")
 	}
 
 	context_p2 = service.Sign().SignRecvRequestP2(context_p2, request)
 
-	s.RecordToken(ctx, token, consts.KEY_context, context_p2)
+	s.RecordUserId(ctx, userId, consts.KEY_context, context_p2)
 	s.RecordSid(ctx, sid, consts.KEY_request, request)
 
 	return context_p2, err
@@ -92,11 +92,11 @@ func (s *sGenerator) calRequest(ctx context.Context, sid string, request string)
 // 9.signature
 func (s *sGenerator) CalSignTask(ctx context.Context, sid string, msg string, request string) error {
 	s.RecordSid(ctx, sid, consts.KEY_signature, "")
-	token, err := s.Sid2Token(ctx, sid)
+	userId, err := s.Sid2UserId(ctx, sid)
 	if err != nil {
 		return err
 	}
-	context_p2, err := s.FetchToken(ctx, token, consts.KEY_context)
+	context_p2, err := s.FetchUserId(ctx, userId, consts.KEY_context)
 	if request != "" {
 		context_p2, err = s.calRequest(ctx, sid, request)
 		if err != nil {

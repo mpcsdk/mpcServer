@@ -38,12 +38,18 @@ func (s *sDB) RecordTxs(ctx context.Context, data *model.AnalzyTx) error {
 			d.To = tx.Args["_to"].(common.Address).Hex()
 			d.Value = tx.Args["_tokenIndex"].(string)
 		} else if tx.MethodName == "transfer" {
+			d.From = addr
 			d.To = tx.Args["_to"].(common.Address).String()
 			d.Value = tx.Args["_value"].(*big.Int).String()
 		} else {
 			g.Log().Error(ctx, "UnRecognized methhod:", tx.MethodName)
 		}
 
+		///
+		d.From = strings.ToLower(d.From)
+		d.To = strings.ToLower(d.To)
+
+		///
 		_, err = dao.EthTx.Ctx(ctx).Insert(d)
 		if err != nil {
 			g.Log().Error(ctx, "RecordTxs :", err, tx)

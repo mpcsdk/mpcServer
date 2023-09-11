@@ -11,11 +11,11 @@ import (
 	"li17server/internal/service"
 )
 
-func (c *ControllerV1) prepareHandshake(ctx context.Context, userToken, sid string) error {
+func (c *ControllerV1) prepareHandshake(ctx context.Context, userId, sid string) error {
 
 	///
 	// todo: tmp key
-	g.Log().Debug(ctx, "prepareHandshake:", userToken, sid)
+	g.Log().Debug(ctx, "prepareHandshake:", userId, sid)
 	///
 	err := service.Generator().GenContextP2(ctx, sid, tmp_privkey2, "", false)
 	if err != nil {
@@ -24,7 +24,7 @@ func (c *ControllerV1) prepareHandshake(ctx context.Context, userToken, sid stri
 	}
 	///
 	///
-	err = service.Generator().UpState(ctx, userToken, service.Generator().StateString(consts.STATE_Auth), err)
+	err = service.Generator().UpState(ctx, userId, service.Generator().StateString(consts.STATE_Auth), err)
 	if err != nil {
 		g.Log().Warning(ctx, err)
 		return gerror.NewCode(consts.CodeInternalError)
@@ -36,21 +36,24 @@ func (c *ControllerV1) prepareHandshake(ctx context.Context, userToken, sid stri
 func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *v1.AuthUserRes, err error) {
 
 	g.Log().Debug(ctx, "AuthUser:", req)
-	if req.UserToken == "" {
+	//todo: check userToekn
+	info, err := service.UserInfo().GetUserInfo(ctx, req.UserToken)
+	if err != nil {
 		g.Log().Error(ctx, "authuser:", req)
 		return nil, gerror.NewCode(consts.AuthError())
 	}
 	///
-	state, err := service.Generator().GetState(ctx, req.UserToken)
+	userId := info.AppPubKey
+	state, err := service.Generator().GetState(ctx, userId)
 	if err != nil {
 		// todo: check usertoken
 		/// unauth user
-		if req.UserToken == "a" {
+		if userId == "a" {
 			g.RequestFromCtx(ctx).Response.WriteStatusExit(500)
 		}
 	}
 	////
-	sid, err := service.Generator().GenNewSid(ctx, req.UserToken)
+	sid, err := service.Generator().GenNewSid(ctx, userId)
 	if err != nil {
 		g.Log().Warning(ctx, "AuthUser:", err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
@@ -61,7 +64,7 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 	case service.Generator().StateString(consts.STATE_Auth),
 		service.Generator().StateString(consts.STATE_None):
 		//
-		c.prepareHandshake(ctx, req.UserToken, sid)
+		c.prepareHandshake(ctx, userId, sid)
 	default:
 		g.Log().Warning(ctx, "AuthUser:", err)
 		return nil, gerror.NewCode(consts.CodeInternalError)

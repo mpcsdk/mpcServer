@@ -32,16 +32,6 @@ func (s *sGenerator) GenContextP2(ctx context.Context, sid string, private_key2,
 	return nil
 }
 
-// 1.2.3 cal zk_proof2 by zk_proof1, need recal private_key2_ and context_p2
-// func (s *sGenerator) CalZKProof2(ctx context.Context, token string, zk_proof1 string) (err error) {
-
-// 	s.pool.Submit(func() {
-// 		s.calZKProof2(s.ctx, token, zk_proof1)
-// 	})
-
-// 	return
-// }
-
 // 4.5.calculate p2_zk_proof by p1_hash_proof, need recal context_p2 by p1_hash_proof
 func (s *sGenerator) CalZKProofP2(ctx context.Context, sid string, p1_hash_proof string) error {
 	s.pool.Submit(func() {
@@ -172,7 +162,7 @@ func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq, checkRule 
 	s.pool.Submit(func() {
 		s.CalSignTask(s.ctx, req.SessionId, signMsg, req.Request)
 		// recordtx
-		service.DB().RecordTxs(ctx, analzytx)
+		service.DB().RecordTxs(s.ctx, analzytx)
 	})
 
 	return nil

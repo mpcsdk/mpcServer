@@ -28,18 +28,18 @@ type (
 		StateString(state int) string
 		StateIs(state string, istate int) bool
 		NextStateIs(curstate string) int
-		UpState(ctx context.Context, token string, state string, err error) error
+		UpState(ctx context.Context, userId string, state string, err error) error
 		// /
 		// /
-		GetState(ctx context.Context, token string) (string, error)
+		GetState(ctx context.Context, userId string) (string, error)
 		// /
 		RecordSid(ctx context.Context, sid string, key string, val string) error
 		FetchSid(ctx context.Context, sid string, key string) (string, error)
-		RecordToken(ctx context.Context, token string, key string, val string) error
-		FetchToken(ctx context.Context, token string, key string) (string, error)
+		RecordUserId(ctx context.Context, userId string, key string, val string) error
+		FetchUserId(ctx context.Context, userId string, key string) (string, error)
 		// // key
-		GenNewSid(ctx context.Context, userToken string) (string, error)
-		Sid2Token(ctx context.Context, sid string) (string, error)
+		GenNewSid(ctx context.Context, userId string) (string, error)
+		Sid2UserId(ctx context.Context, sid string) (string, error)
 		// 9.signature
 		CalSignTask(ctx context.Context, sid string, msg string, request string) error
 	}

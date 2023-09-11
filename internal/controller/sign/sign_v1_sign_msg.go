@@ -16,7 +16,7 @@ import (
 func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1.SignMsgRes, err error) {
 	g.Log().Debug(ctx, "SignMsg:", req)
 	//todo: checksid
-	_, err = service.Generator().Sid2Token(ctx, req.SessionId)
+	_, err = service.Generator().Sid2UserId(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Error(ctx, "SignMsg no sid", req.SessionId, err)
 		return nil, gerror.NewCode(consts.CodeInternalError)

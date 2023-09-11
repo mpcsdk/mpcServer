@@ -17,9 +17,9 @@ func (c *ControllerV1) SendSmsCode(ctx context.Context, req *v1.SendSmsCodeReq) 
 	g.Log().Info(ctx, "SendSmsCode:", req)
 	sid := req.SessionId
 	//todo: check userinfo
-	token, err := service.Generator().Sid2Token(ctx, sid)
+	userId, err := service.Generator().Sid2UserId(ctx, sid)
 	if err != nil {
-		g.Log().Error(ctx, "unexist token:", sid, token)
+		g.Log().Error(ctx, "not exist userId:", sid, userId)
 		return nil, err
 	}
 	///todo: get phone
