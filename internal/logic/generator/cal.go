@@ -129,7 +129,7 @@ func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq, checkRule 
 		hash := s.hashMessage(ctx, msg)
 		hash = strings.TrimPrefix(hash, "0x")
 		if hash != req.Msg {
-			g.Log().Error(ctx, "SignMsg signMsg unmath", req.SessionId, err)
+			g.Log().Error(ctx, "SignMsg signMsg unmath", req.SessionId, err, hash)
 			return gerror.NewCode(consts.CodeInternalError)
 		}
 		///
