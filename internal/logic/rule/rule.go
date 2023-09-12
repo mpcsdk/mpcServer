@@ -5,6 +5,7 @@ import (
 	"li17server/internal/model"
 	"li17server/internal/service"
 	"strings"
+	"time"
 
 	"github.com/gogf/gf/contrib/registry/etcd/v2"
 	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
@@ -101,6 +102,7 @@ func new() *sRule {
 	if err != nil {
 		panic(err)
 	}
+	g.Log().Info(ctx, "etcd address...:", addr.String())
 	grpcx.Resolver.Register(etcd.New(addr.String()))
 	conn, err := grpcx.Client.NewGrpcClientConn("riskrpc")
 	// conn := grpcx.Client.MustNewGrpcClientConn("demo")
@@ -108,10 +110,15 @@ func new() *sRule {
 		panic(err)
 	}
 	client := v1.NewUserClient(conn)
+	//
+	timeout := 3 * time.Second
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
 	_, err = client.PerformAlive(ctx, &emptypb.Empty{})
 	if err != nil {
-		panic(err)
+		g.Log().Panic(ctx, "PerformAlive", err)
 	}
+	g.Log().Info(ctx, "etcd rpcalive", addr.String())
 
 	return &sRule{
 		ctx:    ctx,
