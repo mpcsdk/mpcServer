@@ -3,7 +3,6 @@ package ethtx
 import (
 	"context"
 	"encoding/hex"
-	v1 "li17server/api/rules/v1"
 	"li17server/internal/model"
 	"li17server/internal/service"
 
@@ -12,11 +11,6 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/gogf/gf/v2/os/gcache"
 )
-
-func tidyTx(tx *v1.RiskReq) *v1.RiskReq {
-	tx.Data = strings.Replace(tx.Data, "0x", "", -1)
-	return tx
-}
 
 type sEthTx struct {
 	abicache *gcache.Cache

@@ -11,6 +11,7 @@ require (
 	github.com/gogf/gf/contrib/registry/etcd/v2 v2.5.2
 	github.com/gogf/gf/contrib/rpc/grpcx/v2 v2.5.2
 	github.com/gogf/gf/v2 v2.5.2
+	github.com/golang/protobuf v1.5.3
 	github.com/panjf2000/ants/v2 v2.8.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/yitter/idgenerator-go v1.3.3

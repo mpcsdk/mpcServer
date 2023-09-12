@@ -1,21 +1,19 @@
 package rule
 
 import (
-	"errors"
-	"fmt"
+	"context"
 	"li17server/internal/model"
 	"li17server/internal/service"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/accounts/abi"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/gogf/gf/contrib/registry/etcd/v2"
 	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gcfg"
 	"github.com/gogf/gf/v2/os/gctx"
+	"google.golang.org/protobuf/types/known/emptypb"
 
-	v1 "li17server/api/rules/v1"
+	v1 "li17server/api/risk/v1"
 )
 
 type sRule struct {
@@ -32,51 +30,70 @@ func tidyTx(tx *model.SignTxData) *model.SignTxData {
 	tx.Data = strings.Replace(tx.Data, "0x", "", -1)
 	return tx
 }
-func (s *sRule) Exec(from string, txs []*model.SignTxData) (*v1.RiskRes, error) {
-	//todo:
-	from = strings.ToLower(from)
+
+// /
+func (s *sRule) Exec(ctx context.Context, from string, txs []*model.SignTxData) (*v1.TxRiskRes, error) {
 	for _, tx := range txs {
-		//
-		// rawBytes, err := hex.DecodeString(tx.Data)
-		// rtx := &types.Transaction{}
-		// err = rtx.UnmarshalBinary(rawBytes)
-		// d := rtx.Data()
-		// fmt.Println(common.Bytes2Hex(d))
-		///
-		tidyTx(tx)
-		c, err := abi.JSON(strings.NewReader(contractABI))
-		if err != nil {
-			return nil, err
-		}
-		data := common.Hex2Bytes(tx.Data)
-		method, err := c.MethodById(data[:4])
-		if err != nil {
-			return nil, errors.New("Risk check failed")
-		}
-		args := make(map[string]interface{})
-		err = method.Inputs.UnpackIntoMap(args, []byte(tx.Data)[4:])
-		if err != nil {
-			return nil, err
-		}
-		//todo: tx argx
-		fmt.Println(args)
-		res, err := s.client.PerformRisk(s.ctx, &v1.RiskReq{
-			To:   tx.Target,
-			From: from,
-			Data: tx.Data,
+		rst, err := s.client.PerformRiskTx(ctx, &v1.TxRiskReq{
+			Address:  from,
+			Contract: tx.Target,
+			TxData:   tx.Data,
 		})
 		if err != nil {
-			fmt.Println(err)
 			return nil, err
 		}
-		g.Log().Debug(s.ctx, "Response:", res.String())
-		if res.Result == false {
-			return nil, errors.New("Risk check failed")
+		if rst.Ok == false {
+			return nil, nil
 		}
 	}
-	//todo: rst
 	return nil, nil
 }
+
+// func (s *sRule) exec(from string, txs []*model.SignTxData) (*v1.TxRiskRes, error) {
+// 	//todo:
+// 	from = strings.ToLower(from)
+// 	for _, tx := range txs {
+// 		//
+// 		// rawBytes, err := hex.DecodeString(tx.Data)
+// 		// rtx := &types.Transaction{}
+// 		// err = rtx.UnmarshalBinary(rawBytes)
+// 		// d := rtx.Data()
+// 		// fmt.Println(common.Bytes2Hex(d))
+// 		///
+// 		tidyTx(tx)
+// 		c, err := abi.JSON(strings.NewReader(contractABI))
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		data := common.Hex2Bytes(tx.Data)
+// 		method, err := c.MethodById(data[:4])
+// 		if err != nil {
+// 			return nil, errors.New("Risk check failed")
+// 		}
+// 		args := make(map[string]interface{})
+// 		err = method.Inputs.UnpackIntoMap(args, []byte(tx.Data)[4:])
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		//todo: tx argx
+// 		fmt.Println(args)
+// 		res, err := s.client.PerformRisk(s.ctx, &v1.RiskReq{
+// 			// To:   tx.Target,
+// 			// From: from,
+// 			// Data: tx.Data,
+// 		})
+// 		if err != nil {
+// 			fmt.Println(err)
+// 			return nil, err
+// 		}
+// 		g.Log().Debug(s.ctx, "Response:", res.String())
+// 		if res.Code != 0 {
+// 			return nil, errors.New("Risk check failed")
+// 		}
+// 	}
+// 	//todo: rst
+// 	return nil, nil
+// }
 
 func new() *sRule {
 	ctx := gctx.GetInitCtx()
@@ -85,12 +102,17 @@ func new() *sRule {
 		panic(err)
 	}
 	grpcx.Resolver.Register(etcd.New(addr.String()))
-	conn, err := grpcx.Client.NewGrpcClientConn("rulerpc")
+	conn, err := grpcx.Client.NewGrpcClientConn("riskrpc")
 	// conn := grpcx.Client.MustNewGrpcClientConn("demo")
 	if err != nil {
 		panic(err)
 	}
 	client := v1.NewUserClient(conn)
+	_, err = client.PerformAlive(ctx, &emptypb.Empty{})
+	if err != nil {
+		panic(err)
+	}
+
 	return &sRule{
 		ctx:    ctx,
 		client: client,

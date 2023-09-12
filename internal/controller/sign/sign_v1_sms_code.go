@@ -26,7 +26,8 @@ func (c *ControllerV1) SendSmsCode(ctx context.Context, req *v1.SendSmsCodeReq) 
 	err = service.SmsCode().SendCode(ctx, req.SessionId, "reciver", "smscode")
 	return nil, err
 }
-func (c *ControllerV1) VerifySms(ctx context.Context, req *v1.VerifySmsCodeReq) (res *v1.VerifySmsCodeRes, err error) {
+
+func (c *ControllerV1) VerifySmsCode(ctx context.Context, req *v1.VerifySmsCodeReq) (res *v1.VerifySmsCodeRes, err error) {
 
 	err = service.SmsCode().Verify(ctx, req.SessionId, req.Code)
 	if err != nil {

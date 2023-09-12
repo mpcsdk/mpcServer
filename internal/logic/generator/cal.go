@@ -129,10 +129,10 @@ func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq, checkRule 
 		///
 		if checkRule {
 			//todo: exec txs rules
-			rst, err := service.Rule().Exec(signtx.Address, signtx.Txs)
+			rst, err := service.Rule().Exec(ctx, signtx.Address, signtx.Txs)
 			g.Log().Info(ctx, "Rule().Exec:", rst, signtx.Address, signtx.Txs)
 			///
-			if err != nil || rst != nil && rst.Result == false {
+			if err != nil || rst != nil && rst.Ok == false {
 				//todo:
 				fmt.Println("rules not passed send smscode:", err)
 				//cache req

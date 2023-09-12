@@ -23,7 +23,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	}
 
 	//todo: nocheckrule
-	err = service.Generator().CalSign(ctx, req, false) //, req.SessionId, req.Msg, req.Request, req.SignData)
+	err = service.Generator().CalSign(ctx, req, true) //, req.SessionId, req.Msg, req.Request, req.SignData)
 	if err != nil {
 		g.Log().Warning(ctx, "SignMsg:", err)
 		return nil, err
