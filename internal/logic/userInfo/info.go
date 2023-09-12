@@ -96,7 +96,7 @@ func new() *sUserInfo {
 		url:   url.String(),
 		c:     resty.New(),
 	}
-	_, err = s.getUserInfo(context.Background(), "123")
+	_, err = s.getUserInfo(context.Background(), "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBQdWJLZXkiOiIwMjI1YmI1MmU5NTcyMDUwZmZjMGM4MGRjZDBhYTBmNjQyNDFjMDk5ZDAzZjFlYTFjODEzMmZkMzViY2Q3MDBiMWMiLCJpYXQiOjE2OTQ0Mjk5OTEsImV4cCI6MTcyNTk2NTk5MX0.8YaF5spnD1SjI-NNbBCIBj9H5pspXMMkPJrKk23LdnM")
 	if err != nil {
 		panic(err)
 	}
