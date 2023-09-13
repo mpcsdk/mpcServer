@@ -59,6 +59,7 @@ type SignMsgReq struct {
 }
 
 type SignMsgRes struct {
+	RiskSerial string `json:"riskSerial"`
 }
 
 // ///
@@ -81,17 +82,39 @@ type GetInfoRes struct {
 
 // //
 type SendSmsCodeReq struct {
-	g.Meta    `path:"/SendSmsCode" tags:"SendSmsCode" method:"post" summary:"SendSmsCode"`
-	SessionId string `json:"sessionId"`
+	g.Meta     `path:"/SendSmsCode" tags:"SendSmsCode" method:"post" summary:"SendSmsCode"`
+	SessionId  string `json:"sessionId"`
+	RiskSerial string `json:"riskSerial"`
 }
 type SendSmsCodeRes struct {
 }
 
 // /
 type VerifySmsCodeReq struct {
-	g.Meta    `path:"/VerifySmsCode" tags:"VerifySmsCode" method:"post" summary:"VerifySmsCode"`
-	SessionId string `json:"sessionId"`
-	Code      string `json:"code"`
+	g.Meta     `path:"/VerifySmsCode" tags:"VerifySmsCode" method:"post" summary:"VerifySmsCode"`
+	SessionId  string `json:"sessionId"`
+	RiskSerial string `json:"riskSerial"`
+	Code       string `json:"code"`
 }
 type VerifySmsCodeRes struct {
 }
+
+// /
+// //
+type SendMailCodeReq struct {
+	g.Meta     `path:"/SendMailCode" tags:"SendMailCode" method:"post" summary:"SendMailCode"`
+	SessionId  string `json:"sessionId"`
+	RiskSerial string `json:"riskSerial"`
+}
+type SendMailCodeRes struct {
+}
+type VerifyMailCodeReq struct {
+	g.Meta     `path:"/VerifyMailCode" tags:"VerifyMailCode" method:"post" summary:"VerifyMailCode"`
+	SessionId  string `json:"sessionId"`
+	RiskSerial string `json:"riskSerial"`
+	Code       string `json:"code"`
+}
+type VerifyMailCodeRes struct {
+}
+
+// /

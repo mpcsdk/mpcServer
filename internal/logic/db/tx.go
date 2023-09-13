@@ -14,7 +14,8 @@ import (
 )
 
 func (s *sDB) RecordTxs(ctx context.Context, data *model.AnalzyTx) error {
-
+	g.Log().Debug(ctx, "record txs", data)
+	///
 	addr := strings.ToLower(data.Address)
 	for _, tx := range data.Txs {
 		//dao写eth_tx表

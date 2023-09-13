@@ -37,3 +37,11 @@ func (*Controller) PerformRiskTx(ctx context.Context, req *v1.TxRiskReq) (res *v
 func (*Controller) PerformRiskTFA(ctx context.Context, req *v1.TFARiskReq) (res *v1.TFARiskRes, err error) {
 	return nil, gerror.NewCode(gcode.CodeNotImplemented)
 }
+
+func (*Controller) PerformRiskTxs(ctx context.Context, req *v1.TxRiskReq) (res *v1.TxRiskRes, err error) {
+	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+}
+
+func (*Controller) PerformVerifyCode(ctx context.Context, req *v1.VerifyCodekReq) (res *v1.VerifyCodeRes, err error) {
+	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+}

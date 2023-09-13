@@ -5,7 +5,7 @@ server:
 
 logger:
   level : "all"
-  stdout: false 
+  stdout: true 
   rotateExpire: "1d"
   path: "./"
 

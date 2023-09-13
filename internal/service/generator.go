@@ -20,8 +20,9 @@ type (
 		CalPublicKey2(ctx context.Context, sid string, p1_zk_proof string) error
 		// 8.calculate request, recal context_p2
 		CalRequest(ctx context.Context, sid string, request string) error
-		// 9.signature
-		CalSign(ctx context.Context, req *v1.SignMsgReq, checkRule bool) error
+		CalMsgSign(ctx context.Context, req *v1.SignMsgReq) error
+		// 9.signature/
+		CalSign(ctx context.Context, req *v1.SignMsgReq) error
 		StateNext(state int) int
 		StatePrivate(state int) int
 		StateInt(state string) int

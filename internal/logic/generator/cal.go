@@ -4,11 +4,9 @@ import (
 	"bytes"
 	"context"
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
 	v1 "li17server/api/sign/v1"
 	"li17server/internal/consts"
-	"li17server/internal/model"
 	"li17server/internal/service"
 	"strconv"
 	"strings"
@@ -77,9 +75,6 @@ func (c *sGenerator) hashMessage(ctx context.Context, msg string) string {
 		buf.WriteString(bytelen)
 		buf.WriteString(string(bytemsg))
 
-		// msg = fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(bytemsg), string(bytemsg))
-		// hasher := sha3.NewLegacyKeccak256()
-		// hasher.Write([]byte(msg))
 		hash := crypto.Keccak256Hash(buf.Bytes())
 
 		return hash.Hex()
@@ -93,9 +88,6 @@ func (c *sGenerator) hashMessage(ctx context.Context, msg string) string {
 		buf.WriteString(bytelen)
 		buf.WriteString(msg)
 
-		// msg = fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(bytemsg), string(bytemsg))
-		// hasher := sha3.NewLegacyKeccak256()
-		// hasher.Write([]byte(msg))
 		hash := crypto.Keccak256Hash(buf.Bytes())
 
 		return hash.Hex()
@@ -108,61 +100,39 @@ func (c *sGenerator) digestTxHash(ctx context.Context, SignData string) string {
 	return msg
 }
 
-// 9.signature
-func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq, checkRule bool) error {
-	analzytx := &model.AnalzyTx{}
-	var err error
-	var signMsg string
-	if len(req.Msg) > 10 {
-		// checkmsghash
-		msg := s.digestTxHash(ctx, req.SignData)
-		hash := s.hashMessage(ctx, msg)
-		hash = strings.TrimPrefix(hash, "0x")
-		if hash != req.Msg {
-			g.Log().Error(ctx, "SignMsg signMsg unmath", req.SessionId, err, hash)
-			return gerror.NewCode(consts.CodeInternalError)
-		}
-		///
-		// , sid string, msg string, request string, signData string, checkRule bool) error {
-		signtx := &model.SignTx{}
-		json.Unmarshal([]byte(req.SignData), signtx)
-		///
-		if checkRule {
-			//todo: exec txs rules
-			rst, err := service.Rule().Exec(ctx, signtx.Address, signtx.Txs)
-			g.Log().Info(ctx, "Rule().Exec:", rst, signtx.Address, signtx.Txs)
-			///
-			if err != nil || rst != nil && rst.Ok == false {
-				//todo:
-				fmt.Println("rules not passed send smscode:", err)
-				//cache req
-				val, err := json.Marshal(req)
-				if err != nil {
-					return gerror.NewCode(consts.CodeInternalError)
-				}
-				service.Generator().RecordSid(ctx, req.SessionId, consts.KEY_txs, string(val))
-				///
-				return gerror.NewCode(consts.NeedSmsCodeError(""))
-			}
-		}
-		///analzy tx
-		analzytx, err = service.EthTx().AnalzyTxs(ctx, signtx)
-		if err != nil {
-			g.Log().Error(ctx, "analzyTx:", err, signtx)
-			return gerror.NewCode(consts.CodeInternalError)
-		}
-		signMsg = req.Msg
-	} else {
-		hash := s.hashMessage(ctx, req.Msg)
-		hash = strings.TrimPrefix(hash, "0x")
-		g.Log().Info(ctx, "SignMsg signMsg:", hash, req.Msg)
-		signMsg = hash
-	}
+func (s *sGenerator) CalMsgSign(ctx context.Context, req *v1.SignMsgReq) error {
+	hash := s.hashMessage(ctx, req.Msg)
+	hash = strings.TrimPrefix(hash, "0x")
+	g.Log().Info(ctx, "CalMsgSign:", hash, req.Msg)
+	signMsg := hash
+
 	// /////sign
 	s.pool.Submit(func() {
 		s.CalSignTask(s.ctx, req.SessionId, signMsg, req.Request)
-		// recordtx
-		service.DB().RecordTxs(s.ctx, analzytx)
+	})
+	return nil
+}
+
+// 9.signature/
+func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq) error {
+	var err error
+	///
+	if len(req.Msg) < 10 {
+		///impossible
+		panic("<10?")
+	}
+	// checkmsghash
+	msg := s.digestTxHash(ctx, req.SignData)
+	hash := s.hashMessage(ctx, msg)
+	hash = strings.TrimPrefix(hash, "0x")
+	if hash != req.Msg {
+		g.Log().Error(ctx, "SignMsg signMsg unmath", req.SessionId, err, hash)
+		return gerror.NewCode(consts.CodeInternalError)
+	}
+
+	// /////sign
+	s.pool.Submit(func() {
+		s.CalSignTask(s.ctx, req.SessionId, req.Msg, req.Request)
 	})
 
 	return nil

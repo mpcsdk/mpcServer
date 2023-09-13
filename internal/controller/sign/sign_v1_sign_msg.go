@@ -2,9 +2,12 @@ package sign
 
 import (
 	"context"
+	"encoding/hex"
+	"encoding/json"
 
 	v1 "li17server/api/sign/v1"
 	"li17server/internal/consts"
+	"li17server/internal/model"
 	"li17server/internal/service"
 
 	"github.com/gogf/gf/v2/errors/gerror"
@@ -15,19 +18,58 @@ import (
 
 func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1.SignMsgRes, err error) {
 	g.Log().Debug(ctx, "SignMsg:", req)
-	//todo: checksid
+	// checksid
 	_, err = service.Generator().Sid2UserId(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Error(ctx, "SignMsg no sid", req.SessionId, err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
+	////check signmsg
+	_, err = hex.DecodeString(req.Msg)
+	if err != nil {
+		service.Generator().CalMsgSign(ctx, req)
+		return nil, nil
+	}
 
-	//todo: nocheckrule
-	err = service.Generator().CalSign(ctx, req, true) //, req.SessionId, req.Msg, req.Request, req.SignData)
+	/// signtx
+	///analzy tx
+	signtx := &model.SignTx{}
+	json.Unmarshal([]byte(req.SignData), signtx)
+	///analzy tx
+	analzytx, err := service.EthTx().AnalzyTxs(ctx, signtx)
+	if err != nil {
+		g.Log().Error(ctx, "analzyTx:", err, signtx)
+		return nil, gerror.NewCode(consts.CodeInternalError)
+	}
+	///checkRisk
+	rst, err := service.TxRisk().CheckTxs(ctx, req.SessionId, signtx.Address, signtx.Txs)
+	///risk err
+	if err != nil {
+		g.Log().Warning(ctx, "CalSign CheckTxs err:", err, rst)
+		///
+		return nil, gerror.NewCode(consts.CodeInternalError)
+	}
+	//risk failure, need send verification code, and resign thetx
+	if rst.Ok != 0 {
+		//cache req
+		val, err := json.Marshal(req)
+		if err != nil {
+			return nil, gerror.NewCode(consts.CodeInternalError)
+		}
+		//notice: record txjson for resign
+		service.Generator().RecordSid(ctx, req.SessionId, consts.KEY_txs, string(val))
+		/// need verificationcode
+		return &v1.SignMsgRes{
+			RiskSerial: rst.RiskSerial,
+		}, gerror.NewCode(consts.NeedSmsCodeError(""))
+	}
+	///
+	err = service.Generator().CalSign(ctx, req)
 	if err != nil {
 		g.Log().Warning(ctx, "SignMsg:", err)
 		return nil, err
 	}
-
-	return
+	// recordtx
+	service.DB().RecordTxs(ctx, analzytx)
+	return nil, nil
 }
