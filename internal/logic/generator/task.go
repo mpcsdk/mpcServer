@@ -5,6 +5,8 @@ import (
 	"errors"
 	"li17server/internal/consts"
 	"li17server/internal/service"
+
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 // GenContextP2
@@ -91,6 +93,7 @@ func (s *sGenerator) calRequest(ctx context.Context, sid string, request string)
 
 // 9.signature
 func (s *sGenerator) CalSignTask(ctx context.Context, sid string, msg string, request string) error {
+	g.Log().Debug(ctx, "CalSignTask:", sid, msg, request)
 	s.RecordSid(ctx, sid, consts.KEY_signature, "")
 	userId, err := s.Sid2UserId(ctx, sid)
 	if err != nil {
@@ -100,10 +103,12 @@ func (s *sGenerator) CalSignTask(ctx context.Context, sid string, msg string, re
 	if request != "" {
 		context_p2, err = s.calRequest(ctx, sid, request)
 		if err != nil {
+			g.Log().Warning(ctx, "calRequest:", err)
 			return err
 		}
 	}
 	p2_sign := service.Sign().SignSendPartialP2(context_p2, msg)
+	g.Log().Debug(ctx, "CalSignTask:", sid, msg, request, p2_sign)
 	s.RecordSid(ctx, sid, consts.KEY_signature, p2_sign)
 
 	return err
