@@ -69,7 +69,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		g.Log().Warning(ctx, "SignMsg:", err)
 		return nil, err
 	}
-	// recordtx
+	// todo: recordtx
 	service.DB().RecordTxs(ctx, analzytx)
 	return nil, nil
 }

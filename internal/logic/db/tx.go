@@ -46,7 +46,7 @@ func (s *sDB) RecordTxs(ctx context.Context, data *model.AnalzyTx) error {
 			if val, ok := tx.Args["_value"]; ok {
 				d.Value = val.(*big.Int).String()
 			}
-			if wad, ok := tx.Args["_wad"]; ok {
+			if wad, ok := tx.Args["wad"]; ok {
 				d.Value = wad.(*big.Int).String()
 			}
 		} else {

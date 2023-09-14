@@ -50,6 +50,7 @@ func (c *ControllerV1) VerifyMailCode(ctx context.Context, req *v1.VerifyMailCod
 		g.Log().Warning(ctx, "SignMsg:", err)
 		return nil, gerror.NewCode(consts.CalSignError(""))
 	}
+
 	return nil, nil
 }
 
