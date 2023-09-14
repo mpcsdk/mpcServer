@@ -114,6 +114,8 @@ func (s *sGenerator) CalMsgSign(ctx context.Context, req *v1.SignMsgReq) error {
 }
 
 // 9.signature/
+// func (s *sGenerator) CheckCalSign(ctx context.Context, req *v1.SignMsgReq) error {
+// }
 func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq) error {
 	var err error
 	///

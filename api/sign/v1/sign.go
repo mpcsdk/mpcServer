@@ -89,17 +89,6 @@ type SendSmsCodeReq struct {
 type SendSmsCodeRes struct {
 }
 
-// /
-type VerifySmsCodeReq struct {
-	g.Meta     `path:"/VerifySmsCode" tags:"VerifySmsCode" method:"post" summary:"VerifySmsCode"`
-	SessionId  string `json:"sessionId"`
-	RiskSerial string `json:"riskSerial"`
-	Code       string `json:"code"`
-}
-type VerifySmsCodeRes struct {
-}
-
-// /
 // //
 type SendMailCodeReq struct {
 	g.Meta     `path:"/SendMailCode" tags:"SendMailCode" method:"post" summary:"SendMailCode"`
@@ -108,13 +97,13 @@ type SendMailCodeReq struct {
 }
 type SendMailCodeRes struct {
 }
-type VerifyMailCodeReq struct {
-	g.Meta     `path:"/VerifyMailCode" tags:"VerifyMailCode" method:"post" summary:"VerifyMailCode"`
+type VerifyCodeReq struct {
+	g.Meta     `path:"/VerifyCode" tags:"VerifyCode" method:"post" summary:"VerifyCode"`
 	SessionId  string `json:"sessionId"`
 	RiskSerial string `json:"riskSerial"`
 	Code       string `json:"code"`
 }
-type VerifyMailCodeRes struct {
+type VerifyCodeRes struct {
 }
 
 // /

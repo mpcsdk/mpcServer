@@ -26,8 +26,8 @@ func (c *ControllerV1) SendMailCode(ctx context.Context, req *v1.SendMailCodeReq
 }
 
 // /
-func (c *ControllerV1) VerifyMailCode(ctx context.Context, req *v1.VerifyMailCodeReq) (res *v1.VerifyMailCodeRes, err error) {
-	g.Log().Debug(ctx, "VerifyMailCode:", req)
+func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (res *v1.VerifyCodeRes, err error) {
+	g.Log().Debug(ctx, "VerifyCode:", req)
 	// notice: clean oldsign
 	service.Generator().RecordSid(ctx, req.SessionId, consts.KEY_signature, "")
 	///
@@ -69,9 +69,4 @@ func (c *ControllerV1) SendSmsCode(ctx context.Context, req *v1.SendSmsCodeReq) 
 	///
 	err = service.TxRisk().VerifyMail(ctx, req.SessionId, req.RiskSerial)
 	return res, err
-}
-
-func (c *ControllerV1) VerifySmsCode(ctx context.Context, req *v1.VerifySmsCodeReq) (res *v1.VerifySmsCodeRes, err error) {
-	g.Log().Debug(ctx, "VerifyMailCode:", req)
-	return nil, service.TxRisk().VerifyCode(ctx, req.SessionId, req.RiskSerial, req.Code)
 }
