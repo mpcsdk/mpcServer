@@ -28,6 +28,9 @@ func (c *ControllerV1) SendMailCode(ctx context.Context, req *v1.SendMailCodeReq
 // /
 func (c *ControllerV1) VerifyMailCode(ctx context.Context, req *v1.VerifyMailCodeReq) (res *v1.VerifyMailCodeRes, err error) {
 	g.Log().Debug(ctx, "VerifyMailCode:", req)
+	// notice: clean oldsign
+	service.Generator().RecordSid(ctx, req.SessionId, consts.KEY_signature, "")
+	///
 	err = service.TxRisk().VerifyCode(ctx, req.SessionId, req.RiskSerial, req.Code)
 	if err != nil {
 		return nil, err
