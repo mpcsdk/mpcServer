@@ -3,7 +3,6 @@ package userInfo
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"li17server/internal/consts"
 	"li17server/internal/model"
 	"li17server/internal/service"
@@ -71,7 +70,7 @@ func (s *sUserInfo) getUserInfo(ctx context.Context, token string) (*model.UserI
 		}).
 		// EnableTrace().
 		Get(s.url)
-	fmt.Println(resp)
+	g.Log().Debug(ctx, "getuserInfo:", resp)
 	if err != nil {
 		return nil, err
 	}

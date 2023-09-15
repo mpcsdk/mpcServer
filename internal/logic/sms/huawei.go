@@ -12,11 +12,17 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gogf/gf/v2/os/gcfg"
-	"github.com/gogf/gf/v2/os/gctx"
 	uuid "github.com/satori/go.uuid"
 )
 
+//{"originTo":"+659035559","createTime":"2023-09-15T02:36:17Z","from":"","smsMsgId":"fddf998e-eb87-4923-9a0a-f918acfa1b85_15694441","status":"000000"}
+//json 转struct
+
+type huaweiResp struct {
+	Result      []huaweiResult `json:"result"`
+	Code        string         `json:"code"`
+	Description string         `json:"description"`
+}
 type huawei struct {
 	APIAddress        string
 	ApplicationKey    string
@@ -24,19 +30,6 @@ type huawei struct {
 	Sender            string
 	TemplateID        string
 	Signature         string
-}
-
-func newhuawei() *huawei {
-	cfg := gcfg.Instance()
-	ctx := gctx.GetInitCtx()
-	return &huawei{
-		APIAddress:        cfg.MustGet(ctx, "sms.huawei.APIAddress").String(),
-		ApplicationKey:    cfg.MustGet(ctx, "sms.huawei.ApplicationKey").String(),
-		ApplicationSecret: cfg.MustGet(ctx, "sms.huawei.ApplicationSecret").String(),
-		Sender:            cfg.MustGet(ctx, "sms.huawei.Sender").String(),
-		TemplateID:        cfg.MustGet(ctx, "sms.huawei.TemplateID").String(),
-		Signature:         cfg.MustGet(ctx, "sms.huawei.Signature").String(),
-	}
 }
 
 // 无需修改,用于格式化鉴权头域,给"X-WSSE"参数赋值

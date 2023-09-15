@@ -3,23 +3,50 @@ package sms
 import (
 	"context"
 	"errors"
-	"fmt"
 	"li17server/internal/service"
 	"strconv"
 
 	"github.com/dchest/captcha"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gcfg"
+	"github.com/gogf/gf/v2/os/gctx"
 	"github.com/gogf/gf/v2/os/grpool"
 )
 
 type sSmsCode struct {
-	sms  *huawei
-	pool *grpool.Pool
+	demestic *huawei
+	foreign  *huawei
+	pool     *grpool.Pool
+}
+
+func newforeign() *huawei {
+	cfg := gcfg.Instance()
+	ctx := gctx.GetInitCtx()
+	return &huawei{
+		APIAddress:        cfg.MustGet(ctx, "sms.foreign.APIAddress").String(),
+		ApplicationKey:    cfg.MustGet(ctx, "sms.foreign.ApplicationKey").String(),
+		ApplicationSecret: cfg.MustGet(ctx, "sms.foreign.ApplicationSecret").String(),
+		Sender:            cfg.MustGet(ctx, "sms.foreign.Sender").String(),
+		TemplateID:        cfg.MustGet(ctx, "sms.foreign.TemplateID").String(),
+		Signature:         cfg.MustGet(ctx, "sms.foreign.Signature").String(),
+	}
+}
+func newdomestic() *huawei {
+	cfg := gcfg.Instance()
+	ctx := gctx.GetInitCtx()
+	return &huawei{
+		APIAddress:        cfg.MustGet(ctx, "sms.domestic.APIAddress").String(),
+		ApplicationKey:    cfg.MustGet(ctx, "sms.domestic.ApplicationKey").String(),
+		ApplicationSecret: cfg.MustGet(ctx, "sms.domestic.ApplicationSecret").String(),
+		Sender:            cfg.MustGet(ctx, "sms.domestic.Sender").String(),
+		TemplateID:        cfg.MustGet(ctx, "sms.domestic.TemplateID").String(),
+		Signature:         cfg.MustGet(ctx, "sms.domestic.Signature").String(),
+	}
 }
 
 func (s *sSmsCode) sendCode(ctx context.Context, sid, receiver, code string) error {
 
-	resp, status, err := s.sms.sendSms(receiver, code)
+	resp, status, err := s.foreign.sendSms(receiver, code)
 	//todo: send smscode
 	service.Generator().RecordSid(ctx, sid, "smscode", "123456")
 	return nil
@@ -75,14 +102,16 @@ func (s *sSmsCode) Verify(ctx context.Context, sid, code string) error {
 		return err
 	}
 	///
-	fmt.Println(status.String())
+	g.Log().Debug(ctx, "Verify:", status)
 	return nil
+
 }
 func new() *sSmsCode {
 
 	return &sSmsCode{
-		pool: grpool.New(10),
-		sms:  newhuawei(),
+		pool:     grpool.New(10),
+		foreign:  newforeign(),
+		demestic: newdomestic(),
 	}
 }
 

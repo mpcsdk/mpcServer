@@ -2,12 +2,12 @@ package txhash
 
 import (
 	"context"
-	"fmt"
 	"li17server/internal/service"
 	"os/exec"
 
 	proto "li17server/api/txhash/v1"
 
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gctx"
 	"google.golang.org/grpc"
 )
@@ -46,12 +46,11 @@ func (s *sTxHash) connhash() {
 		panic(err)
 	}
 	conn.Connect()
-	fmt.Println(conn.GetState().String())
+	g.Log().Info(s.ctx, "connhash server:", conn.GetState().String())
 	s.client = proto.NewTransactionClient(conn)
 	// rst, _ := s.client.DigestTxHash(s.ctx, &proto.TxRequest{
 	// 	Message: "msg",
 	// })
-	// fmt.Println(rst)
 }
 
 func (s *sTxHash) daemon() {

@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"li17server/internal/model"
 	"li17server/internal/service"
 	"strings"
@@ -63,7 +62,7 @@ func Test_Tx(t *testing.T) {
 		t.Error(err)
 	}
 	j, _ := json.Marshal(args)
-	fmt.Println(string(j))
+	t.Log(string(j))
 	t.Log(args)
 
 }

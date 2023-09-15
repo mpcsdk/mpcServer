@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	_ "li17server/internal/packed"
 
 	_ "li17server/internal/logic"
@@ -29,7 +28,5 @@ func main() {
 	option := idgen.NewIdGeneratorOptions(workId.Uint16())
 	idgen.SetIdGenerator(option)
 
-	name, _ := cfg.Get(ctx, "base")
-	fmt.Println(name)
 	cmd.Main.Run(ctx)
 }

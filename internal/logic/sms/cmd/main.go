@@ -50,11 +50,10 @@ func main() {
 	headers["Content-Type"] = "application/x-www-form-urlencoded"
 	headers["Authorization"] = AUTH_HEADER_VALUE
 	headers["X-WSSE"] = buildWsseHeader(appKey, appSecret)
-	resp, err := post(apiAddress, []byte(body), headers)
+	_, err := post(apiAddress, []byte(body), headers)
 	if err != nil {
 		return
 	}
-	fmt.Println(resp)
 }
 
 /**
