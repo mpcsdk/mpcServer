@@ -21,7 +21,11 @@ func (c *ControllerV1) SendMailCode(ctx context.Context, req *v1.SendMailCodeReq
 		return res, err
 	}
 	///
-	err = service.TxRisk().VerifyMail(ctx, req.SessionId, req.RiskSerial)
+	err = service.RPC().PerformMailCode(ctx, sid, req.RiskSerial)
+	if err != nil {
+		g.Log().Error(ctx, "PerformMailCode:", sid, userId, err)
+		return res, err
+	}
 	return res, err
 }
 
@@ -31,12 +35,12 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 	// notice: clean oldsign
 	service.Generator().RecordSid(ctx, req.SessionId, consts.KEY_signature, "")
 	///
-	err = service.TxRisk().VerifyCode(ctx, req.SessionId, req.RiskSerial, req.Code)
+	err = service.RPC().PerformVerifyCode(ctx, req.SessionId, req.RiskSerial, req.Code)
 	if err != nil {
 		return nil, err
 	}
 	///
-	//fetch txs
+	//fetch txs by sid
 	//todo: fetchtx by riskserial
 	val, err := service.Generator().FetchSid(ctx, req.SessionId, consts.KEY_txs)
 	if err != nil {
@@ -67,6 +71,10 @@ func (c *ControllerV1) SendSmsCode(ctx context.Context, req *v1.SendSmsCodeReq) 
 		return res, err
 	}
 	///
-	err = service.TxRisk().VerifyMail(ctx, req.SessionId, req.RiskSerial)
+	err = service.RPC().PerformSmsCode(ctx, sid, req.RiskSerial)
+	if err != nil {
+		g.Log().Error(ctx, "PerformSmsCode:", sid, userId, err)
+		return res, err
+	}
 	return res, err
 }

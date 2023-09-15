@@ -11,7 +11,7 @@ logger:
 
 database:
   default:
-  - link: "pgsql:postgres:123456@tcp(127.0.0.1:5432)/riskcontrol"
+  - link: "pgsql:postgres:123456@tcp(127.0.0.1:10100)/riskcontrol"
 
 cache:
   sessionDur: 100000
@@ -40,7 +40,7 @@ sms:
     APIAddress : "https://smsapi.ap-southeast-1.myhuaweicloud.com:443/sms/batchSendSms/v1"
     ApplicationKey : "07wcF2NQy1M7pQ48tp3kvQXgm9PT"                                           
     ApplicationSecret : "xegZ0VXmh5BDygT69sYm5DnKmIou"                                        
-    sender : "msgapp0000000370"                                                         
+    Sender : "msgapp0000000370"                                                         
     TemplateID : "e582fdc05e8043f8b69f9b0b05e970b4"                                    
     Signature: ""
  
@@ -56,6 +56,6 @@ emailOTP:
 gfcli:
   gen:
     dao:
-    - link:     "pgsql:postgres:123456@tcp(127.0.0.1:5432)/riskcontrol"
+    - link:     "pgsql:postgres:123456@tcp(127.0.0.1:10100)/riskcontrol"
       tables:   "contract_abi, eth_tx"
       jsonCase: "CamelLower"

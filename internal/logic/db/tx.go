@@ -33,7 +33,7 @@ func (s *sDB) RecordTxs(ctx context.Context, data *model.AnalzyTx) error {
 			Data:       tx.Data,
 			Args:       string(args),
 		}
-		///todo: specific methdo
+		///todo: specific method
 		if tx.MethodName == "safeTransferFrom" {
 			d.From = tx.Args["_from"].(common.Address).Hex()
 			d.To = tx.Args["_to"].(common.Address).Hex()

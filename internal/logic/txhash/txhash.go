@@ -34,7 +34,7 @@ func (s *sTxHash) start() {
 	}
 	s.connhash()
 	err = s.cmd.Wait()
-	//todo: exit
+	//notice: need txhash service
 	panic(err)
 }
 

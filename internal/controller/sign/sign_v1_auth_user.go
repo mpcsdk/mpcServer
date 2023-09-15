@@ -12,9 +12,7 @@ import (
 )
 
 func (c *ControllerV1) prepareHandshake(ctx context.Context, userId, sid string) error {
-
 	///
-	// todo: tmp key
 	g.Log().Debug(ctx, "prepareHandshake:", userId, sid)
 	///
 	err := service.Generator().GenContextP2(ctx, sid, tmp_privkey2, "", false)
@@ -34,24 +32,21 @@ func (c *ControllerV1) prepareHandshake(ctx context.Context, userId, sid string)
 }
 
 func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *v1.AuthUserRes, err error) {
-
 	g.Log().Debug(ctx, "AuthUser:", req)
-	//todo: check userToekn
 	info, err := service.UserInfo().GetUserInfo(ctx, req.UserToken)
 	if err != nil {
 		g.Log().Error(ctx, "authuser:", req)
 		return nil, gerror.NewCode(consts.AuthError())
 	}
-	///
+	///userid
 	userId := info.AppPubKey
 	state, err := service.Generator().GetState(ctx, userId)
 	if err != nil {
-		// todo: check usertoken
-		/// unauth user
-		if userId == "a" {
-			g.RequestFromCtx(ctx).Response.WriteStatusExit(500)
-		}
+		//reject unath user
+		g.Log().Warning(ctx, "AuthUser:", req, err)
+		g.RequestFromCtx(ctx).Response.WriteStatusExit(500)
 	}
+	///
 	////
 	sid, err := service.Generator().GenNewSid(ctx, userId)
 	if err != nil {

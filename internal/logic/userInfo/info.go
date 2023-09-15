@@ -35,7 +35,6 @@ func (s *sUserInfo) GetUserInfo(ctx context.Context, userToken string) (userInfo
 		g.Log().Error(ctx, "GetUserInfo:", userToken)
 		return nil, gerror.NewCode(consts.AuthError())
 	}
-	//todo: check userToekn
 	if err != nil {
 		g.Log().Error(ctx, "GetUserInfo:", userToken)
 		return nil, gerror.NewCode(consts.AuthError())

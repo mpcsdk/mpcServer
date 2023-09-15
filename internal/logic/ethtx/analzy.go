@@ -46,8 +46,6 @@ func (s *sEthTx) analzyTx(ctx context.Context, tx *model.SignTxData) (*model.Ana
 	if err != nil {
 		return nil, err
 	}
-	//todo: check method
-	//
 	args := make(map[string]interface{})
 	err = method.Inputs.UnpackIntoMap(args, dataByte[4:])
 	if err != nil {

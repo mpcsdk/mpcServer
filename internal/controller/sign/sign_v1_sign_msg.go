@@ -41,12 +41,15 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		g.Log().Error(ctx, "analzyTx:", err, signtx)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
-	///checkRisk
-	rst, err := service.TxRisk().CheckTxs(ctx, req.SessionId, signtx.Address, signtx.Txs)
-	///risk err
+	///Risktx
+	userId, err := service.Generator().Sid2UserId(ctx, req.SessionId)
 	if err != nil {
-		g.Log().Warning(ctx, "CalSign CheckTxs err:", err, rst)
-		///
+		g.Log().Warning(ctx, "CalSign PerformRiskTxs err:", err)
+		return nil, gerror.NewCode(consts.CodeInternalError)
+	}
+	rst, err := service.RPC().PerformRiskTxs(ctx, userId, analzytx)
+	if err != nil {
+		g.Log().Warning(ctx, "CalSign PerformRiskTxs err:", err, rst)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	//risk failure, need send verification code, and resign thetx
@@ -69,7 +72,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		g.Log().Warning(ctx, "SignMsg:", err)
 		return nil, err
 	}
-	// todo: recordtx
+	// todo: rm recordtx,  subscribe ethlog insteadof
 	service.DB().RecordTxs(ctx, analzytx)
 	return nil, nil
 }
