@@ -22,11 +22,11 @@ type sRPC struct {
 	client v1.UserClient
 }
 
-func (s *sRPC) PerformMailCode(ctx context.Context, sid, serial string) error {
-	g.Log().Debug(ctx, "PerformMailCode:", sid, serial)
+func (s *sRPC) PerformMailCode(ctx context.Context, token, serial string) error {
+	g.Log().Debug(ctx, "PerformMailCode:", token, serial)
 	rst, err := s.client.PerformMailCode(ctx, &v1.MailCodekReq{
 		RiskSerial: serial,
-		Operations: "verifyTx",
+		Token:      token,
 	})
 	if err != nil {
 		g.Log().Error(ctx, "PerformMailCode:", err, rst)
@@ -34,11 +34,11 @@ func (s *sRPC) PerformMailCode(ctx context.Context, sid, serial string) error {
 	}
 	return nil
 }
-func (s *sRPC) PerformSmsCode(ctx context.Context, sid, serial string) error {
-	g.Log().Debug(ctx, "PerformSmsCode:", sid, serial)
+func (s *sRPC) PerformSmsCode(ctx context.Context, token, serial string) error {
+	g.Log().Debug(ctx, "PerformSmsCode:", token, serial)
 	rst, err := s.client.PerformSmsCode(ctx, &v1.SmsCodeReq{
 		RiskSerial: serial,
-		Operations: "verifyTx",
+		Token:      token,
 	})
 	if err != nil {
 		g.Log().Error(ctx, "PerformSmsCode:", err, rst)

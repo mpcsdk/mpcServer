@@ -86,8 +86,11 @@ func (c *sGenerator) hashMessage(ctx context.Context, msg string) string {
 		buf.WriteString(msg)
 
 		hash := crypto.Keccak256Hash(buf.Bytes())
+		///
+		hstr := hash.Hex()
+		hstr = strings.TrimPrefix(hstr, "0x")
 
-		return hash.Hex()
+		return c.hashMessage(ctx, hstr)
 	}
 }
 

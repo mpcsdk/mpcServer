@@ -27,6 +27,7 @@ const (
 	KEY_signature   string = "signature"
 	///
 	KEY_RiskSerial string = "riskSerial"
+	KEY_UserToken  string = "userToken"
 )
 
 var SessionDur time.Duration = 0

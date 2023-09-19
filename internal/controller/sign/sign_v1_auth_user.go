@@ -70,6 +70,7 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	////
+	service.Generator().RecordSid(ctx, sid, consts.KEY_UserToken, req.UserToken)
 	res = &v1.AuthUserRes{
 		SessionId: sid,
 	}

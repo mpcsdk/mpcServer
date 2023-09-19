@@ -13,8 +13,8 @@ import (
 
 type (
 	IRPC interface {
-		PerformMailCode(ctx context.Context, sid, serial string) error
-		PerformSmsCode(ctx context.Context, sid, serial string) error
+		PerformMailCode(ctx context.Context, token, serial string) error
+		PerformSmsCode(ctx context.Context, token, serial string) error
 		PerformVerifyCode(ctx context.Context, sid, serial, code string) error
 		PerformRiskTxs(ctx context.Context, userId string, analzyTx *model.AnalzyTx) (*v1.TxRiskRes, error)
 	}

@@ -22,6 +22,8 @@ type (
 		CalRequest(ctx context.Context, sid string, request string) error
 		CalMsgSign(ctx context.Context, req *v1.SignMsgReq) error
 		// 9.signature/
+		// func (s *sGenerator) CheckCalSign(ctx context.Context, req *v1.SignMsgReq) error {
+		// }
 		CalSign(ctx context.Context, req *v1.SignMsgReq) error
 		StateNext(state int) int
 		StatePrivate(state int) int
@@ -41,6 +43,7 @@ type (
 		// // key
 		GenNewSid(ctx context.Context, userId string) (string, error)
 		Sid2UserId(ctx context.Context, sid string) (string, error)
+		Sid2Token(ctx context.Context, sid string) (string, error)
 		// 9.signature
 		CalSignTask(ctx context.Context, sid string, msg string, request string) error
 	}

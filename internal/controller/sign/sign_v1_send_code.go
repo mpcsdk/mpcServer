@@ -20,15 +20,15 @@ func (c *ControllerV1) SendMailCode(ctx context.Context, req *v1.SendMailCodeReq
 	//
 	g.Log().Debug(ctx, "SendMailCode:", req)
 	sid := req.SessionId
-	userId, err := service.Generator().Sid2UserId(ctx, sid)
+	token, err := service.Generator().Sid2Token(ctx, sid)
 	if err != nil {
-		g.Log().Error(ctx, "not exist userId:", sid, userId)
+		g.Log().Error(ctx, "not exist userId:", sid, token)
 		return res, err
 	}
 	///
-	err = service.RPC().PerformMailCode(ctx, sid, req.RiskSerial)
+	err = service.RPC().PerformMailCode(ctx, token, req.RiskSerial)
 	if err != nil {
-		g.Log().Error(ctx, "PerformMailCode:", sid, userId, err)
+		g.Log().Error(ctx, "PerformMailCode:", sid, token, err)
 		return res, err
 	}
 	return res, err
@@ -78,15 +78,15 @@ func (c *ControllerV1) SendSmsCode(ctx context.Context, req *v1.SendSmsCodeReq) 
 	//
 	g.Log().Debug(ctx, "SendMailCode:", req)
 	sid := req.SessionId
-	userId, err := service.Generator().Sid2UserId(ctx, sid)
+	token, err := service.Generator().Sid2Token(ctx, sid)
 	if err != nil {
-		g.Log().Error(ctx, "not exist userId:", sid, userId)
+		g.Log().Error(ctx, "not exist userId:", sid, token)
 		return res, err
 	}
 	///
-	err = service.RPC().PerformSmsCode(ctx, sid, req.RiskSerial)
+	err = service.RPC().PerformSmsCode(ctx, token, req.RiskSerial)
 	if err != nil {
-		g.Log().Error(ctx, "PerformSmsCode:", sid, userId, err)
+		g.Log().Error(ctx, "PerformSmsCode:", token, sid, err)
 		return res, err
 	}
 	return res, err
