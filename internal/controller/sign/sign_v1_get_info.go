@@ -5,6 +5,7 @@ import (
 
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/gtrace"
 
 	v1 "li17server/api/sign/v1"
 	"li17server/internal/consts"
@@ -12,20 +13,23 @@ import (
 )
 
 func (c *ControllerV1) GetInfo(ctx context.Context, req *v1.GetInfoReq) (res *v1.GetInfoRes, err error) {
-
-	g.Log().Debug(ctx, "GetInfo:", req)
+	//trace
+	sctx, span := gtrace.NewSpan(ctx, "GetInfo")
+	defer span.End()
+	//
+	g.Log().Debug(sctx, "GetInfo:", req)
 	///
-	userId, err := service.Generator().Sid2UserId(ctx, req.SessionId)
+	userId, err := service.Generator().Sid2UserId(sctx, req.SessionId)
 	if err != nil {
-		g.Log().Warning(ctx, "GetInfo:", err)
+		g.Log().Warning(sctx, "GetInfo:", err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	////
 
 	///
-	pubkey, err := service.Generator().FetchUserId(ctx, userId, consts.KEY_publickey2)
+	pubkey, err := service.Generator().FetchUserId(sctx, userId, consts.KEY_publickey2)
 	if err != nil {
-		g.Log().Warning(ctx, "GetInfo:", userId, err)
+		g.Log().Warning(sctx, "GetInfo:", userId, err)
 		return nil, gerror.NewCode(consts.CodeStateError(consts.ErrSessionNotExist))
 	}
 

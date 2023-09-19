@@ -12,11 +12,16 @@ import (
 
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/gtrace"
 	///
 	// "github.com/ethereum/go-ethereum/signer/core/apitypes"
 )
 
 func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1.SignMsgRes, err error) {
+	//trace
+	ctx, span := gtrace.NewSpan(ctx, "SignMsg")
+	defer span.End()
+	//
 	g.Log().Debug(ctx, "SignMsg:", req)
 	// checksid
 	_, err = service.Generator().Sid2UserId(ctx, req.SessionId)

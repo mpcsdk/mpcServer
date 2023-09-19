@@ -10,9 +10,14 @@ import (
 
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/gtrace"
 )
 
 func (c *ControllerV1) SendMailCode(ctx context.Context, req *v1.SendMailCodeReq) (res *v1.SendMailCodeRes, err error) {
+	//trace
+	ctx, span := gtrace.NewSpan(ctx, "SendMailCode")
+	defer span.End()
+	//
 	g.Log().Debug(ctx, "SendMailCode:", req)
 	sid := req.SessionId
 	userId, err := service.Generator().Sid2UserId(ctx, sid)
@@ -31,6 +36,10 @@ func (c *ControllerV1) SendMailCode(ctx context.Context, req *v1.SendMailCodeReq
 
 // /
 func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (res *v1.VerifyCodeRes, err error) {
+	//trace
+	ctx, span := gtrace.NewSpan(ctx, "VerifyCode")
+	defer span.End()
+	//
 	g.Log().Debug(ctx, "VerifyCode:", req)
 	// notice: clean oldsign
 	service.Generator().RecordSid(ctx, req.SessionId, consts.KEY_signature, "")
@@ -63,6 +72,10 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 
 // //////////////////
 func (c *ControllerV1) SendSmsCode(ctx context.Context, req *v1.SendSmsCodeReq) (res *v1.SendSmsCodeRes, err error) {
+	//trace
+	ctx, span := gtrace.NewSpan(ctx, "SendSmsCode")
+	defer span.End()
+	//
 	g.Log().Debug(ctx, "SendMailCode:", req)
 	sid := req.SessionId
 	userId, err := service.Generator().Sid2UserId(ctx, sid)

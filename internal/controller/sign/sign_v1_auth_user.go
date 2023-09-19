@@ -5,6 +5,7 @@ import (
 
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/gtrace"
 
 	v1 "li17server/api/sign/v1"
 	"li17server/internal/consts"
@@ -32,6 +33,10 @@ func (c *ControllerV1) prepareHandshake(ctx context.Context, userId, sid string)
 }
 
 func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *v1.AuthUserRes, err error) {
+	//trace
+	ctx, span := gtrace.NewSpan(ctx, "AuthUser")
+	defer span.End()
+	//
 	g.Log().Debug(ctx, "AuthUser:", req)
 	info, err := service.UserInfo().GetUserInfo(ctx, req.UserToken)
 	if err != nil {

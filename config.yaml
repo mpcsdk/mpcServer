@@ -1,7 +1,9 @@
-base: li17server
 server:
+  name: "mpc-signer"
   address:     ":8000"
   workId: 1
+
+jaegerUrl: "127.0.0.1:6831"
 
 logger:
   level : "all"

@@ -9,10 +9,15 @@ import (
 
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/gtrace"
 )
 
 // recv p1_hash_proof for cal p2_zk_proof
 func (c *ControllerV1) SendHashProof(ctx context.Context, req *v1.SendHashProofReq) (res *v1.SendHashProofRes, err error) {
+	//trace
+	ctx, span := gtrace.NewSpan(ctx, "SendHashProof")
+	defer span.End()
+	//
 	g.Log().Debug(ctx, "SendHashProof:", req)
 	///
 	userId, err := service.Generator().Sid2UserId(ctx, req.SessionId)
@@ -43,6 +48,10 @@ func (c *ControllerV1) SendHashProof(ctx context.Context, req *v1.SendHashProofR
 }
 
 func (c *ControllerV1) SendZKProofP1(ctx context.Context, req *v1.SendZKProofP1Req) (res *v1.SendZKProofP1Res, err error) {
+	//trace
+	ctx, span := gtrace.NewSpan(ctx, "SendZKProofP1")
+	defer span.End()
+	//
 	g.Log().Debug(ctx, "SendZKProofP1:", req)
 	///
 	userId, err := service.Generator().Sid2UserId(ctx, req.SessionId)
