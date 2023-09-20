@@ -18,13 +18,27 @@ type sTxHash struct {
 	client proto.TransactionClient
 }
 
-func (s *sTxHash) DigestTxHash(ctx context.Context, msg string) string {
-	rst, _ := s.client.DigestTxHash(ctx, &proto.TxRequest{
+func (s *sTxHash) DigestTxHash(ctx context.Context, msg string) (string, error) {
+	rst, err := s.client.DigestTxHash(ctx, &proto.TxRequest{
 		Message: msg,
 	})
+	return rst.Message, err
+}
+
+func (s *sTxHash) HasDomain(ctx context.Context, msg string) string {
+	rst, err := s.client.HasDomain(ctx, &proto.TxRequest{
+		Message: msg,
+	})
+	g.Log().Warning(ctx, "HasDomain:", err)
 	return rst.Message
 }
 
+func (s *sTxHash) TypedDataEncoderHash(ctx context.Context, msg string) (string, error) {
+	rst, err := s.client.TypedDataEncoderHash(ctx, &proto.TxRequest{
+		Message: msg,
+	})
+	return rst.Message, err
+}
 func (s *sTxHash) start() {
 	// hashserver
 	s.cmd = exec.Command("node", "./utility/txhash/dist/main.js")

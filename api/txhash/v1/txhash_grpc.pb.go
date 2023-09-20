@@ -24,6 +24,8 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TransactionClient interface {
 	DigestTxHash(ctx context.Context, in *TxRequest, opts ...grpc.CallOption) (*TxReply, error)
+	TypedDataEncoderHash(ctx context.Context, in *TxRequest, opts ...grpc.CallOption) (*TxReply, error)
+	HasDomain(ctx context.Context, in *TxRequest, opts ...grpc.CallOption) (*TxReply, error)
 }
 
 type transactionClient struct {
@@ -43,11 +45,31 @@ func (c *transactionClient) DigestTxHash(ctx context.Context, in *TxRequest, opt
 	return out, nil
 }
 
+func (c *transactionClient) TypedDataEncoderHash(ctx context.Context, in *TxRequest, opts ...grpc.CallOption) (*TxReply, error) {
+	out := new(TxReply)
+	err := c.cc.Invoke(ctx, "/txhash.Transaction/TypedDataEncoderHash", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionClient) HasDomain(ctx context.Context, in *TxRequest, opts ...grpc.CallOption) (*TxReply, error) {
+	out := new(TxReply)
+	err := c.cc.Invoke(ctx, "/txhash.Transaction/HasDomain", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TransactionServer is the server API for Transaction service.
 // All implementations must embed UnimplementedTransactionServer
 // for forward compatibility
 type TransactionServer interface {
 	DigestTxHash(context.Context, *TxRequest) (*TxReply, error)
+	TypedDataEncoderHash(context.Context, *TxRequest) (*TxReply, error)
+	HasDomain(context.Context, *TxRequest) (*TxReply, error)
 	mustEmbedUnimplementedTransactionServer()
 }
 
@@ -57,6 +79,12 @@ type UnimplementedTransactionServer struct {
 
 func (UnimplementedTransactionServer) DigestTxHash(context.Context, *TxRequest) (*TxReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DigestTxHash not implemented")
+}
+func (UnimplementedTransactionServer) TypedDataEncoderHash(context.Context, *TxRequest) (*TxReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TypedDataEncoderHash not implemented")
+}
+func (UnimplementedTransactionServer) HasDomain(context.Context, *TxRequest) (*TxReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HasDomain not implemented")
 }
 func (UnimplementedTransactionServer) mustEmbedUnimplementedTransactionServer() {}
 
@@ -89,6 +117,42 @@ func _Transaction_DigestTxHash_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Transaction_TypedDataEncoderHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TxRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).TypedDataEncoderHash(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/txhash.Transaction/TypedDataEncoderHash",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).TypedDataEncoderHash(ctx, req.(*TxRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transaction_HasDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TxRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionServer).HasDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/txhash.Transaction/HasDomain",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionServer).HasDomain(ctx, req.(*TxRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Transaction_ServiceDesc is the grpc.ServiceDesc for Transaction service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -99,6 +163,14 @@ var Transaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DigestTxHash",
 			Handler:    _Transaction_DigestTxHash_Handler,
+		},
+		{
+			MethodName: "TypedDataEncoderHash",
+			Handler:    _Transaction_TypedDataEncoderHash_Handler,
+		},
+		{
+			MethodName: "HasDomain",
+			Handler:    _Transaction_HasDomain_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -20,3 +20,11 @@ func Register(s *grpcx.GrpcServer) {
 func (*Controller) DigestTxHash(ctx context.Context, req *v1.TxRequest) (res *v1.TxReply, err error) {
 	return nil, gerror.NewCode(gcode.CodeNotImplemented)
 }
+
+func (*Controller) TypedDataEncoderHash(ctx context.Context, req *v1.TxRequest) (res *v1.TxReply, err error) {
+	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+}
+
+func (*Controller) HasDomain(ctx context.Context, req *v1.TxRequest) (res *v1.TxReply, err error) {
+	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+}

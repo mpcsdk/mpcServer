@@ -21,6 +21,7 @@ type (
 		// 8.calculate request, recal context_p2
 		CalRequest(ctx context.Context, sid string, request string) error
 		CalMsgSign(ctx context.Context, req *v1.SignMsgReq) error
+		CalDomainSign(ctx context.Context, req *v1.SignMsgReq) error
 		// 9.signature/
 		// func (s *sGenerator) CheckCalSign(ctx context.Context, req *v1.SignMsgReq) error {
 		// }

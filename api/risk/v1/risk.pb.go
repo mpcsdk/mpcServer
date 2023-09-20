@@ -30,8 +30,8 @@ type RiskTx struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Contract string `protobuf:"bytes,1,opt,name=Contract,proto3" json:"Contract,omitempty" v:"required"` // v: required
-	TxData   string `protobuf:"bytes,2,opt,name=TxData,proto3" json:"TxData,omitempty" v:"required"`     // v: required
+	Contract string `protobuf:"bytes,1,opt,name=Contract,proto3" json:"Contract,omitempty" v:"required" v:"required"` // v: required
+	TxData   string `protobuf:"bytes,2,opt,name=TxData,proto3" json:"TxData,omitempty" v:"required" v:"required"`     // v: required
 }
 
 func (x *RiskTx) Reset() {
@@ -85,10 +85,10 @@ type TxRiskReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserId  string `protobuf:"bytes,1,opt,name=UserId,proto3" json:"UserId,omitempty" v:"required"`   // v: required
-	Address string `protobuf:"bytes,2,opt,name=Address,proto3" json:"Address,omitempty" v:"required"` // v: required
+	UserId  string `protobuf:"bytes,1,opt,name=UserId,proto3" json:"UserId,omitempty" v:"required" v:"required"`   // v: required
+	Address string `protobuf:"bytes,2,opt,name=Address,proto3" json:"Address,omitempty" v:"required" v:"required"` // v: required
 	// //
-	Txs []*RiskTx `protobuf:"bytes,3,rep,name=Txs,proto3" json:"Txs,omitempty" dc:"//" v:"required"` // v: required
+	Txs []*RiskTx `protobuf:"bytes,3,rep,name=Txs,proto3" json:"Txs,omitempty" dc:"//" v:"required" dc:"//" v:"required"` // v: required
 }
 
 func (x *TxRiskReq) Reset() {
@@ -213,8 +213,8 @@ type TFARiskReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserId     string `protobuf:"bytes,1,opt,name=UserId,proto3" json:"UserId,omitempty" v:"required"`         // v: required
-	Operations string `protobuf:"bytes,2,opt,name=Operations,proto3" json:"Operations,omitempty" v:"required"` // v: required
+	UserId     string `protobuf:"bytes,1,opt,name=UserId,proto3" json:"UserId,omitempty" v:"required" v:"required"`         // v: required
+	Operations string `protobuf:"bytes,2,opt,name=Operations,proto3" json:"Operations,omitempty" v:"required" v:"required"` // v: required
 }
 
 func (x *TFARiskReq) Reset() {
@@ -331,8 +331,8 @@ type SmsCodeReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	RiskSerial string `protobuf:"bytes,1,opt,name=RiskSerial,proto3" json:"RiskSerial,omitempty" v:"required"` // v: required
-	Token      string `protobuf:"bytes,2,opt,name=Token,proto3" json:"Token,omitempty" v:"required"`           // v: required
+	RiskSerial string `protobuf:"bytes,1,opt,name=RiskSerial,proto3" json:"RiskSerial,omitempty" v:"required" v:"required"` // v: required
+	Token      string `protobuf:"bytes,2,opt,name=Token,proto3" json:"Token,omitempty" v:"required" v:"required"`           // v: required
 }
 
 func (x *SmsCodeReq) Reset() {
@@ -441,8 +441,8 @@ type MailCodekReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	RiskSerial string `protobuf:"bytes,1,opt,name=RiskSerial,proto3" json:"RiskSerial,omitempty" v:"required"` // v: required
-	Token      string `protobuf:"bytes,2,opt,name=Token,proto3" json:"Token,omitempty" v:"required"`           // v: required
+	RiskSerial string `protobuf:"bytes,1,opt,name=RiskSerial,proto3" json:"RiskSerial,omitempty" v:"required" v:"required"` // v: required
+	Token      string `protobuf:"bytes,2,opt,name=Token,proto3" json:"Token,omitempty" v:"required" v:"required"`           // v: required
 }
 
 func (x *MailCodekReq) Reset() {
@@ -552,9 +552,9 @@ type VerifyCodekReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	RiskSerial string `protobuf:"bytes,1,opt,name=RiskSerial,proto3" json:"RiskSerial,omitempty" v:"required"` // v: required
-	Token      string `protobuf:"bytes,2,opt,name=Token,proto3" json:"Token,omitempty" v:"required"`           // v: required
-	Code       string `protobuf:"bytes,3,opt,name=Code,proto3" json:"Code,omitempty" v:"required"`             // v: required
+	RiskSerial string `protobuf:"bytes,1,opt,name=RiskSerial,proto3" json:"RiskSerial,omitempty" v:"required" v:"required"` // v: required
+	Token      string `protobuf:"bytes,2,opt,name=Token,proto3" json:"Token,omitempty" v:"required" v:"required"`           // v: required
+	Code       string `protobuf:"bytes,3,opt,name=Code,proto3" json:"Code,omitempty" v:"required" v:"required"`             // v: required
 }
 
 func (x *VerifyCodekReq) Reset() {

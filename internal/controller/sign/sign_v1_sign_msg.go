@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/hex"
 	"encoding/json"
+	"strings"
 
 	v1 "li17server/api/sign/v1"
 	"li17server/internal/consts"
@@ -29,14 +30,22 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		g.Log().Error(ctx, "SignMsg no sid", req.SessionId, err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
-	////check signmsg
+
+	////if string msg
 	_, err = hex.DecodeString(req.Msg)
 	if err != nil {
 		service.Generator().CalMsgSign(ctx, req)
 		return nil, nil
 	}
+	///
+	//
+	///check isdomain
+	if strings.Index(req.SignData, "domain") != -1 {
+		err = service.Generator().CalDomainSign(ctx, req)
+		return nil, err
+	}
 
-	/// signtx
+	///is tx
 	///analzy tx
 	signtx := &model.SignTx{}
 	json.Unmarshal([]byte(req.SignData), signtx)

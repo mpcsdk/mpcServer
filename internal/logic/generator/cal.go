@@ -94,10 +94,10 @@ func (c *sGenerator) hashMessage(ctx context.Context, msg string) string {
 	}
 }
 
-func (c *sGenerator) digestTxHash(ctx context.Context, SignData string) string {
-	msg := service.TxHash().DigestTxHash(ctx, SignData)
+func (c *sGenerator) digestTxHash(ctx context.Context, SignData string) (string, error) {
+	msg, err := service.TxHash().DigestTxHash(ctx, SignData)
 	msg = strings.TrimPrefix(msg, "0x")
-	return msg
+	return msg, err
 }
 
 func (s *sGenerator) CalMsgSign(ctx context.Context, req *v1.SignMsgReq) error {
@@ -109,6 +109,33 @@ func (s *sGenerator) CalMsgSign(ctx context.Context, req *v1.SignMsgReq) error {
 	// /////sign
 	s.pool.Submit(func() {
 		s.CalSignTask(s.ctx, req.SessionId, signMsg, req.Request)
+	})
+	return nil
+}
+func (s *sGenerator) CalDomainSign(ctx context.Context, req *v1.SignMsgReq) error {
+
+	///
+	msg, err := service.TxHash().TypedDataEncoderHash(ctx, req.SignData)
+	if err != nil {
+
+	}
+	if msg != "" {
+
+	}
+	msg = strings.TrimPrefix(msg, "0x")
+	////
+
+	// check domainhash
+	hash := s.hashMessage(ctx, msg)
+	hash = strings.TrimPrefix(hash, "0x")
+	if hash != req.Msg {
+		g.Log().Error(ctx, "CalDomainSign unmath", req.SessionId, err, hash)
+		return gerror.NewCode(consts.CodeInternalError)
+	}
+
+	// /////sign
+	s.pool.Submit(func() {
+		s.CalSignTask(s.ctx, req.SessionId, req.Msg, req.Request)
 	})
 	return nil
 }
@@ -124,7 +151,10 @@ func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq) error {
 		panic("<10?")
 	}
 	// checkmsghash
-	msg := s.digestTxHash(ctx, req.SignData)
+	msg, err := s.digestTxHash(ctx, req.SignData)
+	if err != nil {
+		//todo:
+	}
 	hash := s.hashMessage(ctx, msg)
 	hash = strings.TrimPrefix(hash, "0x")
 	if hash != req.Msg {
