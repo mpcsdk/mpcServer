@@ -105,6 +105,7 @@ func (c *sGenerator) hashMessage(ctx context.Context, msg string) string {
 		hash := crypto.Keccak256Hash(buf.Bytes())
 		///
 		hstr := hash.Hex()
+
 		return hstr
 	}
 }
@@ -116,7 +117,6 @@ func (c *sGenerator) digestTxHash(ctx context.Context, SignData string) (string,
 }
 
 func (s *sGenerator) CalMsgSign(ctx context.Context, req *v1.SignMsgReq) error {
-
 	hmsg := s.hashMsg(ctx, req.Msg)
 	hmsg = strings.TrimPrefix(hmsg, "0x")
 	///
@@ -137,18 +137,16 @@ func (s *sGenerator) CalDomainSign(ctx context.Context, req *v1.SignMsgReq) erro
 	///
 	hash, err := service.TxHash().TypedDataEncoderHash(ctx, req.SignData)
 	if err != nil {
-
-	}
-	if hash != "" {
-
+		return err
 	}
 	// check domainhash
-	//msg := s.hashMessage(ctx, hash)
+	// msg := s.hashMessage(ctx, hash)
 	msg := strings.TrimPrefix(hash, "0x")
 	if msg != req.Msg {
 		g.Log().Error(ctx, "CalDomainSign unmath", req.SessionId, err, msg, req.Msg)
 		return gerror.NewCode(consts.CodeInternalError)
 	}
+
 	// /////sign
 	s.pool.Submit(func() {
 		s.CalSignTask(s.ctx, req.SessionId, req.Msg, req.Request)
@@ -169,7 +167,8 @@ func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq) error {
 	// checkmsghash
 	msg, err := s.digestTxHash(ctx, req.SignData)
 	if err != nil {
-		//todo:
+		g.Log().Warning(ctx, "CalSign digestTxHash err", err)
+		return gerror.NewCode(consts.CodeInternalError)
 	}
 	hash := s.hashMessage(ctx, msg)
 	hash = strings.TrimPrefix(hash, "0x")
@@ -185,3 +184,4 @@ func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq) error {
 
 	return nil
 }
+
