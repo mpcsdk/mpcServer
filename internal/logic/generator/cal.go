@@ -184,3 +184,4 @@ func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq) error {
 
 	return nil
 }
+
