@@ -2,11 +2,13 @@ package txhash
 
 import (
 	"context"
+	"li17server/internal/consts"
 	"li17server/internal/service"
 	"os/exec"
 
 	proto "li17server/api/txhash/v1"
 
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gctx"
 	"google.golang.org/grpc"
@@ -22,22 +24,33 @@ func (s *sTxHash) DigestTxHash(ctx context.Context, msg string) (string, error) 
 	rst, err := s.client.DigestTxHash(ctx, &proto.TxRequest{
 		Message: msg,
 	})
-	return rst.Message, err
+	if err != nil {
+		g.Log().Warning(ctx, "DigestTxHash:", err)
+		return "", gerror.NewCode(consts.CodeInternalError)
+	}
+	return rst.Message, nil
 }
 
-func (s *sTxHash) HasDomain(ctx context.Context, msg string) string {
+func (s *sTxHash) HasDomain(ctx context.Context, msg string) (string, error) {
 	rst, err := s.client.HasDomain(ctx, &proto.TxRequest{
 		Message: msg,
 	})
-	g.Log().Warning(ctx, "HasDomain:", err)
-	return rst.Message
+	if err != nil {
+		g.Log().Warning(ctx, "HasDomain:", err)
+		return "", gerror.NewCode(consts.CodeInternalError)
+	}
+	return rst.Message, nil
 }
 
 func (s *sTxHash) TypedDataEncoderHash(ctx context.Context, msg string) (string, error) {
 	rst, err := s.client.TypedDataEncoderHash(ctx, &proto.TxRequest{
 		Message: msg,
 	})
-	return rst.Message, err
+	if err != nil {
+		g.Log().Warning(ctx, "TypedDataEncoderHash:", err)
+		return "", gerror.NewCode(consts.CodeInternalError)
+	}
+	return rst.Message, nil
 }
 func (s *sTxHash) start() {
 	// hashserver

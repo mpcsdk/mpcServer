@@ -137,14 +137,11 @@ func (s *sGenerator) CalDomainSign(ctx context.Context, req *v1.SignMsgReq) erro
 	///
 	hash, err := service.TxHash().TypedDataEncoderHash(ctx, req.SignData)
 	if err != nil {
-
-	}
-	if hash != "" {
-
+		return err
 	}
 	// check domainhash
-	msg := s.hashMessage(ctx, hash)
-	msg = strings.TrimPrefix(msg, "0x")
+	// msg := s.hashMessage(ctx, hash)
+	msg := strings.TrimPrefix(hash, "0x")
 	if msg != req.Msg {
 		g.Log().Error(ctx, "CalDomainSign unmath", req.SessionId, err, msg, req.Msg)
 		return gerror.NewCode(consts.CodeInternalError)
@@ -170,7 +167,8 @@ func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq) error {
 	// checkmsghash
 	msg, err := s.digestTxHash(ctx, req.SignData)
 	if err != nil {
-		//todo:
+		g.Log().Warning(ctx, "CalSign digestTxHash err", err)
+		return gerror.NewCode(consts.CodeInternalError)
 	}
 	hash := s.hashMessage(ctx, msg)
 	hash = strings.TrimPrefix(hash, "0x")

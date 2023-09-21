@@ -75,7 +75,7 @@ func (s *sGenerator) GenNewSid(ctx context.Context, userId string) (string, erro
 
 func (s *sGenerator) Sid2UserId(ctx context.Context, sid string) (string, error) {
 	////
-	key, err := service.Cache().Get(ctx, sid)
+	key, err := service.Cache().Get(ctx, sid+consts.KEY_UserId)
 	if key.IsEmpty() {
 		return "", emptyErr
 	}

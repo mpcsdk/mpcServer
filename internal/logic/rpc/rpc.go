@@ -47,15 +47,16 @@ func (s *sRPC) PerformSmsCode(ctx context.Context, token, serial string) error {
 	return nil
 }
 
-func (s *sRPC) PerformVerifyCode(ctx context.Context, sid, serial, code string) error {
-	g.Log().Debug(ctx, "PerformVerifyCode:", sid, serial, code)
+func (s *sRPC) PerformVerifyCode(ctx context.Context, token, serial, code string) error {
+	g.Log().Debug(ctx, "PerformVerifyCode:", token, serial, code)
 	rst, err := s.client.PerformVerifyCode(ctx, &v1.VerifyCodekReq{
+		Token:      token,
 		RiskSerial: serial,
 		Code:       code,
 	})
 	if err != nil {
 		g.Log().Error(ctx, "PerformVerifyCode:", err, rst)
-		return gerror.NewCode(consts.CodeInternalError)
+		return gerror.NewCode(consts.CodeRiskVerifyInvalid)
 	}
 	///
 	return nil

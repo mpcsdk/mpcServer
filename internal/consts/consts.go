@@ -28,6 +28,7 @@ const (
 	///
 	KEY_RiskSerial string = "riskSerial"
 	KEY_UserToken  string = "userToken"
+	KEY_UserId     string = "userId"
 )
 
 var SessionDur time.Duration = 0

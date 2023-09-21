@@ -22,7 +22,7 @@ func main() {
 	g.Log().SetWriterColorEnable(true)
 	///
 	///
-	ctx := gctx.GetInitCtx()
+	ctx := gctx.New()
 	cfg := gcfg.Instance()
 	//
 	workId, _ := cfg.Get(ctx, "server.workId")

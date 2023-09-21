@@ -12,7 +12,7 @@ import (
 type (
 	ITxHash interface {
 		DigestTxHash(ctx context.Context, msg string) (string, error)
-		HasDomain(ctx context.Context, msg string) string
+		HasDomain(ctx context.Context, msg string) (string, error)
 		TypedDataEncoderHash(ctx context.Context, msg string) (string, error)
 	}
 )
