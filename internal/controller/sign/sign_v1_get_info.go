@@ -14,22 +14,23 @@ import (
 
 func (c *ControllerV1) GetInfo(ctx context.Context, req *v1.GetInfoReq) (res *v1.GetInfoRes, err error) {
 	//trace
-	sctx, span := gtrace.NewSpan(ctx, "GetInfo")
+	ctx, span := gtrace.NewSpan(ctx, "GetInfo")
 	defer span.End()
 	//
-	g.Log().Debug(sctx, "GetInfo:", req)
-	///
-	userId, err := service.Generator().Sid2UserId(sctx, req.SessionId)
-	if err != nil {
-		g.Log().Warning(sctx, "GetInfo:", err)
-		return nil, gerror.NewCode(consts.CodeInternalError)
-	}
-	////
+	g.Log().Debug(ctx, "GetInfo:", req)
+	// ///
+	// userId, err := service.Generator().Sid2UserId(ctx, req.SessionId)
+	// if err != nil {
+	// 	g.Log().Warning(ctx, "GetInfo:", err)
+	// 	return nil, gerror.NewCode(consts.CodeInternalError)
+	// }
+	// ////
 
-	///
-	pubkey, err := service.Generator().FetchUserId(sctx, userId, consts.KEY_publickey2)
+	// ///
+	// pubkey, err := service.Generator().FetchPubKey(ctx, userId, consts.KEY_publickey2)
+	pubkey, err := service.Generator().FetchPubKey(ctx, req.SessionId)
 	if err != nil {
-		g.Log().Warning(sctx, "GetInfo:", userId, err)
+		g.Log().Warning(ctx, "GetInfo:", req.SessionId, err)
 		return nil, gerror.NewCode(consts.CodeStateError(consts.ErrSessionNotExist))
 	}
 

@@ -45,7 +45,7 @@ func (c *ControllerV1) GetZKProofP2(ctx context.Context, req *v1.GetZKProofP2Req
 	//
 	g.Log().Debug(ctx, "GetZKProofP2:", req)
 	///
-	ZKProofp2, err := service.Generator().FetchSid(ctx, req.SessionId, consts.KEY_zkproof2)
+	ZKProofp2, err := service.Generator().FetchZKProofp2(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Warning(ctx, "GetZKProofP2:", err)
 		return nil, gerror.NewCode(consts.CodeGetGeneratorError(consts.ErrZKProofP2NotExist))
@@ -65,7 +65,7 @@ func (c *ControllerV1) GetSignature(ctx context.Context, req *v1.GetSignatureReq
 	////
 	g.Log().Debug(ctx, "GetSignature", req)
 	// signature, err := service.Generator().FetchSignature(ctx, token)
-	signature, err := service.Generator().FetchSid(ctx, req.SessionId, consts.KEY_signature)
+	signature, err := service.Generator().FetchSignature(ctx, req.SessionId)
 	if err != nil || signature == "" {
 		g.Log().Warning(ctx, "getsignature:", err)
 		return nil, gerror.NewCode(consts.CodeGetGeneratorError(consts.ErrSignatureNotExist))

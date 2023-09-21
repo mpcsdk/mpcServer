@@ -35,11 +35,11 @@ func (s *sGenerator) GetState(ctx context.Context, userId string) (string, error
 }
 
 // /
-func (s *sGenerator) RecordSid(ctx context.Context, sid string, key string, val string) error {
+func (s *sGenerator) recordSid(ctx context.Context, sid string, key string, val string) error {
 	err := service.Cache().Set(ctx, sid+key, val, sessionDur)
 	return err
 }
-func (s *sGenerator) FetchSid(ctx context.Context, sid string, key string) (string, error) {
+func (s *sGenerator) fetchSid(ctx context.Context, sid string, key string) (string, error) {
 	val, err := service.Cache().Get(ctx, sid+key)
 	if val.IsEmpty() {
 		return "", emptyErr
@@ -47,11 +47,11 @@ func (s *sGenerator) FetchSid(ctx context.Context, sid string, key string) (stri
 	return val.String(), err
 }
 
-func (s *sGenerator) RecordUserId(ctx context.Context, userId string, key string, val string) error {
+func (s *sGenerator) recordUserId(ctx context.Context, userId string, key string, val string) error {
 	err := service.Cache().Set(ctx, userId+key, val, tokenDur)
 	return err
 }
-func (s *sGenerator) FetchUserId(ctx context.Context, userId string, key string) (string, error) {
+func (s *sGenerator) fetchUserId(ctx context.Context, userId string, key string) (string, error) {
 	val, err := service.Cache().Get(ctx, userId+key)
 	if val.IsEmpty() {
 		return "", emptyErr
@@ -59,12 +59,20 @@ func (s *sGenerator) FetchUserId(ctx context.Context, userId string, key string)
 	return val.String(), err
 }
 
+// /
 // // key
-func (s *sGenerator) GenNewSid(ctx context.Context, userId string) (string, error) {
+func (s *sGenerator) GenNewSid(ctx context.Context, userId string, token string) (string, error) {
 	var genid gvar.Var
 	genid.Set(idgen.NextId())
 	sid := genid.String()
-	err := service.Generator().RecordSid(ctx, sid, consts.KEY_UserId, userId)
+	//
+	err := s.recordUserId(ctx, sid, consts.KEY_UserId, userId)
+	if err != nil {
+		g.Log().Warning(ctx, err)
+		return "", err
+	}
+	///
+	err = s.recordSid(ctx, sid, consts.KEY_UserToken, token)
 	if err != nil {
 		g.Log().Warning(ctx, err)
 		return "", err

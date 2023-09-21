@@ -42,7 +42,7 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 	//
 	g.Log().Debug(ctx, "VerifyCode:", req)
 	// notice: clean oldsign
-	service.Generator().RecordSid(ctx, req.SessionId, consts.KEY_signature, "")
+	service.Generator().CleanSignature(ctx, req.SessionId)
 	///
 	///
 	for _, r := range req.VerifyReq {
