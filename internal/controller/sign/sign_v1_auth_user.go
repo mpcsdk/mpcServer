@@ -40,7 +40,7 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 	g.Log().Debug(ctx, "AuthUser:", req)
 	info, err := service.UserInfo().GetUserInfo(ctx, req.UserToken)
 	if err != nil {
-		g.Log().Error(ctx, "authuser:", req)
+		g.Log().Error(ctx, "authuser:", req, err)
 		return nil, gerror.NewCode(consts.AuthError())
 	}
 	///userid

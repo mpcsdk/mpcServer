@@ -3,6 +3,7 @@ package userInfo
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"li17server/internal/consts"
 	"li17server/internal/model"
 	"li17server/internal/service"
@@ -49,6 +50,9 @@ func (s *sUserInfo) GetUserInfo(ctx context.Context, userToken string) (userInfo
 	// "keyHash": "U2FsdGVkX1/O6j9czaWzdjjDo/XPjk1hI8pIoaxSuS52zIxVuStK/nS07ucgiM5si8NjN97rAux3aH7Ld2i5oO8UuL6tpNZmLMG9ZpwVTxvGkCa3H14vTxWNz+yBoWG8",
 	// "create_time": 1691118876
 	info, err := s.getUserInfo(ctx, userToken)
+	if info == nil {
+		return nil, errors.New("GetUserInfo: userInfo is nil")
+	}
 	return info, err
 	// return &model.UserInfo{
 	// 	Id: 10,
@@ -79,6 +83,7 @@ func (s *sUserInfo) getUserInfo(ctx context.Context, token string) (*model.UserI
 		g.Log().Error(ctx, "getUserInfo:", err, token)
 		return nil, err
 	}
+
 	return userInfo.Data, nil
 }
 
