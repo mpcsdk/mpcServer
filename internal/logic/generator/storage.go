@@ -5,7 +5,6 @@ import (
 	"errors"
 	"li17server/internal/consts"
 	"li17server/internal/service"
-	"time"
 
 	"github.com/gogf/gf/v2/container/gvar"
 	"github.com/gogf/gf/v2/frame/g"
@@ -65,7 +64,7 @@ func (s *sGenerator) GenNewSid(ctx context.Context, userId string) (string, erro
 	var genid gvar.Var
 	genid.Set(idgen.NextId())
 	sid := genid.String()
-	err := service.Cache().Set(ctx, sid, userId, time.Duration(sessionDur))
+	err := service.Generator().RecordSid(ctx, sid, consts.KEY_UserId, userId)
 	if err != nil {
 		g.Log().Warning(ctx, err)
 		return "", err
