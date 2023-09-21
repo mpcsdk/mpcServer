@@ -59,7 +59,8 @@ type SignMsgReq struct {
 }
 
 type SignMsgRes struct {
-	RiskSerial string `json:"riskSerial"`
+	RiskSerial string   `json:"riskSerial"`
+	RiskKind   []string `json:"riskKind"`
 }
 
 // ///

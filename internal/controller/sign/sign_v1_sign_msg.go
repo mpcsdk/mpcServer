@@ -78,6 +78,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		/// need verificationcode
 		return &v1.SignMsgRes{
 			RiskSerial: rst.RiskSerial,
+			RiskKind:   rst.RiskKind,
 		}, gerror.NewCode(consts.NeedSmsCodeError(""))
 	}
 	///
