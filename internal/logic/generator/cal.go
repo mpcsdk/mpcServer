@@ -59,6 +59,23 @@ func (s *sGenerator) CalRequest(ctx context.Context, sid string, request string)
 
 var prefix = "\x19Ethereum Signed Message:\n"
 
+func (c *sGenerator) hashMsg(ctx context.Context, msg string) string {
+	buf := bytes.Buffer{}
+
+	///
+	bytelen := strconv.Itoa(len(msg))
+	//
+	buf.WriteString(prefix)
+	buf.WriteString(bytelen)
+	buf.WriteString(msg)
+
+	hash := crypto.Keccak256Hash(buf.Bytes())
+	///
+	hstr := hash.Hex()
+	hstr = strings.TrimPrefix(hstr, "0x")
+
+	return hstr
+}
 func (c *sGenerator) hashMessage(ctx context.Context, msg string) string {
 	bytemsg, err := hex.DecodeString(msg)
 	if err == nil {
@@ -88,9 +105,7 @@ func (c *sGenerator) hashMessage(ctx context.Context, msg string) string {
 		hash := crypto.Keccak256Hash(buf.Bytes())
 		///
 		hstr := hash.Hex()
-		hstr = strings.TrimPrefix(hstr, "0x")
-
-		return c.hashMessage(ctx, hstr)
+		return hstr
 	}
 }
 
@@ -101,8 +116,13 @@ func (c *sGenerator) digestTxHash(ctx context.Context, SignData string) (string,
 }
 
 func (s *sGenerator) CalMsgSign(ctx context.Context, req *v1.SignMsgReq) error {
-	hash := s.hashMessage(ctx, req.Msg)
+
+	hmsg := s.hashMsg(ctx, req.Msg)
+	hmsg = strings.TrimPrefix(hmsg, "0x")
+	///
+	hash := s.hashMessage(ctx, hmsg)
 	hash = strings.TrimPrefix(hash, "0x")
+	//
 	g.Log().Info(ctx, "CalMsgSign:", hash, req.Msg)
 	signMsg := hash
 
@@ -115,24 +135,20 @@ func (s *sGenerator) CalMsgSign(ctx context.Context, req *v1.SignMsgReq) error {
 func (s *sGenerator) CalDomainSign(ctx context.Context, req *v1.SignMsgReq) error {
 
 	///
-	msg, err := service.TxHash().TypedDataEncoderHash(ctx, req.SignData)
+	hash, err := service.TxHash().TypedDataEncoderHash(ctx, req.SignData)
 	if err != nil {
 
 	}
-	if msg != "" {
+	if hash != "" {
 
 	}
-	msg = strings.TrimPrefix(msg, "0x")
-	////
-
 	// check domainhash
-	hash := s.hashMessage(ctx, msg)
-	hash = strings.TrimPrefix(hash, "0x")
-	if hash != req.Msg {
-		g.Log().Error(ctx, "CalDomainSign unmath", req.SessionId, err, hash)
+	//msg := s.hashMessage(ctx, hash)
+	msg := strings.TrimPrefix(hash, "0x")
+	if msg != req.Msg {
+		g.Log().Error(ctx, "CalDomainSign unmath", req.SessionId, err, msg, req.Msg)
 		return gerror.NewCode(consts.CodeInternalError)
 	}
-
 	// /////sign
 	s.pool.Submit(func() {
 		s.CalSignTask(s.ctx, req.SessionId, req.Msg, req.Request)
