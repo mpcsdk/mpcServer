@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gcache"
 )
 
@@ -44,6 +45,7 @@ func (s *sEthTx) analzyTx(ctx context.Context, tx *model.SignTxData) (*model.Ana
 	////
 	method, err := contract.MethodById(dataByte[:4])
 	if err != nil {
+		g.Log().Warning(ctx, "", contract.Methods, err)
 		return nil, err
 	}
 	args := make(map[string]interface{})
