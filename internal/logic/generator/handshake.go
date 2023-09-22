@@ -18,7 +18,7 @@ func (s *sGenerator) FetchPubKey(ctx context.Context, sid string) (string, error
 	////
 
 	///
-	pubkey, err := s.fetchUserId(ctx, userId, consts.KEY_publickey2)
+	pubkey, err := s.fetchByUserId(ctx, userId, consts.KEY_publickey2)
 	if err != nil {
 		return "", gerror.NewCode(consts.CodeInternalError)
 	}
@@ -27,7 +27,7 @@ func (s *sGenerator) FetchPubKey(ctx context.Context, sid string) (string, error
 }
 func (s *sGenerator) FetchZKProofp2(ctx context.Context, sid string) (string, error) {
 	////
-	ZKProofp2, err := s.fetchSid(ctx, sid, consts.KEY_zkproof2)
+	ZKProofp2, err := s.fetchBySid(ctx, sid, consts.KEY_zkproof2)
 	if err != nil {
 		return "", gerror.NewCode(consts.CodeInternalError)
 	}
@@ -36,7 +36,7 @@ func (s *sGenerator) FetchZKProofp2(ctx context.Context, sid string) (string, er
 }
 func (s *sGenerator) FetchSignature(ctx context.Context, sid string) (string, error) {
 	////
-	signature, err := s.fetchSid(ctx, sid, consts.KEY_signature)
+	signature, err := s.fetchBySid(ctx, sid, consts.KEY_signature)
 	if err != nil {
 		return "", gerror.NewCode(consts.CodeInternalError)
 	}
@@ -48,14 +48,14 @@ func (s *sGenerator) FetchSignature(ctx context.Context, sid string) (string, er
 }
 func (s *sGenerator) CleanSignature(ctx context.Context, sid string) (string, error) {
 	////
-	s.recordSid(ctx, sid, consts.KEY_signature, "")
+	s.recordSidVal(ctx, sid, consts.KEY_signature, "")
 	return "", nil
 }
 
 // ///
 func (s *sGenerator) FetchTxs(ctx context.Context, sid string) (string, error) {
 	////
-	signature, err := s.fetchSid(ctx, sid, consts.KEY_txs)
+	signature, err := s.fetchBySid(ctx, sid, consts.KEY_txs)
 	if err != nil {
 		return "", gerror.NewCode(consts.CodeInternalError)
 	}
@@ -67,7 +67,7 @@ func (s *sGenerator) FetchTxs(ctx context.Context, sid string) (string, error) {
 }
 func (s *sGenerator) RecordTxs(ctx context.Context, sid string, val string) (string, error) {
 	////
-	s.recordSid(ctx, sid, consts.KEY_txs, val)
+	s.recordSidVal(ctx, sid, consts.KEY_txs, val)
 	return "", nil
 	// if err != nil {
 	// 	return "", gerror.NewCode(consts.CodeInternalError)

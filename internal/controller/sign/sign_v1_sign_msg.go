@@ -66,6 +66,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		g.Log().Warning(ctx, "CalSign PerformRiskTxs err:", err, rst)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
+	g.Log().Debug(ctx, "CalSign PerformRiskTxs:", rst)
 	//risk failure, need send verification code, and resign thetx
 	if rst.Ok != 0 {
 		//cache req

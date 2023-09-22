@@ -35,11 +35,11 @@ func (s *sGenerator) GetState(ctx context.Context, userId string) (string, error
 }
 
 // /
-func (s *sGenerator) recordSid(ctx context.Context, sid string, key string, val string) error {
+func (s *sGenerator) recordSidVal(ctx context.Context, sid string, key string, val string) error {
 	err := service.Cache().Set(ctx, sid+key, val, sessionDur)
 	return err
 }
-func (s *sGenerator) fetchSid(ctx context.Context, sid string, key string) (string, error) {
+func (s *sGenerator) fetchBySid(ctx context.Context, sid string, key string) (string, error) {
 	val, err := service.Cache().Get(ctx, sid+key)
 	if val.IsEmpty() {
 		return "", emptyErr
@@ -47,11 +47,11 @@ func (s *sGenerator) fetchSid(ctx context.Context, sid string, key string) (stri
 	return val.String(), err
 }
 
-func (s *sGenerator) recordUserId(ctx context.Context, userId string, key string, val string) error {
+func (s *sGenerator) recordUserIdVal(ctx context.Context, userId string, key string, val string) error {
 	err := service.Cache().Set(ctx, userId+key, val, tokenDur)
 	return err
 }
-func (s *sGenerator) fetchUserId(ctx context.Context, userId string, key string) (string, error) {
+func (s *sGenerator) fetchByUserId(ctx context.Context, userId string, key string) (string, error) {
 	val, err := service.Cache().Get(ctx, userId+key)
 	if val.IsEmpty() {
 		return "", emptyErr
@@ -66,13 +66,13 @@ func (s *sGenerator) GenNewSid(ctx context.Context, userId string, token string)
 	genid.Set(idgen.NextId())
 	sid := genid.String()
 	//
-	err := s.recordUserId(ctx, sid, consts.KEY_UserId, userId)
+	err := s.recordUserIdVal(ctx, sid, consts.KEY_UserId, userId)
 	if err != nil {
 		g.Log().Warning(ctx, err)
 		return "", err
 	}
 	///
-	err = s.recordSid(ctx, sid, consts.KEY_UserToken, token)
+	err = s.recordSidVal(ctx, sid, consts.KEY_UserToken, token)
 	if err != nil {
 		g.Log().Warning(ctx, err)
 		return "", err
