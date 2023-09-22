@@ -59,7 +59,7 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 	}
 	//fetch txs by sid
 	//todo: fetchtx by riskserial
-	val, err := service.Generator().FetchSid(ctx, req.SessionId, consts.KEY_txs)
+	val, err := service.Generator().FetchTxs(ctx, req.SessionId)
 	if err != nil {
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}

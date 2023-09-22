@@ -72,7 +72,7 @@ func (c *ControllerV1) SendZKProofP1(ctx context.Context, req *v1.SendZKProofP1R
 		return nil, gerror.NewCode(consts.CodeStateError(consts.ErrStateIncorrect))
 	}
 
-	_, err = service.Generator().FetchSid(ctx, req.SessionId, consts.KEY_zkproof2)
+	_, err = service.Generator().FetchZKProofp2(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Warning(ctx, "SendZKProofP1:", err)
 		return nil, gerror.NewCode(consts.CodeGetGeneratorError(consts.ErrZKProofP2NotExist))

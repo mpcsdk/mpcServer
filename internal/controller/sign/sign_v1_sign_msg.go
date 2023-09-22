@@ -73,8 +73,8 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		if err != nil {
 			return nil, gerror.NewCode(consts.CodeInternalError)
 		}
-		//notice: record txjson for resign
-		service.Generator().RecordSid(ctx, req.SessionId, consts.KEY_txs, string(val))
+		//notice: record txjson for re-sign
+		service.Generator().RecordTxs(ctx, req.SessionId, string(val))
 		/// need verificationcode
 		return &v1.SignMsgRes{
 			RiskSerial: rst.RiskSerial,

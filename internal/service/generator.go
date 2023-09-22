@@ -30,6 +30,9 @@ type (
 		FetchZKProofp2(ctx context.Context, sid string) (string, error)
 		FetchSignature(ctx context.Context, sid string) (string, error)
 		CleanSignature(ctx context.Context, sid string) (string, error)
+		// ///
+		FetchTxs(ctx context.Context, sid string) (string, error)
+		RecordTxs(ctx context.Context, sid string, val string) (string, error)
 		StateNext(state int) int
 		StatePrivate(state int) int
 		StateInt(state string) int

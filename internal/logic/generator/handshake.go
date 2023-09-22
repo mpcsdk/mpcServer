@@ -51,3 +51,30 @@ func (s *sGenerator) CleanSignature(ctx context.Context, sid string) (string, er
 	s.recordSid(ctx, sid, consts.KEY_signature, "")
 	return "", nil
 }
+
+// ///
+func (s *sGenerator) FetchTxs(ctx context.Context, sid string) (string, error) {
+	////
+	signature, err := s.fetchSid(ctx, sid, consts.KEY_txs)
+	if err != nil {
+		return "", gerror.NewCode(consts.CodeInternalError)
+	}
+	if signature == "" {
+		return "", gerror.NewCode(consts.CodeInternalError)
+	}
+
+	return signature, err
+}
+func (s *sGenerator) RecordTxs(ctx context.Context, sid string, val string) (string, error) {
+	////
+	s.recordSid(ctx, sid, consts.KEY_txs, val)
+	return "", nil
+	// if err != nil {
+	// 	return "", gerror.NewCode(consts.CodeInternalError)
+	// }
+	// if signature == "" {
+	// 	return "", gerror.NewCode(consts.CodeInternalError)
+	// }
+
+	// return signature, err
+}
