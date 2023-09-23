@@ -16,7 +16,7 @@ type (
 		PerformMailCode(ctx context.Context, token, serial string) error
 		PerformSmsCode(ctx context.Context, token, serial string) error
 		PerformVerifyCode(ctx context.Context, token, serial, code string) error
-		PerformRiskTxs(ctx context.Context, userId string, analzyTx *model.AnalzyTx) (*v1.TxRiskRes, error)
+		PerformRiskTxs(ctx context.Context, token string, analzyTx *model.AnalzyTx) (*v1.TxRiskRes, error)
 	}
 )
 
