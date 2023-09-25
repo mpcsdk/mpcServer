@@ -26,6 +26,10 @@ type (
 		// func (s *sGenerator) CheckCalSign(ctx context.Context, req *v1.SignMsgReq) error {
 		// }
 		CalSign(ctx context.Context, req *v1.SignMsgReq) error
+		UpState(ctx context.Context, userId string, state string, err error) error
+		// /
+		// /
+		GetState(ctx context.Context, userId string) (string, error)
 		FetchPubKey(ctx context.Context, sid string) (string, error)
 		FetchZKProofp2(ctx context.Context, sid string) (string, error)
 		FetchSignature(ctx context.Context, sid string) (string, error)
@@ -33,16 +37,7 @@ type (
 		// ///
 		FetchTxs(ctx context.Context, sid string) (string, error)
 		RecordTxs(ctx context.Context, sid string, val string) (string, error)
-		StateNext(state int) int
-		StatePrivate(state int) int
-		StateInt(state string) int
 		StateString(state int) string
-		StateIs(state string, istate int) bool
-		NextStateIs(curstate string) int
-		UpState(ctx context.Context, userId string, state string, err error) error
-		// /
-		// /
-		GetState(ctx context.Context, userId string) (string, error)
 		// /
 		// // key
 		GenNewSid(ctx context.Context, userId string, token string) (string, error)

@@ -16,13 +16,22 @@ database:
   - link: "pgsql:postgres:123456@tcp(127.0.0.1:10100)/riskcontrol"
 
 cache:
-  sessionDur: 100000
+  sessionDur: 0
   contextDur: 0
-# redis mem
-  type: "redis"
-  redis:
-    Addr: "127.0.0.1:6379"
-    Db: 1
+# # redis mem
+#   type: "redis"
+#   redis:
+#     Addr: "127.0.0.1:6379"
+#     Db: 1
+
+# redis 
+redis:
+  default:
+    address: 127.0.0.1:6379
+    db:      1
+  cache:
+    address:     127.0.0.1:6379
+    db:          2
 
 # rpc
 userToken: "https://auth-dev.mixmarvel-sdk.com/info"
@@ -59,5 +68,5 @@ gfcli:
   gen:
     dao:
     - link:     "pgsql:postgres:123456@tcp(127.0.0.1:10100)/riskcontrol"
-      tables:   "contract_abi, eth_tx"
+      tables:   "contract_abi, eth_tx, mpc_context"
       jsonCase: "CamelLower"

@@ -27,7 +27,6 @@ func (c *ControllerV1) GetInfo(ctx context.Context, req *v1.GetInfoReq) (res *v1
 	// ////
 
 	// ///
-	// pubkey, err := service.Generator().FetchPubKey(ctx, userId, consts.KEY_publickey2)
 	pubkey, err := service.Generator().FetchPubKey(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Warning(ctx, "GetInfo:", req.SessionId, err)

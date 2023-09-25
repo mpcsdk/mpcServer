@@ -26,8 +26,9 @@ var (
 	CodeRiskNeedVerification   = &errCode{21, "Risk Need a VerificationCode", nil} // The risk need verification code
 	CodeRiskVerifyCodeInvalid  = &errCode{22, "Verify Code Invalid", nil}          // The verify code is invalid.
 	CodeRiskVerifyCodeNotExist = &errCode{23, "Verify RiskSerial NotExist", nil}
-	CodeRiskVerifyInvalid      = &errCode{24, "Verify Invalid", nil}     //
-	CodeRiskPerformFailed      = &errCode{26, "RiskPerform failed", nil} //
+	CodeRiskVerifyPhoneInvalid = &errCode{24, "Verify PhoneCode Invalid", nil} //
+	CodeRiskVerifyMailInvalid  = &errCode{25, "Verify MailCode Invalid", nil}  //
+	CodeRiskPerformFailed      = &errCode{26, "RiskPerform failed", nil}       //
 
 	CodeInternalError = &errCode{50, "Internal Error", nil} // An error occurred internally.
 
