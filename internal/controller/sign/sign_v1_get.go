@@ -26,11 +26,11 @@ func (c *ControllerV1) GetState(ctx context.Context, req *v1.GetStateReq) (res *
 	}
 	////
 	///
-	state, err := service.Generator().GetState(ctx, userId)
-	if err != nil {
-		g.Log().Warning(ctx, "GetState:", userId, err)
-		return nil, gerror.NewCode(consts.CodeStateError(consts.ErrSessionNotExist))
-	}
+	state := service.Generator().GetState(ctx, userId)
+	// if err != nil {
+	// 	g.Log().Warning(ctx, "GetState:", userId, err)
+	// 	return nil, gerror.NewCode(consts.CodeStateError(consts.ErrSessionNotExist))
+	// }
 
 	res = &v1.GetStateRes{
 		State: state,

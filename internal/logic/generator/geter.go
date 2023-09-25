@@ -14,25 +14,36 @@ import (
 
 var emptyErr error = errors.New("empty value")
 
-func (s *sGenerator) UpState(ctx context.Context, userId string, state string, err error) error {
-	stat := string(state)
-	if err != nil {
-		stat = stat + ":err:"
-		stat += err.Error()
-	}
-	service.Cache().Set(ctx, userId, stat, tokenDur)
-	return nil
-}
+// func (s *sGenerator) UpState(ctx context.Context, userId string, state string, err error) error {
+// 	stat := string(state)
+// 	if err != nil {
+// 		stat = stat + ":err:"
+// 		stat += err.Error()
+// 	}
+// 	service.Cache().Set(ctx, userId, stat, tokenDur)
+// 	return nil
+// }
 
 // /
 // /
-func (s *sGenerator) GetState(ctx context.Context, userId string) (string, error) {
-	stat, err := service.Cache().Get(ctx, userId)
-	if stat.IsEmpty() {
-		return service.Generator().StateString(consts.STATE_None), nil
+func (s *sGenerator) GetState(ctx context.Context, userId string) string {
+	info, err := s.fetchUserContext(ctx, userId)
+	// stat, err := service.Cache().Get(ctx, userId)
+	if err != nil {
+		g.Log().Warning(ctx, "GetState:", userId, err)
+		return service.Generator().StateString(consts.STATE_None)
 	}
-	return stat.String(), err
+	if info == nil {
+		return service.Generator().StateString(consts.STATE_None)
+	}
+	if info.Context == "" {
+		return service.Generator().StateString(consts.STATE_Auth)
+	}
+	//
+	return service.Generator().StateString(consts.STATE_HandShake)
 }
+
+// /
 func (s *sGenerator) FetchPubKey(ctx context.Context, sid string) (string, error) {
 	////
 	///

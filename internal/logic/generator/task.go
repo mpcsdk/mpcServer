@@ -62,8 +62,7 @@ func (s *sGenerator) calPublicKey2(ctx context.Context, sid string, p1_zk_proof 
 	// s.recordUserIdVal(ctx, userId, KEY_context, context_p2)
 	// s.recordUserIdVal(ctx, userId, KEY_publickey2, v2_public_key)
 	s.recordUserContext(ctx, userId, context_p2, "", v2_public_key)
-	//
-	s.UpState(ctx, userId, s.StateString(consts.STATE_HandShake), nil)
+	// s.UpState(ctx, userId, s.StateString(consts.STATE_HandShake), nil)
 	return err
 }
 
@@ -73,7 +72,7 @@ func (s *sGenerator) calRequest(ctx context.Context, sid string, request string)
 	if err != nil {
 		return "", err
 	}
-	state, err := s.GetState(ctx, userId)
+	state := s.GetState(ctx, userId)
 	context_p2 := ""
 	if err != nil {
 		return "", err

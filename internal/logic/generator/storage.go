@@ -35,6 +35,7 @@ func (s *sGenerator) insertUserContext(ctx context.Context, userId string, conte
 		Request: request,
 		PubKey:  pubkey,
 	})
+
 	return err
 }
 func (s *sGenerator) fetchUserContext(ctx context.Context, userId string) (*entity.MpcContext, error) {

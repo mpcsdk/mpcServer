@@ -14,7 +14,17 @@ import (
 )
 
 func (s *sDB) InsertContext(ctx context.Context, data *entity.MpcContext) error {
-	_, err := g.Model(dao.MpcContext.Table()).Ctx(ctx).Cache(gdb.CacheOption{
+	cnt, err := g.Model(dao.MpcContext.Table()).Ctx(ctx).Where(do.MpcContext{
+		UserId: data.UserId,
+	}).CountColumn(dao.MpcContext.Columns().UserId)
+	if err != nil {
+		return err
+	}
+	if cnt != 0 {
+		return nil
+	}
+
+	_, err = g.Model(dao.MpcContext.Table()).Ctx(ctx).Cache(gdb.CacheOption{
 		Duration: -1,
 		Name:     dao.MpcContext.Table(),
 		Force:    false,
