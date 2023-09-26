@@ -124,7 +124,7 @@ func (s *sGenerator) GenNewSid(ctx context.Context, userId string, token string)
 	sid := genid.String()
 	//
 	// err := s.recordUserIdVal(ctx, sid, KEY_UserId, userId)
-	err := s.insertUserContext(ctx, userId, "", "", "")
+	err := s.insertUserContext(ctx, userId, nil, nil, nil)
 	if err != nil {
 		g.Log().Warning(ctx, err)
 		return "", err

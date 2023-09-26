@@ -2,6 +2,7 @@ package generator
 
 import (
 	"context"
+	"li17server/internal/model/do"
 	"li17server/internal/model/entity"
 	"li17server/internal/service"
 )
@@ -19,8 +20,8 @@ func (s *sGenerator) fetchBySid(ctx context.Context, sid string, key string) (st
 	return val.String(), err
 }
 
-func (s *sGenerator) recordUserContext(ctx context.Context, userId string, context string, request string, pubkey string) error {
-	err := service.DB().UpdateContext(ctx, &entity.MpcContext{
+func (s *sGenerator) recordUserContext(ctx context.Context, userId string, context, request, pubkey *string) error {
+	err := service.DB().UpdateContext(ctx, userId, &do.MpcContext{
 		UserId:  userId,
 		Context: context,
 		Request: request,
@@ -28,8 +29,8 @@ func (s *sGenerator) recordUserContext(ctx context.Context, userId string, conte
 	})
 	return err
 }
-func (s *sGenerator) insertUserContext(ctx context.Context, userId string, context string, request string, pubkey string) error {
-	err := service.DB().InsertContext(ctx, &entity.MpcContext{
+func (s *sGenerator) insertUserContext(ctx context.Context, userId string, context, request, pubkey *string) error {
+	err := service.DB().InertContext(ctx, userId, &do.MpcContext{
 		UserId:  userId,
 		Context: context,
 		Request: request,
@@ -39,9 +40,7 @@ func (s *sGenerator) insertUserContext(ctx context.Context, userId string, conte
 	return err
 }
 func (s *sGenerator) fetchUserContext(ctx context.Context, userId string) (*entity.MpcContext, error) {
-	data, err := service.DB().FetchContext(ctx, &entity.MpcContext{
-		UserId: userId,
-	})
+	data, err := service.DB().FetchContext(ctx, userId)
 	return data, err
 }
 
