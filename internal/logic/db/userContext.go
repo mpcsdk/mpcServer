@@ -26,7 +26,7 @@ func (s *sDB) InsertContext(ctx context.Context, data *entity.MpcContext) error 
 
 	_, err = g.Model(dao.MpcContext.Table()).Ctx(ctx).Cache(gdb.CacheOption{
 		Duration: -1,
-		Name:     dao.MpcContext.Table(),
+		Name:     dao.MpcContext.Table() + data.UserId,
 		Force:    false,
 	}).Data(data).
 		Insert()
@@ -36,7 +36,7 @@ func (s *sDB) InsertContext(ctx context.Context, data *entity.MpcContext) error 
 func (s *sDB) UpdateContext(ctx context.Context, data *entity.MpcContext) error {
 	_, err := g.Model(dao.MpcContext.Table()).Ctx(ctx).Cache(gdb.CacheOption{
 		Duration: -1,
-		Name:     dao.MpcContext.Table(),
+		Name:     dao.MpcContext.Table() + data.UserId,
 		Force:    false,
 	}).Data(data).Where(do.MpcContext{
 		UserId: "",
@@ -50,7 +50,7 @@ func (s *sDB) FetchContext(ctx context.Context, data *entity.MpcContext) (*entit
 	}
 	rst, err := g.Model(dao.MpcContext.Table()).Ctx(ctx).Cache(gdb.CacheOption{
 		Duration: time.Hour,
-		Name:     dao.MpcContext.Table(),
+		Name:     dao.MpcContext.Table() + data.UserId,
 		Force:    false,
 		// }).Where("user_id", 1).One()
 	}).Where(do.MpcContext{
