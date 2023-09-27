@@ -13,9 +13,9 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-func (s *sDB) InsertContext(ctx context.Context, data *entity.MpcContext) error {
+func (s *sDB) InertContext(ctx context.Context, userId string, data *do.MpcContext) error {
 	cnt, err := g.Model(dao.MpcContext.Table()).Ctx(ctx).Where(do.MpcContext{
-		UserId: data.UserId,
+		UserId: userId,
 	}).CountColumn(dao.MpcContext.Columns().UserId)
 	if err != nil {
 		return err
@@ -26,35 +26,36 @@ func (s *sDB) InsertContext(ctx context.Context, data *entity.MpcContext) error 
 
 	_, err = g.Model(dao.MpcContext.Table()).Ctx(ctx).Cache(gdb.CacheOption{
 		Duration: -1,
-		Name:     dao.MpcContext.Table() + data.UserId,
+		Name:     dao.MpcContext.Table() + userId,
 		Force:    false,
 	}).Data(data).
 		Insert()
 
 	return err
 }
-func (s *sDB) UpdateContext(ctx context.Context, data *entity.MpcContext) error {
+func (s *sDB) UpdateContext(ctx context.Context, userId string, data *do.MpcContext) error {
 	_, err := g.Model(dao.MpcContext.Table()).Ctx(ctx).Cache(gdb.CacheOption{
 		Duration: -1,
-		Name:     dao.MpcContext.Table() + data.UserId,
+		Name:     dao.MpcContext.Table() + userId,
 		Force:    false,
 	}).Data(data).Where(do.MpcContext{
-		UserId: "",
+		UserId: userId,
 	}).Update()
 	return err
 }
 
-func (s *sDB) FetchContext(ctx context.Context, data *entity.MpcContext) (*entity.MpcContext, error) {
-	if data.UserId == "" {
+func (s *sDB) FetchContext(ctx context.Context, userId string) (*entity.MpcContext, error) {
+	var data *entity.MpcContext
+	if userId == "" {
 		return nil, nil
 	}
 	rst, err := g.Model(dao.MpcContext.Table()).Ctx(ctx).Cache(gdb.CacheOption{
 		Duration: time.Hour,
-		Name:     dao.MpcContext.Table() + data.UserId,
+		Name:     dao.MpcContext.Table() + userId,
 		Force:    false,
 		// }).Where("user_id", 1).One()
 	}).Where(do.MpcContext{
-		UserId: data.UserId,
+		UserId: userId,
 	}).One()
 	if err != nil {
 		return nil, gerror.NewCode(consts.CodeInternalError)

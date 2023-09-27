@@ -8,6 +8,7 @@ package service
 import (
 	"context"
 	"li17server/internal/model"
+	"li17server/internal/model/do"
 	"li17server/internal/model/entity"
 )
 
@@ -15,9 +16,9 @@ type (
 	IDB interface {
 		GetAbi(ctx context.Context, addr string) (string, error)
 		RecordTxs(ctx context.Context, data *model.AnalzyTx) error
-		InsertContext(ctx context.Context, data *entity.MpcContext) error
-		UpdateContext(ctx context.Context, data *entity.MpcContext) error
-		FetchContext(ctx context.Context, data *entity.MpcContext) (*entity.MpcContext, error)
+		InertContext(ctx context.Context, userId string, data *do.MpcContext) error
+		UpdateContext(ctx context.Context, userId string, data *do.MpcContext) error
+		FetchContext(ctx context.Context, userId string) (*entity.MpcContext, error)
 	}
 )
 

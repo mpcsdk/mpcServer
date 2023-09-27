@@ -57,6 +57,11 @@ func (s *sDB) RecordTxs(ctx context.Context, data *model.AnalzyTx) error {
 		}
 
 		///
+<<<<<<< HEAD
+=======
+
+		///
+>>>>>>> b42d5ad7c9afe9ee3dafbd911c976381477a141c
 		_, err = dao.EthTx.Ctx(ctx).Insert(d)
 		if err != nil {
 			g.Log().Error(ctx, "RecordTxs :", err, tx)

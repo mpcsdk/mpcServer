@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"li17server/internal/model"
+	"li17server/internal/model/do"
 	"li17server/internal/model/entity"
 	"li17server/internal/service"
 	"strings"
@@ -40,13 +41,13 @@ func newdb() *db {
 	return &db{}
 }
 
-func (s *db) InsertContext(ctx context.Context, data *entity.MpcContext) error {
+func (s *db) InertContext(ctx context.Context, userId string, data *do.MpcContext) error {
 	return nil
 }
-func (s *db) UpdateContext(ctx context.Context, data *entity.MpcContext) error {
+func (s *db) UpdateContext(ctx context.Context, userId string, data *do.MpcContext) error {
 	return nil
 }
-func (s *db) FetchContext(ctx context.Context, data *entity.MpcContext) (*entity.MpcContext, error) {
+func (s *db) FetchContext(ctx context.Context, userId string) (*entity.MpcContext, error) {
 	return nil, nil
 }
 func Test_Tx(t *testing.T) {
