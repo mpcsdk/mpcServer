@@ -3,9 +3,7 @@ package rpc
 import (
 	"context"
 	"li17server/internal/consts"
-	"li17server/internal/model"
 	"li17server/internal/service"
-	"strings"
 
 	"github.com/gogf/gf/contrib/registry/etcd/v2"
 	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
@@ -61,21 +59,22 @@ func (s *sRPC) PerformVerifyCode(ctx context.Context, token, serial, code string
 	///
 	return nil
 }
-func (s *sRPC) PerformRiskTxs(ctx context.Context, userId string, analzyTx *model.AnalzyTx) (*v1.TxRiskRes, error) {
-	g.Log().Debug(ctx, "PerformRiskTxs:", analzyTx)
+func (s *sRPC) PerformRiskTxs(ctx context.Context, userId string, signTxData string) (*v1.TxRiskRes, error) {
+	//analzyTx *model.AnalzyTx) (*v1.TxRiskRes, error) {
+	g.Log().Debug(ctx, "PerformRiskTxs:", signTxData)
 	////
-	risktxs := []*v1.RiskTx{}
-	for _, tx := range analzyTx.Txs {
-		risktxs = append(risktxs, &v1.RiskTx{
-			Contract: tx.Target,
-			TxData:   tx.Data,
-		})
-	}
-	from := strings.ToLower(analzyTx.Address)
+	// risktxs := []*v1.RiskTx{}
+	// for _, tx := range analzyTx.Txs {
+	// 	risktxs = append(risktxs, &v1.RiskTx{
+	// 		Contract: tx.Target,
+	// 		TxData:   tx.Data,
+	// 	})
+	// }
 	rst, err := s.client.PerformRiskTxs(ctx, &v1.TxRiskReq{
-		UserId:  userId,
-		Address: from,
-		Txs:     risktxs,
+		UserId: userId,
+		// Address:    ,
+		SignTxData: signTxData,
+		// Txs:     risktxs,
 	})
 	if err != nil {
 		g.Log().Error(ctx, "PerformVerifyCode:", err, rst)

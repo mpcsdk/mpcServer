@@ -8,7 +8,6 @@ package service
 import (
 	"context"
 	v1 "li17server/api/risk/v1"
-	"li17server/internal/model"
 )
 
 type (
@@ -16,7 +15,7 @@ type (
 		PerformMailCode(ctx context.Context, token, serial string) error
 		PerformSmsCode(ctx context.Context, token, serial string) error
 		PerformVerifyCode(ctx context.Context, token, serial, code string) error
-		PerformRiskTxs(ctx context.Context, userId string, analzyTx *model.AnalzyTx) (*v1.TxRiskRes, error)
+		PerformRiskTxs(ctx context.Context, userId string, signTxData string) (*v1.TxRiskRes, error)
 	}
 )
 

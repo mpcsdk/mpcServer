@@ -8,7 +8,6 @@ import (
 
 	v1 "li17server/api/sign/v1"
 	"li17server/internal/consts"
-	"li17server/internal/model"
 	"li17server/internal/service"
 
 	"github.com/gogf/gf/v2/errors/gerror"
@@ -38,35 +37,33 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		return nil, nil
 	}
 	///
-	//
 	///check isdomain
 	if strings.Index(req.SignData, "domain") != -1 {
 		err = service.Generator().CalDomainSign(ctx, req)
 		return nil, err
 	}
-
 	///is tx
 	///analzy tx
-	signtx := &model.SignTx{}
-	json.Unmarshal([]byte(req.SignData), signtx)
-	///analzy tx
-	analzytx, err := service.EthTx().AnalzyTxs(ctx, signtx)
-	if err != nil {
-		g.Log().Error(ctx, "analzyTx:", err, signtx)
-		return nil, gerror.NewCode(consts.CodeInternalError)
-	}
-	///Risktx
+	// signtx := &model.SignTx{}
+	// json.Unmarshal([]byte(req.SignData), signtx)
+	// ///analzy tx
+	// analzytx, err := service.EthTx().AnalzyTxs(ctx, signtx)
+	// if err != nil {
+	// 	g.Log().Error(ctx, "analzyTx:", err, signtx)
+	// 	return nil, gerror.NewCode(consts.CodeInternalError)
+	// }
+	// ///Risktx
 	userId, err := service.Generator().Sid2UserId(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Warning(ctx, "CalSign PerformRiskTxs err:", err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
-	rst, err := service.RPC().PerformRiskTxs(ctx, userId, analzytx)
+	rst, err := service.RPC().PerformRiskTxs(ctx, userId, req.SignData)
 	if err != nil {
 		g.Log().Warning(ctx, "CalSign PerformRiskTxs err:", err, rst)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
-	g.Log().Debug(ctx, "CalSign PerformRiskTxs:", rst, "\nanalzytx:", analzytx)
+	g.Log().Debug(ctx, "CalSign PerformRiskTxs:", rst)
 	//risk failure, need send verification code, and resign thetx
 	if rst.Ok != 0 {
 		//cache req
@@ -80,7 +77,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		return &v1.SignMsgRes{
 			RiskSerial: rst.RiskSerial,
 			RiskKind:   rst.RiskKind,
-		}, gerror.NewCode(consts.NeedSmsCodeError(""))
+		}, gerror.NewCode(consts.CodeRiskNeedVerification)
 	}
 	///
 	err = service.Generator().CalSign(ctx, req)
@@ -89,6 +86,6 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		return nil, err
 	}
 	// todo: rm recordtx,  subscribe ethlog insteadof
-	service.DB().RecordTxs(ctx, analzytx)
+	// service.DB().RecordTxs(ctx, analzytx)
 	return nil, nil
 }

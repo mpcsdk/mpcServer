@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"li17server/internal/dao"
 	"li17server/internal/model"
-	"li17server/internal/model/entity"
+	"li17server/internal/model/do"
 	"math/big"
 	"strings"
 
@@ -24,7 +24,7 @@ func (s *sDB) RecordTxs(ctx context.Context, data *model.AnalzyTx) error {
 			g.Log().Error(ctx, err, tx)
 			continue
 		}
-		d := &entity.EthTx{
+		d := &do.EthTx{
 			Address:    addr,
 			Target:     tx.Target,
 			MethodId:   tx.MethodId,
@@ -34,10 +34,13 @@ func (s *sDB) RecordTxs(ctx context.Context, data *model.AnalzyTx) error {
 			Args:       string(args),
 		}
 		///todo: specific method
-		if tx.MethodName == "safeTransferFrom" {
-			d.From = tx.Args["_from"].(common.Address).Hex()
-			d.To = tx.Args["_to"].(common.Address).Hex()
-			d.Value = tx.Args["_tokenIndex"].(string)
+		if tx.MethodName == "transferFrom" {
+			d.From = tx.Args["from"].(common.Address).Hex()
+			d.To = tx.Args["to"].(common.Address).Hex()
+			if val, ok := tx.Args["tokenId"]; ok {
+				d.Value = val.(*big.Int).String()
+			}
+
 		} else if tx.MethodName == "transfer" {
 			d.From = addr
 			if to, ok := tx.Args["_to"]; ok {
@@ -52,10 +55,6 @@ func (s *sDB) RecordTxs(ctx context.Context, data *model.AnalzyTx) error {
 		} else {
 			g.Log().Error(ctx, "UnRecognized methhod:", tx.MethodName)
 		}
-
-		///
-		d.From = strings.ToLower(d.From)
-		d.To = strings.ToLower(d.To)
 
 		///
 		_, err = dao.EthTx.Ctx(ctx).Insert(d)
