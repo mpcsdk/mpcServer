@@ -5,3 +5,9 @@ const (
 	STATE_Auth
 	STATE_HandShake
 )
+const (
+	RiskCodePass int32 = iota
+	RiskCodeNeedVerification
+	RiskCodeForbidden
+	RiskCodeError
+)

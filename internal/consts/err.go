@@ -29,7 +29,11 @@ var (
 	CodeRiskVerifyPhoneInvalid = &errCode{24, "Verify PhoneCode Invalid", nil} //
 	CodeRiskVerifyMailInvalid  = &errCode{25, "Verify MailCode Invalid", nil}  //
 	CodeRiskPerformFailed      = &errCode{26, "RiskPerform failed", nil}       //
-
+	///
+	CodePerformRiskForbidden        = &errCode{31, "Perform Risk Forbidden", nil}         //
+	CodePerformRiskNeedVerification = &errCode{32, "Perform Risk Need Verification", nil} //
+	CodePerformRiskError            = &errCode{33, "Perform Risk Error", nil}             //
+	///
 	CodeInternalError = &errCode{50, "Internal Error", nil} // An error occurred internally.
 
 )
