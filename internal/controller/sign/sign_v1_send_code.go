@@ -44,22 +44,18 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 	// notice: clean oldsign
 	service.Generator().CleanSignature(ctx, req.SessionId)
 	///
-	///
-	for _, r := range req.VerifyReq {
-		if r.Code == "" || r.RiskSerial == "" {
-			continue
-		}
-		token, err := service.Generator().Sid2Token(ctx, req.SessionId)
-		if err != nil {
-			g.Log().Error(ctx, "not exist userId:", req.SessionId, token)
-			return res, err
-		}
-		err = service.RPC().PerformVerifyCode(ctx, token, r.RiskSerial, r.Code)
-		if err != nil {
-			return nil, err
-		}
-		///
+
+	token, err := service.Generator().Sid2Token(ctx, req.SessionId)
+	if err != nil {
+		g.Log().Error(ctx, "not exist userId:", req.SessionId, token)
+		return res, err
 	}
+	err = service.RPC().PerformVerifyCode(ctx, token, req.RiskSerial, req.PhoneCode, req.MailCode)
+	if err != nil {
+		return nil, err
+	}
+	///
+
 	//fetch txs by sid
 	//todo: fetchtx by riskserial
 	val, err := service.Generator().FetchTxs(ctx, req.SessionId)

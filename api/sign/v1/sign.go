@@ -102,16 +102,13 @@ type SendMailCodeRes struct {
 // /
 // /
 type VerifyCodeReq struct {
-	g.Meta    `path:"/VerifyCode" tags:"VerifyCode" method:"post" summary:"VerifyCode"`
-	SessionId string       `json:"sessionId"`
-	VerifyReq []*VerifyReq `json:"codes"`
+	g.Meta     `path:"/VerifyCode" tags:"VerifyCode" method:"post" summary:"VerifyCode"`
+	SessionId  string `json:"sessionId"`
+	RiskSerial string `json:"riskSerial"`
+	PhoneCode  string `json:"phoneCode"`
+	MailCode   string `json:"mailCode"`
 }
 type VerifyCodeRes struct {
-}
-
-type VerifyReq struct {
-	RiskSerial string `json:"riskSerial"`
-	Code       string `json:"code"`
 }
 
 // /
