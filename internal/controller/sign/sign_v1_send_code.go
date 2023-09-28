@@ -46,6 +46,9 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 	///
 	///
 	for _, r := range req.VerifyReq {
+		if r.Code == "" || r.RiskSerial == "" {
+			continue
+		}
 		token, err := service.Generator().Sid2Token(ctx, req.SessionId)
 		if err != nil {
 			g.Log().Error(ctx, "not exist userId:", req.SessionId, token)

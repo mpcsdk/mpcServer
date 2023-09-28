@@ -63,13 +63,13 @@ func (c *ControllerV1) GetSignature(ctx context.Context, req *v1.GetSignatureReq
 	defer span.End()
 	//
 	////
-	g.Log().Debug(ctx, "GetSignature", req)
 	// signature, err := service.Generator().FetchSignature(ctx, token)
 	signature, err := service.Generator().FetchSignature(ctx, req.SessionId)
 	if err != nil || signature == "" {
 		g.Log().Warning(ctx, "getsignature:", err)
 		return nil, gerror.NewCode(consts.CodeGetGeneratorError(consts.ErrSignatureNotExist))
 	}
+	g.Log().Debug(ctx, "GetSignature:", req, signature)
 
 	res = &v1.GetSignatureRes{
 		Signature: signature,

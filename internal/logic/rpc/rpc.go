@@ -53,7 +53,7 @@ func (s *sRPC) PerformVerifyCode(ctx context.Context, token, serial, code string
 		Code:       code,
 	})
 	if err != nil {
-		g.Log().Error(ctx, "PerformVerifyCode:", err, rst)
+		g.Log().Error(ctx, "PerformVerifyCode:", token, serial, code, err, rst)
 		return gerror.NewCode(consts.CodeRiskVerifyCodeInvalid)
 	}
 	///
