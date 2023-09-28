@@ -19,7 +19,7 @@ type sEthTx struct {
 
 func (s *sEthTx) analzyTx(ctx context.Context, tx *model.SignTxData) (*model.AnalzyTxData, error) {
 
-	target := strings.ToLower(tx.Target)
+	target := tx.Target
 	data := strings.TrimPrefix(tx.Data, "0x")
 	///
 	contractabi := ""
@@ -65,13 +65,10 @@ func (s *sEthTx) analzyTx(ctx context.Context, tx *model.SignTxData) (*model.Ana
 	return atx, nil
 }
 
-func (s *sEthTx) tidy(signtxs *model.SignTx) {
-	signtxs.Address = strings.ToLower(signtxs.Address)
-}
 func (s *sEthTx) AnalzyTxs(ctx context.Context, signtxs *model.SignTx) (*model.AnalzyTx, error) {
 	// s.tidy(signtxs)
 	atx := &model.AnalzyTx{}
-	atx.Address = strings.ToLower(signtxs.Address)
+	atx.Address = signtxs.Address
 	///
 	for _, tx := range signtxs.Txs {
 		adata, err := s.analzyTx(ctx, tx)

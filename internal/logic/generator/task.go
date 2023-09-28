@@ -61,9 +61,8 @@ func (s *sGenerator) calPublicKey2(ctx context.Context, sid string, p1_zk_proof 
 	v2_public_key := service.Sign().PublicKeyP2(context_p2)
 	// s.recordUserIdVal(ctx, userId, KEY_context, context_p2)
 	// s.recordUserIdVal(ctx, userId, KEY_publickey2, v2_public_key)
-	s.recordUserContext(ctx, userId, &context_p2, nil, &v2_public_key)
+	return s.recordUserContext(ctx, userId, &context_p2, nil, &v2_public_key)
 	// s.UpState(ctx, userId, s.StateString(consts.STATE_HandShake), nil)
-	return err
 }
 
 // 8.calculate request, recal context_p2

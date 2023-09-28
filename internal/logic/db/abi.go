@@ -4,11 +4,9 @@ import (
 	"context"
 	"li17server/internal/dao"
 	"li17server/internal/model/entity"
-	"strings"
 )
 
 func (s *sDB) GetAbi(ctx context.Context, addr string) (string, error) {
-	addr = strings.ToLower(addr)
 	// 缓存
 	if abi, err := s.cache.Get(ctx, addr); err != nil {
 		return abi.String(), nil

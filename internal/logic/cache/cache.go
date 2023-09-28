@@ -27,36 +27,11 @@ func init() {
 			c: gcache.New(),
 		}
 		r := g.Redis("cache")
-		// cfg := gcfg.Instance()
-		// cacheType, err := cfg.Get(context.Background(), "cache.type")
-		// if err == nil && cacheType.String() == "redis" {
-		// 	addr, err := cfg.Get(context.Background(), "cache.redis.Addr")
-		// 	if err != nil {
-		// 		return
-		// 	}
-		// 	db, err := cfg.Get(context.Background(), "cache.redis.Db")
-		// 	if err != nil {
-		// 		return
-		// 	}
 
-		// 	redisConfig := &gredis.Config{
-		// 		Address: addr.String(),
-		// 		Pass:    "",
-		// 		Db:      db.Int(),
-		// 	}
-
-		// 	redis, err := gredis.New(redisConfig)
-		// 	if err != nil {
-		// 		return
-		// 	}
 		cache.c.SetAdapter(gcache.NewAdapterRedis(r))
 		if err := cache.c.Set(nil, "test", "test", 0); err != nil {
 			panic(err)
 		}
-		// } else {
-		// 	g.Log().Error(context.Background(), "have no redis config")
-		// 	return
-		// }
 
 	})
 

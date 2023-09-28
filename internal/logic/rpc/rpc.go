@@ -61,16 +61,9 @@ func (s *sRPC) PerformVerifyCode(ctx context.Context, token, serial, phoneCode, 
 	return nil
 }
 func (s *sRPC) PerformRiskTxs(ctx context.Context, userId string, signTxData string) (*v1.TxRiskRes, error) {
-	//analzyTx *model.AnalzyTx) (*v1.TxRiskRes, error) {
 	g.Log().Debug(ctx, "PerformRiskTxs:", signTxData)
 	////
-	// risktxs := []*v1.RiskTx{}
-	// for _, tx := range analzyTx.Txs {
-	// 	risktxs = append(risktxs, &v1.RiskTx{
-	// 		Contract: tx.Target,
-	// 		TxData:   tx.Data,
-	// 	})
-	// }
+
 	rst, err := s.client.PerformRiskTxs(ctx, &v1.TxRiskReq{
 		UserId: userId,
 		// Address:    ,

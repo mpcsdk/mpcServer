@@ -17,12 +17,7 @@ database:
 
 cache:
   sessionDur: 0
-  contextDur: 0
-# # redis mem
-#   type: "redis"
-#   redis:
-#     Addr: "127.0.0.1:6379"
-#     Db: 1
+
 
 # redis 
 redis:

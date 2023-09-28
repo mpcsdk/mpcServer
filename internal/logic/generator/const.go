@@ -31,6 +31,4 @@ func init() {
 	ctx := gctx.GetInitCtx()
 	SessionDur = time.Duration(gcfg.Instance().MustGet(ctx, "cache.sessionDur", 1000).Int())
 	SessionDur *= time.Second
-	TokenDur = time.Duration(gcfg.Instance().MustGet(ctx, "cache.tokenDur", 0).Int())
-	TokenDur *= time.Second
 }

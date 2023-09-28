@@ -40,7 +40,9 @@ func (s *sGenerator) CalZKProofP2(ctx context.Context, sid string, p1_hash_proof
 func (s *sGenerator) CalPublicKey2(ctx context.Context, sid string, p1_zk_proof string) error {
 
 	s.pool.Submit(func() {
-		s.calPublicKey2(s.ctx, sid, p1_zk_proof)
+		if err := s.calPublicKey2(s.ctx, sid, p1_zk_proof); err != nil {
+			g.Log().Error(s.ctx, "CalPublicKey2:", err)
+		}
 	})
 
 	return nil
@@ -184,4 +186,3 @@ func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq) error {
 
 	return nil
 }
-

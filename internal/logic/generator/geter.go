@@ -14,16 +14,6 @@ import (
 
 var emptyErr error = errors.New("empty value")
 
-// func (s *sGenerator) UpState(ctx context.Context, userId string, state string, err error) error {
-// 	stat := string(state)
-// 	if err != nil {
-// 		stat = stat + ":err:"
-// 		stat += err.Error()
-// 	}
-// 	service.Cache().Set(ctx, userId, stat, tokenDur)
-// 	return nil
-// }
-
 // /
 // /
 func (s *sGenerator) GetState(ctx context.Context, userId string) string {

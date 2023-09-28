@@ -7,7 +7,6 @@ import (
 	"li17server/internal/model"
 	"li17server/internal/model/do"
 	"math/big"
-	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/gogf/gf/v2/frame/g"
@@ -16,7 +15,7 @@ import (
 func (s *sDB) RecordTxs(ctx context.Context, data *model.AnalzyTx) error {
 	g.Log().Debug(ctx, "record txs", data)
 	///
-	addr := strings.ToLower(data.Address)
+	addr := data.Address
 	for _, tx := range data.Txs {
 		//dao写eth_tx表
 		args, err := json.Marshal(tx.Args)
