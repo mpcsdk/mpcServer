@@ -68,9 +68,10 @@ func (s *sEthTx) analzyTx(ctx context.Context, tx *model.SignTxData) (*model.Ana
 func (s *sEthTx) AnalzyTxs(ctx context.Context, signtxs *model.SignTx) (*model.AnalzyTx, error) {
 	// s.tidy(signtxs)
 	atx := &model.AnalzyTx{}
-	atx.Address = signtxs.Address
+	atx.Address = strings.ToLower(signtxs.Address)
 	///
 	for _, tx := range signtxs.Txs {
+		tx.Target = strings.ToLower(tx.Target)
 		adata, err := s.analzyTx(ctx, tx)
 		if err != nil {
 			return nil, err

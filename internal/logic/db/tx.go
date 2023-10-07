@@ -56,7 +56,6 @@ func (s *sDB) RecordTxs(ctx context.Context, data *model.AnalzyTx) error {
 		}
 
 		///
-
 		_, err = dao.EthTx.Ctx(ctx).Insert(d)
 		if err != nil {
 			g.Log().Error(ctx, "RecordTxs :", err, tx)
