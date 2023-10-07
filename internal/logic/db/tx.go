@@ -39,7 +39,6 @@ func (s *sDB) RecordTxs(ctx context.Context, data *model.AnalzyTx) error {
 			if val, ok := tx.Args["tokenId"]; ok {
 				d.Value = val.(*big.Int).String()
 			}
-
 		} else if tx.MethodName == "transfer" {
 			d.From = addr
 			if to, ok := tx.Args["_to"]; ok {
@@ -51,6 +50,13 @@ func (s *sDB) RecordTxs(ctx context.Context, data *model.AnalzyTx) error {
 			if wad, ok := tx.Args["wad"]; ok {
 				d.Value = wad.(*big.Int).String()
 			}
+			if amount, ok := tx.Args["amount"]; ok {
+				d.Value = amount.(*big.Int).String()
+			}
+			if recipient, ok := tx.Args["recipient"]; ok {
+				d.To = recipient.(common.Address).String()
+			}
+
 		} else {
 			g.Log().Error(ctx, "UnRecognized methhod:", tx.MethodName)
 		}
