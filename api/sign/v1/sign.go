@@ -110,5 +110,3 @@ type VerifyCodeReq struct {
 }
 type VerifyCodeRes struct {
 }
-
-// /
