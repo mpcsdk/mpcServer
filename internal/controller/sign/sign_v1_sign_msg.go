@@ -8,7 +8,6 @@ import (
 
 	v1 "li17server/api/sign/v1"
 	"li17server/internal/consts"
-	"li17server/internal/model"
 	"li17server/internal/service"
 
 	"github.com/gogf/gf/v2/errors/gerror"
@@ -80,17 +79,17 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 			return nil, err
 		}
 
-		///todo: txtest
-		signtx := &model.SignTx{}
-		json.Unmarshal([]byte(req.SignData), signtx)
-		///analzy tx
-		analzytx, err := service.EthTx().AnalzyTxs(ctx, signtx)
-		if err != nil {
-			g.Log().Error(ctx, "analzyTx:", err, signtx)
-			return nil, gerror.NewCode(consts.CodeInternalError)
-		}
-		// todo: rm recordtx,  subscribe ethlog insteadof
-		service.DB().RecordTxs(ctx, analzytx)
+		// ///todo: txtest
+		// signtx := &model.SignTx{}
+		// json.Unmarshal([]byte(req.SignData), signtx)
+		// ///analzy tx
+		// analzytx, err := service.EthTx().AnalzyTxs(ctx, signtx)
+		// if err != nil {
+		// 	g.Log().Error(ctx, "analzyTx:", err, signtx)
+		// 	return nil, gerror.NewCode(consts.CodeInternalError)
+		// }
+		// // todo: rm recordtx,  subscribe ethlog insteadof
+		// service.DB().RecordTxs(ctx, analzytx)
 		////
 
 	default:
