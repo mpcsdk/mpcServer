@@ -7,6 +7,7 @@ import (
 	"li17server/internal/model"
 	"li17server/internal/model/do"
 	"math/big"
+	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/gogf/gf/v2/frame/g"
@@ -15,7 +16,7 @@ import (
 func (s *sDB) RecordTxs(ctx context.Context, data *model.AnalzyTx) error {
 	g.Log().Debug(ctx, "record txs", data)
 	///
-	addr := data.Address
+	addr := strings.ToLower(data.Address)
 	for _, tx := range data.Txs {
 		//dao写eth_tx表
 		args, err := json.Marshal(tx.Args)
@@ -34,15 +35,15 @@ func (s *sDB) RecordTxs(ctx context.Context, data *model.AnalzyTx) error {
 		}
 		///todo: specific method
 		if tx.MethodName == "transferFrom" {
-			d.From = tx.Args["from"].(common.Address).Hex()
-			d.To = tx.Args["to"].(common.Address).Hex()
+			d.From = strings.ToLower(tx.Args["from"].(common.Address).Hex())
+			d.To = strings.ToLower(tx.Args["to"].(common.Address).Hex())
 			if val, ok := tx.Args["tokenId"]; ok {
 				d.Value = val.(*big.Int).String()
 			}
 		} else if tx.MethodName == "transfer" {
 			d.From = addr
 			if to, ok := tx.Args["_to"]; ok {
-				d.To = to.(common.Address).String()
+				d.To = strings.ToLower(to.(common.Address).String())
 			}
 			if val, ok := tx.Args["_value"]; ok {
 				d.Value = val.(*big.Int).String()
@@ -54,7 +55,7 @@ func (s *sDB) RecordTxs(ctx context.Context, data *model.AnalzyTx) error {
 				d.Value = amount.(*big.Int).String()
 			}
 			if recipient, ok := tx.Args["recipient"]; ok {
-				d.To = recipient.(common.Address).String()
+				d.To = strings.ToLower(recipient.(common.Address).String())
 			}
 
 		} else {
