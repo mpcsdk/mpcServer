@@ -13,7 +13,6 @@ import (
 
 type (
 	IDB interface {
-		GetAbi(ctx context.Context, addr string) (string, error)
 		InertContext(ctx context.Context, userId string, data *do.MpcContext) error
 		UpdateContext(ctx context.Context, userId string, data *do.MpcContext) error
 		FetchContext(ctx context.Context, userId string) (*entity.MpcContext, error)
