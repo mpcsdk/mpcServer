@@ -34,6 +34,11 @@ func (s *sRPC) PerformMailCode(ctx context.Context, token, serial string) error 
 		RiskSerial: serial,
 		Token:      token,
 	})
+	if err == errDeadLine {
+		g.Log().Warning(ctx, "PerformVerifyCode TimeOut:")
+		return nil
+	}
+
 	if err != nil {
 		g.Log().Error(ctx, "PerformMailCode:", err, rst)
 		return gerror.NewCode(consts.CodeInternalError)
@@ -48,6 +53,10 @@ func (s *sRPC) PerformSmsCode(ctx context.Context, token, serial string) error {
 		RiskSerial: serial,
 		Token:      token,
 	})
+	if err == errDeadLine {
+		g.Log().Warning(ctx, "PerformVerifyCode TimeOut:")
+		return nil
+	}
 
 	if err != nil {
 		g.Log().Error(ctx, "PerformSmsCode:", err, rst)
@@ -66,6 +75,10 @@ func (s *sRPC) PerformVerifyCode(ctx context.Context, token, serial, phoneCode, 
 		PhoneCode:  phoneCode,
 		MailCode:   mailCode,
 	})
+	if err == errDeadLine {
+		g.Log().Warning(ctx, "PerformVerifyCode TimeOut:")
+		return nil
+	}
 
 	///
 	if err != nil {
