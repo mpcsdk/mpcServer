@@ -45,3 +45,15 @@ func (*Controller) PerformRiskTxs(ctx context.Context, req *v1.TxRiskReq) (res *
 func (*Controller) PerformVerifyCode(ctx context.Context, req *v1.VerifyCodekReq) (res *v1.VerifyCodeRes, err error) {
 	return nil, gerror.NewCode(gcode.CodeNotImplemented)
 }
+
+func (*Controller) PerformAllAbi(ctx context.Context, req *v1.AllAbiReq) (res *v1.AllAbiRes, err error) {
+	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+}
+
+func (*Controller) PerformAllNftRules(ctx context.Context, req *v1.NftRulesReq) (res *v1.NftRulesRes, err error) {
+	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+}
+
+func (*Controller) PerformAllFtRules(ctx context.Context, req *v1.FtRulesReq) (res *v1.FtRulesRes, err error) {
+	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+}
