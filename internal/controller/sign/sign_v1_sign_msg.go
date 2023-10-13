@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"strings"
 
-	riskv1 "li17server/api/risk/v1"
 	v1 "li17server/api/sign/v1"
 	"li17server/internal/consts"
 	"li17server/internal/service"
@@ -45,19 +44,18 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	}
 
 	// ///Risktx
-	//todo: tunoff risktxs
-	// rst, err := service.RPC().PerformRiskTxs(ctx, userId, req.SignData)
-	// if err != nil {
-	// 	g.Log().Warning(ctx, "CalSign PerformRiskTxs err:", err, rst)
-	// 	return nil, gerror.NewCode(consts.CodeInternalError)
-	// }
-	// g.Log().Debug(ctx, "CalSign PerformRiskTxs:", rst)
-	//risk failure, need send verification code, and resign thetx
-	//or forbidden
-	rst := riskv1.TxRiskRes{
-		Ok:  consts.RiskCodePass,
-		Msg: userId,
+	rst, err := service.RPC().PerformRiskTxs(ctx, userId, req.SignData)
+	if err != nil {
+		g.Log().Warning(ctx, "CalSign PerformRiskTxs err:", err, rst)
+		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
+	g.Log().Debug(ctx, "CalSign PerformRiskTxs:", rst)
+	// risk failure, need send verification code, and resign thetx
+	//or forbidden
+	// rst := riskv1.TxRiskRes{
+	// 	Ok:  consts.RiskCodePass,
+	// 	Msg: userId,
+	// }
 	switch rst.Ok {
 	case consts.RiskCodeForbidden:
 		return &v1.SignMsgRes{
