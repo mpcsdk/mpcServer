@@ -8,19 +8,19 @@ import (
 	"li17server/internal/dao/internal"
 )
 
-// internalContractAbiDao is internal type for wrapping internal DAO implements.
-type internalContractAbiDao = *internal.ContractAbiDao
+// internalMpcContextDao is internal type for wrapping internal DAO implements.
+type internalMpcContextDao = *internal.MpcContextDao
 
-// contractAbiDao is the data access object for table contract_abi.
+// mpcContextDao is the data access object for table mpc_context.
 // You can define custom methods on it to extend its functionality as you wish.
-type contractAbiDao struct {
-	internalContractAbiDao
+type mpcContextDao struct {
+	internalMpcContextDao
 }
 
 var (
-	// ContractAbi is globally public accessible object for table contract_abi operations.
-	ContractAbi = contractAbiDao{
-		internal.NewContractAbiDao(),
+	// MpcContext is globally public accessible object for table mpc_context operations.
+	MpcContext = mpcContextDao{
+		internal.NewMpcContextDao(),
 	}
 )
 

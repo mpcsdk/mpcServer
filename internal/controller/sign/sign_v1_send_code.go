@@ -42,24 +42,23 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 	//
 	g.Log().Debug(ctx, "VerifyCode:", req)
 	// notice: clean oldsign
-	service.Generator().RecordSid(ctx, req.SessionId, consts.KEY_signature, "")
+	service.Generator().CleanSignature(ctx, req.SessionId)
 	///
-	///
-	for _, r := range req.VerifyReq {
-		token, err := service.Generator().Sid2Token(ctx, req.SessionId)
-		if err != nil {
-			g.Log().Error(ctx, "not exist userId:", req.SessionId, token)
-			return res, err
-		}
-		err = service.RPC().PerformVerifyCode(ctx, token, r.RiskSerial, r.Code)
-		if err != nil {
-			return nil, err
-		}
-		///
+
+	token, err := service.Generator().Sid2Token(ctx, req.SessionId)
+	if err != nil {
+		g.Log().Error(ctx, "not exist userId:", req.SessionId, token)
+		return res, err
 	}
+	err = service.RPC().PerformVerifyCode(ctx, token, req.RiskSerial, req.PhoneCode, req.MailCode)
+	if err != nil {
+		return nil, err
+	}
+	///
+
 	//fetch txs by sid
 	//todo: fetchtx by riskserial
-	val, err := service.Generator().FetchSid(ctx, req.SessionId, consts.KEY_txs)
+	val, err := service.Generator().FetchTxs(ctx, req.SessionId)
 	if err != nil {
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}

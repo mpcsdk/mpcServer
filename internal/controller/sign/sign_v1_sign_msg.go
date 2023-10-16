@@ -8,7 +8,6 @@ import (
 
 	v1 "li17server/api/sign/v1"
 	"li17server/internal/consts"
-	"li17server/internal/model"
 	"li17server/internal/service"
 
 	"github.com/gogf/gf/v2/errors/gerror"
@@ -25,7 +24,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	//
 	g.Log().Debug(ctx, "SignMsg:", req)
 	// checksid
-	_, err = service.Generator().Sid2UserId(ctx, req.SessionId)
+	userId, err := service.Generator().Sid2UserId(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Error(ctx, "SignMsg no sid", req.SessionId, err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
@@ -38,55 +37,58 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		return nil, nil
 	}
 	///
-	//
 	///check isdomain
 	if strings.Index(req.SignData, "domain") != -1 {
 		err = service.Generator().CalDomainSign(ctx, req)
 		return nil, err
 	}
 
-	///is tx
-	///analzy tx
-	signtx := &model.SignTx{}
-	json.Unmarshal([]byte(req.SignData), signtx)
-	///analzy tx
-	analzytx, err := service.EthTx().AnalzyTxs(ctx, signtx)
-	if err != nil {
-		g.Log().Error(ctx, "analzyTx:", err, signtx)
-		return nil, gerror.NewCode(consts.CodeInternalError)
-	}
-	///Risktx
-	userId, err := service.Generator().Sid2UserId(ctx, req.SessionId)
-	if err != nil {
-		g.Log().Warning(ctx, "CalSign PerformRiskTxs err:", err)
-		return nil, gerror.NewCode(consts.CodeInternalError)
-	}
-	rst, err := service.RPC().PerformRiskTxs(ctx, userId, analzytx)
+	// ///Risktx
+	rst, err := service.RPC().PerformRiskTxs(ctx, userId, req.SignData)
 	if err != nil {
 		g.Log().Warning(ctx, "CalSign PerformRiskTxs err:", err, rst)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
-	//risk failure, need send verification code, and resign thetx
-	if rst.Ok != 0 {
-		//cache req
-		val, err := json.Marshal(req)
-		if err != nil {
-			return nil, gerror.NewCode(consts.CodeInternalError)
-		}
-		//notice: record txjson for resign
-		service.Generator().RecordSid(ctx, req.SessionId, consts.KEY_txs, string(val))
-		/// need verificationcode
+	g.Log().Debug(ctx, "CalSign PerformRiskTxs:", rst)
+	// risk failure, need send verification code, and resign thetx
+	//or forbidden
+	// rst := riskv1.TxRiskRes{
+	// 	Ok:  consts.RiskCodePass,
+	// 	Msg: userId,
+	// }
+	switch rst.Ok {
+	case consts.RiskCodeForbidden:
 		return &v1.SignMsgRes{
 			RiskSerial: rst.RiskSerial,
-		}, gerror.NewCode(consts.NeedSmsCodeError(""))
+			RiskKind:   rst.RiskKind,
+		}, gerror.NewCode(consts.CodePerformRiskForbidden)
+
+	case consts.RiskCodeNeedVerification:
+		//notice: record txjson for re-sign
+		val, err := json.Marshal(req)
+		if err != nil {
+			g.Log().Warning(ctx, "CalSign PerformRiskTxs err:", err, rst)
+			return nil, gerror.NewCode(consts.CodeInternalError)
+		}
+		service.Generator().RecordTxs(ctx, req.SessionId, string(val))
+
+		return &v1.SignMsgRes{
+			RiskSerial: rst.RiskSerial,
+			RiskKind:   rst.RiskKind,
+		}, gerror.NewCode(consts.CodePerformRiskNeedVerification)
+	case consts.RiskCodePass:
+		err = service.Generator().CalSign(ctx, req)
+		if err != nil {
+			g.Log().Warning(ctx, "SignMsg:", err)
+			return nil, err
+		}
+
+	default:
+		return &v1.SignMsgRes{
+			RiskSerial: rst.RiskSerial,
+			RiskKind:   rst.RiskKind,
+		}, gerror.NewCode(consts.CodePerformRiskError)
 	}
-	///
-	err = service.Generator().CalSign(ctx, req)
-	if err != nil {
-		g.Log().Warning(ctx, "SignMsg:", err)
-		return nil, err
-	}
-	// todo: rm recordtx,  subscribe ethlog insteadof
-	service.DB().RecordTxs(ctx, analzytx)
+
 	return nil, nil
 }

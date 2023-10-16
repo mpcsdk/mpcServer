@@ -23,11 +23,11 @@ func (c *ControllerV1) prepareHandshake(ctx context.Context, userId, sid string)
 	}
 	///
 	///
-	err = service.Generator().UpState(ctx, userId, service.Generator().StateString(consts.STATE_Auth), err)
-	if err != nil {
-		g.Log().Warning(ctx, err)
-		return gerror.NewCode(consts.CodeInternalError)
-	}
+	// err = service.Generator().UpState(ctx, userId, service.Generator().StateString(consts.STATE_Auth), err)
+	// if err != nil {
+	// 	g.Log().Warning(ctx, err)
+	// 	return gerror.NewCode(consts.CodeInternalError)
+	// }
 
 	return nil
 }
@@ -40,37 +40,42 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 	g.Log().Debug(ctx, "AuthUser:", req)
 	info, err := service.UserInfo().GetUserInfo(ctx, req.UserToken)
 	if err != nil {
-		g.Log().Error(ctx, "authuser:", req)
+		g.Log().Error(ctx, "AuthUser:", req, err)
+		g.RequestFromCtx(ctx).Response.WriteStatusExit(500)
 		return nil, gerror.NewCode(consts.AuthError())
 	}
 	///userid
 	userId := info.AppPubKey
-	state, err := service.Generator().GetState(ctx, userId)
-	if err != nil {
-		//reject unath user
-		g.Log().Warning(ctx, "AuthUser:", req, err)
-		g.RequestFromCtx(ctx).Response.WriteStatusExit(500)
-	}
+
+	// if err != nil {
+	// 	//reject unath user
+	// 	g.Log().Warning(ctx, "AuthUser:", req, err)
+	// 	g.RequestFromCtx(ctx).Response.WriteStatusExit(500)
+	// }
 	///
 	////
-	sid, err := service.Generator().GenNewSid(ctx, userId)
+	sid, err := service.Generator().GenNewSid(ctx, userId, req.UserToken)
 	if err != nil {
 		g.Log().Warning(ctx, "AuthUser:", err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
+	///
+	state := service.Generator().GetState(ctx, userId)
 	switch state {
 	case service.Generator().StateString(consts.STATE_HandShake):
 		//
-	case service.Generator().StateString(consts.STATE_Auth),
-		service.Generator().StateString(consts.STATE_None):
-		//
-		c.prepareHandshake(ctx, userId, sid)
+	case service.Generator().StateString(consts.STATE_Auth):
+		err := service.Generator().GenContextP2(ctx, sid, tmp_privkey2, "", false)
+		if err != nil {
+			g.Log().Warning(ctx, "AuthUser GenContextP2:", err)
+			return nil, gerror.NewCode(consts.CodeInternalError)
+		}
 	default:
 		g.Log().Warning(ctx, "AuthUser:", err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	////
-	service.Generator().RecordSid(ctx, sid, consts.KEY_UserToken, req.UserToken)
+
 	res = &v1.AuthUserRes{
 		SessionId: sid,
 	}

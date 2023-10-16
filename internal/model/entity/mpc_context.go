@@ -8,12 +8,14 @@ import (
 	"github.com/gogf/gf/v2/os/gtime"
 )
 
-// ContractAbi is the golang structure for table contract_abi.
-type ContractAbi struct {
-	Id        int64       `json:"id"        ` //
-	CreatedAt *gtime.Time `json:"createdAt" ` //
+// MpcContext is the golang structure for table mpc_context.
+type MpcContext struct {
+	UserId    string      `json:"userId"    ` //
+	Context   string      `json:"context"   ` //
 	UpdatedAt *gtime.Time `json:"updatedAt" ` //
+	Request   string      `json:"request"   ` //
+	Token     string      `json:"token"     ` //
+	CreatedAt *gtime.Time `json:"createdAt" ` //
 	DeletedAt *gtime.Time `json:"deletedAt" ` //
-	Addr      string      `json:"addr"      ` //
-	Abi       string      `json:"abi"       ` //
+	PubKey    string      `json:"pubKey"    ` //
 }

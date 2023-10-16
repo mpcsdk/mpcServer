@@ -26,11 +26,11 @@ func (c *ControllerV1) GetState(ctx context.Context, req *v1.GetStateReq) (res *
 	}
 	////
 	///
-	state, err := service.Generator().GetState(ctx, userId)
-	if err != nil {
-		g.Log().Warning(ctx, "GetState:", userId, err)
-		return nil, gerror.NewCode(consts.CodeStateError(consts.ErrSessionNotExist))
-	}
+	state := service.Generator().GetState(ctx, userId)
+	// if err != nil {
+	// 	g.Log().Warning(ctx, "GetState:", userId, err)
+	// 	return nil, gerror.NewCode(consts.CodeStateError(consts.ErrSessionNotExist))
+	// }
 
 	res = &v1.GetStateRes{
 		State: state,
@@ -45,7 +45,7 @@ func (c *ControllerV1) GetZKProofP2(ctx context.Context, req *v1.GetZKProofP2Req
 	//
 	g.Log().Debug(ctx, "GetZKProofP2:", req)
 	///
-	ZKProofp2, err := service.Generator().FetchSid(ctx, req.SessionId, consts.KEY_zkproof2)
+	ZKProofp2, err := service.Generator().FetchZKProofp2(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Warning(ctx, "GetZKProofP2:", err)
 		return nil, gerror.NewCode(consts.CodeGetGeneratorError(consts.ErrZKProofP2NotExist))
@@ -63,13 +63,13 @@ func (c *ControllerV1) GetSignature(ctx context.Context, req *v1.GetSignatureReq
 	defer span.End()
 	//
 	////
-	g.Log().Debug(ctx, "GetSignature", req)
 	// signature, err := service.Generator().FetchSignature(ctx, token)
-	signature, err := service.Generator().FetchSid(ctx, req.SessionId, consts.KEY_signature)
+	signature, err := service.Generator().FetchSignature(ctx, req.SessionId)
 	if err != nil || signature == "" {
 		g.Log().Warning(ctx, "getsignature:", err)
 		return nil, gerror.NewCode(consts.CodeGetGeneratorError(consts.ErrSignatureNotExist))
 	}
+	g.Log().Debug(ctx, "GetSignature:", req, signature)
 
 	res = &v1.GetSignatureRes{
 		Signature: signature,

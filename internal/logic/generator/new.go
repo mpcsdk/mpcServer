@@ -23,7 +23,6 @@ func New() *sGenerator {
 }
 
 var sessionDur time.Duration = 0
-var tokenDur time.Duration = 0
 
 func init() {
 	service.RegisterGenerator(New())
