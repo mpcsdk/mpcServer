@@ -2,6 +2,7 @@ server:
   name: "mpc-signer"
   address:     ":8000"
   workId: 1
+  cpuCore: 2
 
 jaegerUrl: "127.0.0.1:6831"
 
