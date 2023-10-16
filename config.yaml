@@ -13,7 +13,7 @@ logger:
 
 database:
   default:
-  - link: "pgsql:postgres:123456@tcp(127.0.0.1:10100)/riskcontrol"
+  - link: "pgsql:postgres:123456@tcp(127.0.0.1:5432)/mpc"
 
 cache:
   sessionDur: 0
@@ -38,6 +38,6 @@ etcd:
 gfcli:
   gen:
     dao:
-    - link:     "pgsql:postgres:123456@tcp(127.0.0.1:10100)/riskcontrol"
+    - link:     "pgsql:postgres:123456@tcp(127.0.0.1:5432)/mpc"
       tables:   "mpc_context"
       jsonCase: "CamelLower"

@@ -18,7 +18,6 @@ func data2json(data interface{}) string {
 	encoder := json.NewEncoder(bf)
 	encoder.SetEscapeHTML(false)
 	encoder.Encode(data)
-
 	return bf.String()
 }
 
