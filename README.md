@@ -35,6 +35,7 @@ go build
 
 ```
 cd internal/logic/sign/util/li17/cmd/
+go run main.go
 ```
 
 > export LD_LIBRARY_PATH=../libs/
