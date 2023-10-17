@@ -47,15 +47,15 @@ func runtest(i int, private_key1, private_key2, msg32, public_key string) {
 	var v2_public_key = li17.PublicKeyP2(context_p2)
 
 	if v1_public_key == v2_public_key {
-		if public_key == v1_public_key {
-			fmt.Println("private_key1 : ", private_key1, " => ", private_key1_)
-			fmt.Println("private_key2 : ", private_key2, " => ", private_key2_)
-			fmt.Println("  public_key : ", public_key)
-		} else {
-			fmt.Println("private_key1 : ", private_key1_)
-			fmt.Println("private_key2 : ", private_key2_)
-			fmt.Println("  public_key : ", v1_public_key)
-		}
+		// if public_key == v1_public_key {
+		// 	fmt.Println("private_key1 : ", private_key1, " => ", private_key1_)
+		// 	fmt.Println("private_key2 : ", private_key2, " => ", private_key2_)
+		// 	fmt.Println("  public_key : ", public_key)
+		// } else {
+		// 	fmt.Println("private_key1 : ", private_key1_)
+		// 	fmt.Println("private_key2 : ", private_key2_)
+		// 	fmt.Println("  public_key : ", v1_public_key)
+		// }
 
 		// signature
 		// var request = li17.li17_p1_signature_send_signature_request(p1_context)
@@ -69,11 +69,33 @@ func runtest(i int, private_key1, private_key2, msg32, public_key string) {
 		// var signature = li17.li17_p1_signature_recv_signature_partial(p1_context, p2_sign, c_msg32)
 		var signature = li17.SignSendPartialP1(p1_context, p2_sign, msg32)
 
-		fmt.Println("         msg : ", msg32)
-		fmt.Println("   signature : ", signature)
 		if signature == "" {
+			fmt.Println("           p1: ", p1)
+			fmt.Println("           p2: ", p2)
+			fmt.Println("    zk_proof1: ", zk_proof1)
+			fmt.Println("private_key2_: ", private_key2_)
+			fmt.Println("    zk_proof2: ", zk_proof2)
+			fmt.Println("private_key1_: ", private_key1_)
+			fmt.Println("   p1_context: ", p1_context)
+			fmt.Println("   context_p2: ", context_p2)
+			fmt.Println("p1_hash_proof: ", p1_hash_proof)
+			fmt.Println("   context_p2: ", context_p2)
+			fmt.Println("  p2_zk_proof: ", p2_zk_proof)
+			fmt.Println("   p1_context: ", p1_context)
+			fmt.Println("  p1_zk_proof: ", p1_zk_proof)
+			fmt.Println("   context_p2: ", context_p2)
+			fmt.Println("v1_public_key: ", v1_public_key)
+			fmt.Println("v2_public_key: ", v2_public_key)
+			fmt.Println("===============Sign==============")
+
+			fmt.Println("   request: ", request)
+			fmt.Println("context_p2: ", context_p2)
+			fmt.Println("   p2_sign: ", p2_sign)
+			fmt.Println(" signature: ", signature)
+			fmt.Println("      msg : ", msg32)
 			panic(i)
 		}
+		fmt.Println(">", i)
 	} else {
 		fmt.Println("pkey1 != pkey2")
 	}
