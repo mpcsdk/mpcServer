@@ -11,9 +11,6 @@ package li17
 // 	printf("printf:%s\n", p);
 // }
 import "C"
-import (
-	"unsafe"
-)
 
 func KeygenSendHashProofP1(context1 string) string {
 
@@ -38,15 +35,11 @@ func KeygenSendZKProofP1(context1 string) string {
 
 func KeygenRecvZKProofP1(context1, proof2 string) string {
 
-	s_context1 := (*Li17String)(unsafe.Pointer(&context1)).Str
-	s_proof2 := (*Li17String)(unsafe.Pointer(&proof2)).Str
+	s_context1 := C.CString(context1)
+	s_proof2 := C.CString(proof2)
 
-	// C.Print((*C.char)(s_context1))
-	// C.Print((*C.char)(s_proof2))
-
-	p1_context := C.li17_p1_keygen_recv_zk_proof((*C.char)(s_context1), (*C.char)(s_proof2))
+	p1_context := C.li17_p1_keygen_recv_zk_proof(s_context1, s_proof2)
 	return C.GoString(p1_context)
-
 }
 
 func KeygenSendZKProofP2(context1 string) string {
