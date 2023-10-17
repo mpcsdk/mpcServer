@@ -8,7 +8,7 @@ import "C"
 
 import (
 	"fmt"
-	"li17server/internal/logic/sign/util/li17"
+	"mpcServer/internal/logic/sign/util/li17"
 	"time"
 )
 

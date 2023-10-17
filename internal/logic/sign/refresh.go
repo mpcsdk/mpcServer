@@ -1,6 +1,6 @@
 package sign
 
-import "li17server/internal/logic/sign/util/li17"
+import "mpcServer/internal/logic/sign/util/li17"
 
 func (a *sSign) GenContextP1(preivateKey, publicKey string) string {
 	return li17.GenContextP1(preivateKey, publicKey)

@@ -7,7 +7,7 @@ package service
 
 import (
 	"context"
-	v1 "li17server/api/sign/v1"
+	v1 "mpcServer/api/sign/v1"
 )
 
 type (

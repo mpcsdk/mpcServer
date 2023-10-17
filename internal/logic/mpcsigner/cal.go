@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"context"
 	"encoding/hex"
-	v1 "li17server/api/sign/v1"
-	"li17server/internal/consts"
-	"li17server/internal/service"
+	v1 "mpcServer/api/sign/v1"
+	"mpcServer/internal/consts"
+	"mpcServer/internal/service"
 	"strconv"
 	"strings"
 

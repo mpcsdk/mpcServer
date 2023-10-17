@@ -5,7 +5,7 @@
 package sign
 
 import (
-	"li17server/api/sign"
+	"mpcServer/api/sign"
 )
 
 

@@ -5,7 +5,7 @@
 package dao
 
 import (
-	"li17server/internal/dao/internal"
+	"mpcServer/internal/dao/internal"
 )
 
 // internalMpcContextDao is internal type for wrapping internal DAO implements.

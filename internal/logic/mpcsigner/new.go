@@ -2,7 +2,7 @@ package mpcsigner
 
 import (
 	"context"
-	"li17server/internal/service"
+	"mpcServer/internal/service"
 	"time"
 
 	"github.com/gogf/gf/v2/os/gcfg"

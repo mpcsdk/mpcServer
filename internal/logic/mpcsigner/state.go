@@ -2,7 +2,7 @@ package mpcsigner
 
 import (
 	"fmt"
-	"li17server/internal/consts"
+	"mpcServer/internal/consts"
 )
 
 func (s *sMpcSigner) StateString(state int) string {

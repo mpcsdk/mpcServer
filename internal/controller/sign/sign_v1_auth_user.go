@@ -7,9 +7,9 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/gtrace"
 
-	v1 "li17server/api/sign/v1"
-	"li17server/internal/consts"
-	"li17server/internal/service"
+	v1 "mpcServer/api/sign/v1"
+	"mpcServer/internal/consts"
+	"mpcServer/internal/service"
 )
 
 func (c *ControllerV1) prepareHandshake(ctx context.Context, userId, sid string) error {

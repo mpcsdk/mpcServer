@@ -2,7 +2,7 @@ package txhash
 
 import (
 	"context"
-	v1 "li17server/api/txhash/v1"
+	v1 "mpcServer/api/txhash/v1"
 
 	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
 	"github.com/gogf/gf/v2/errors/gcode"

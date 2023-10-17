@@ -2,10 +2,10 @@ package db
 
 import (
 	"context"
-	"li17server/internal/consts"
-	"li17server/internal/dao"
-	"li17server/internal/model/do"
-	"li17server/internal/model/entity"
+	"mpcServer/internal/consts"
+	"mpcServer/internal/dao"
+	"mpcServer/internal/model/do"
+	"mpcServer/internal/model/entity"
 
 	"time"
 

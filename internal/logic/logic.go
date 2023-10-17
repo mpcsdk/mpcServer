@@ -5,11 +5,11 @@
 package logic
 
 import (
-	_ "li17server/internal/logic/cache"
-	_ "li17server/internal/logic/db"
-	_ "li17server/internal/logic/mpcsigner"
-	_ "li17server/internal/logic/rpc"
-	_ "li17server/internal/logic/sign"
-	_ "li17server/internal/logic/txhash"
-	_ "li17server/internal/logic/userInfo"
+	_ "mpcServer/internal/logic/cache"
+	_ "mpcServer/internal/logic/db"
+	_ "mpcServer/internal/logic/mpcsigner"
+	_ "mpcServer/internal/logic/rpc"
+	_ "mpcServer/internal/logic/sign"
+	_ "mpcServer/internal/logic/txhash"
+	_ "mpcServer/internal/logic/userInfo"
 )

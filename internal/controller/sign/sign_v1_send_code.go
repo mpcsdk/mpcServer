@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 
-	v1 "li17server/api/sign/v1"
-	"li17server/internal/consts"
-	"li17server/internal/service"
+	v1 "mpcServer/api/sign/v1"
+	"mpcServer/internal/consts"
+	"mpcServer/internal/service"
 
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"

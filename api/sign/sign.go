@@ -7,7 +7,7 @@ package sign
 import (
 	"context"
 	
-	"li17server/api/sign/v1"
+	"mpcServer/api/sign/v1"
 )
 
 type ISignV1 interface {

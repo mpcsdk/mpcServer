@@ -2,11 +2,11 @@ package txhash
 
 import (
 	"context"
-	"li17server/internal/consts"
-	"li17server/internal/service"
+	"mpcServer/internal/consts"
+	"mpcServer/internal/service"
 	"os/exec"
 
-	proto "li17server/api/txhash/v1"
+	proto "mpcServer/api/txhash/v1"
 
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"

@@ -2,7 +2,7 @@ package risk
 
 import (
 	"context"
-	v1 "li17server/api/risk/v1"
+	v1 "mpcServer/api/risk/v1"
 
 	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
 	"github.com/gogf/gf/v2/errors/gcode"

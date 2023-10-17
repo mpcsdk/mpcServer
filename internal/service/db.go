@@ -7,8 +7,8 @@ package service
 
 import (
 	"context"
-	"li17server/internal/model/do"
-	"li17server/internal/model/entity"
+	"mpcServer/internal/model/do"
+	"mpcServer/internal/model/entity"
 )
 
 type (

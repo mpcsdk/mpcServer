@@ -3,8 +3,8 @@ package mpcsigner
 import (
 	"context"
 	"errors"
-	"li17server/internal/consts"
-	"li17server/internal/service"
+	"mpcServer/internal/consts"
+	"mpcServer/internal/service"
 
 	"github.com/gogf/gf/v2/frame/g"
 )

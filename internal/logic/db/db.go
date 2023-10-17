@@ -1,7 +1,7 @@
 package db
 
 import (
-	"li17server/internal/service"
+	"mpcServer/internal/service"
 
 	_ "github.com/gogf/gf/contrib/drivers/pgsql/v2"
 	_ "github.com/gogf/gf/contrib/nosql/redis/v2"

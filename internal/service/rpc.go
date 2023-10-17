@@ -7,7 +7,7 @@ package service
 
 import (
 	"context"
-	v1 "li17server/api/risk/v1"
+	v1 "mpcServer/api/risk/v1"
 )
 
 type (

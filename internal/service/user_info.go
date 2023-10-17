@@ -7,7 +7,7 @@ package service
 
 import (
 	"context"
-	"li17server/internal/model"
+	"mpcServer/internal/model"
 )
 
 type (

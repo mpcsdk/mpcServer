@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"li17server/internal/consts"
-	"li17server/internal/model"
-	"li17server/internal/service"
+	"mpcServer/internal/consts"
+	"mpcServer/internal/model"
+	"mpcServer/internal/service"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/gogf/gf/v2/errors/gerror"

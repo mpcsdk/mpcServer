@@ -1,7 +1,7 @@
 package sign
 
 import (
-	"li17server/internal/service"
+	"mpcServer/internal/service"
 )
 
 type sSign struct{}

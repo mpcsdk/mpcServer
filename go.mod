@@ -1,4 +1,4 @@
-module li17server
+module mpcServer
 
 go 1.15
 

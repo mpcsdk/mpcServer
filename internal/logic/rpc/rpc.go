@@ -3,8 +3,8 @@ package rpc
 import (
 	"context"
 	"errors"
-	"li17server/internal/consts"
-	"li17server/internal/service"
+	"mpcServer/internal/consts"
+	"mpcServer/internal/service"
 	"time"
 
 	"github.com/gogf/gf/contrib/registry/etcd/v2"
@@ -15,7 +15,7 @@ import (
 	"github.com/gogf/gf/v2/os/gctx"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	v1 "li17server/api/risk/v1"
+	v1 "mpcServer/api/risk/v1"
 )
 
 type sRPC struct {

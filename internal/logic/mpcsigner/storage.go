@@ -2,9 +2,9 @@ package mpcsigner
 
 import (
 	"context"
-	"li17server/internal/model/do"
-	"li17server/internal/model/entity"
-	"li17server/internal/service"
+	"mpcServer/internal/model/do"
+	"mpcServer/internal/model/entity"
+	"mpcServer/internal/service"
 )
 
 // /

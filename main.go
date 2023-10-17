@@ -1,9 +1,9 @@
 package main
 
 import (
-	_ "li17server/internal/packed"
+	_ "mpcServer/internal/packed"
 
-	_ "li17server/internal/logic"
+	_ "mpcServer/internal/logic"
 
 	_ "github.com/gogf/gf/contrib/drivers/pgsql/v2"
 	_ "github.com/gogf/gf/contrib/nosql/redis/v2"
@@ -12,7 +12,7 @@ import (
 	"github.com/gogf/gf/v2/os/gcfg"
 	"github.com/gogf/gf/v2/os/gctx"
 
-	"li17server/internal/cmd"
+	"mpcServer/internal/cmd"
 
 	"github.com/yitter/idgenerator-go/idgen"
 )

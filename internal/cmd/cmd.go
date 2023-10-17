@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"context"
-	"li17server/internal/controller/sign"
+	"mpcServer/internal/controller/sign"
 
 	"github.com/gogf/gf/v2/errors/gcode"
 	"github.com/gogf/gf/v2/errors/gerror"
