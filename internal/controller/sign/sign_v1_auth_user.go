@@ -46,7 +46,11 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 	}
 	///userid
 	userId := info.AppPubKey
-
+	if userId == "" {
+		g.Log().Error(ctx, "AuthUser:", req, err)
+		g.RequestFromCtx(ctx).Response.WriteStatusExit(500)
+		return nil, gerror.NewCode(consts.AuthError())
+	}
 	// if err != nil {
 	// 	//reject unath user
 	// 	g.Log().Warning(ctx, "AuthUser:", req, err)
