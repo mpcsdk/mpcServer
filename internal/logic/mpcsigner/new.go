@@ -1,4 +1,4 @@
-package generator
+package mpcsigner
 
 import (
 	"context"
@@ -10,15 +10,15 @@ import (
 	"github.com/panjf2000/ants/v2"
 )
 
-type sGenerator struct {
+type sMpcSigner struct {
 	pool *ants.Pool
 	ctx  context.Context
 }
 
-func New() *sGenerator {
+func New() *sMpcSigner {
 	p, _ := ants.NewPool(core)
 
-	return &sGenerator{
+	return &sMpcSigner{
 		ctx:  context.Background(),
 		pool: p,
 	}
@@ -35,6 +35,6 @@ func init() {
 		panic(err)
 	}
 	core = v.Int()
-	service.RegisterGenerator(New())
+	service.RegisterMpcSigner(New())
 
 }

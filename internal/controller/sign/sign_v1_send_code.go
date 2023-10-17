@@ -20,7 +20,7 @@ func (c *ControllerV1) SendMailCode(ctx context.Context, req *v1.SendMailCodeReq
 	//
 	g.Log().Debug(ctx, "SendMailCode:", req)
 	sid := req.SessionId
-	token, err := service.Generator().Sid2Token(ctx, sid)
+	token, err := service.MpcSigner().Sid2Token(ctx, sid)
 	if err != nil {
 		g.Log().Error(ctx, "not exist userId:", sid, token)
 		return res, err
@@ -42,10 +42,10 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 	//
 	g.Log().Debug(ctx, "VerifyCode:", req)
 	// notice: clean oldsign
-	service.Generator().CleanSignature(ctx, req.SessionId)
+	service.MpcSigner().CleanSignature(ctx, req.SessionId)
 	///
 
-	token, err := service.Generator().Sid2Token(ctx, req.SessionId)
+	token, err := service.MpcSigner().Sid2Token(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Error(ctx, "not exist userId:", req.SessionId, token)
 		return res, err
@@ -58,7 +58,7 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 
 	//fetch txs by sid
 	//todo: fetchtx by riskserial
-	val, err := service.Generator().FetchTxs(ctx, req.SessionId)
+	val, err := service.MpcSigner().FetchTxs(ctx, req.SessionId)
 	if err != nil {
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
@@ -68,7 +68,7 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	///sign msg
-	err = service.Generator().CalSign(ctx, txreq)
+	err = service.MpcSigner().CalSign(ctx, txreq)
 	if err != nil {
 		g.Log().Warning(ctx, "SignMsg:", err)
 		return nil, gerror.NewCode(consts.CalSignError(""))
@@ -85,7 +85,7 @@ func (c *ControllerV1) SendSmsCode(ctx context.Context, req *v1.SendSmsCodeReq) 
 	//
 	g.Log().Debug(ctx, "SendMailCode:", req)
 	sid := req.SessionId
-	token, err := service.Generator().Sid2Token(ctx, sid)
+	token, err := service.MpcSigner().Sid2Token(ctx, sid)
 	if err != nil {
 		g.Log().Error(ctx, "not exist userId:", sid, token)
 		return res, err

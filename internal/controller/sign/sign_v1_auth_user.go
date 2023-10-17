@@ -16,14 +16,14 @@ func (c *ControllerV1) prepareHandshake(ctx context.Context, userId, sid string)
 	///
 	g.Log().Debug(ctx, "prepareHandshake:", userId, sid)
 	///
-	err := service.Generator().GenContextP2(ctx, sid, tmp_privkey2, "", false)
+	err := service.MpcSigner().GenContextP2(ctx, sid, tmp_privkey2, "", false)
 	if err != nil {
 		g.Log().Warning(ctx, "prepareHandshake:", err)
 		return gerror.NewCode(consts.CodeInternalError)
 	}
 	///
 	///
-	// err = service.Generator().UpState(ctx, userId, service.Generator().StateString(consts.STATE_Auth), err)
+	// err = service.MpcSigner().UpState(ctx, userId, service.MpcSigner().StateString(consts.STATE_Auth), err)
 	// if err != nil {
 	// 	g.Log().Warning(ctx, err)
 	// 	return gerror.NewCode(consts.CodeInternalError)
@@ -54,18 +54,18 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 	// }
 	///
 	////
-	sid, err := service.Generator().GenNewSid(ctx, userId, req.UserToken)
+	sid, err := service.MpcSigner().GenNewSid(ctx, userId, req.UserToken)
 	if err != nil {
 		g.Log().Warning(ctx, "AuthUser:", err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	///
-	state := service.Generator().GetState(ctx, userId)
+	state := service.MpcSigner().GetState(ctx, userId)
 	switch state {
-	case service.Generator().StateString(consts.STATE_HandShake):
+	case service.MpcSigner().StateString(consts.STATE_HandShake):
 		//
-	case service.Generator().StateString(consts.STATE_Auth):
-		err := service.Generator().GenContextP2(ctx, sid, tmp_privkey2, "", false)
+	case service.MpcSigner().StateString(consts.STATE_Auth):
+		err := service.MpcSigner().GenContextP2(ctx, sid, tmp_privkey2, "", false)
 		if err != nil {
 			g.Log().Warning(ctx, "AuthUser GenContextP2:", err)
 			return nil, gerror.NewCode(consts.CodeInternalError)

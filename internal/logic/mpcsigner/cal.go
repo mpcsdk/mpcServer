@@ -1,4 +1,4 @@
-package generator
+package mpcsigner
 
 import (
 	"bytes"
@@ -16,7 +16,7 @@ import (
 )
 
 // GenContextP2
-func (s *sGenerator) GenContextP2(ctx context.Context, sid string, private_key2, public_key string, submit bool) error {
+func (s *sMpcSigner) GenContextP2(ctx context.Context, sid string, private_key2, public_key string, submit bool) error {
 	if submit {
 		s.pool.Submit(func() {
 			s.genContextP2(s.ctx, sid, private_key2, public_key)
@@ -28,7 +28,7 @@ func (s *sGenerator) GenContextP2(ctx context.Context, sid string, private_key2,
 }
 
 // 4.5.calculate p2_zk_proof by p1_hash_proof, need recal context_p2 by p1_hash_proof
-func (s *sGenerator) CalZKProofP2(ctx context.Context, sid string, p1_hash_proof string) error {
+func (s *sMpcSigner) CalZKProofP2(ctx context.Context, sid string, p1_hash_proof string) error {
 	s.pool.Submit(func() {
 		s.calZKProofP2(s.ctx, sid, p1_hash_proof)
 	})
@@ -37,7 +37,7 @@ func (s *sGenerator) CalZKProofP2(ctx context.Context, sid string, p1_hash_proof
 }
 
 // 6.7.calculate v2_public_key by p1_zk_proof, recal context_p2 by p1_zk_proof
-func (s *sGenerator) CalPublicKey2(ctx context.Context, sid string, p1_zk_proof string) error {
+func (s *sMpcSigner) CalPublicKey2(ctx context.Context, sid string, p1_zk_proof string) error {
 
 	s.pool.Submit(func() {
 		if err := s.calPublicKey2(s.ctx, sid, p1_zk_proof); err != nil {
@@ -49,7 +49,7 @@ func (s *sGenerator) CalPublicKey2(ctx context.Context, sid string, p1_zk_proof 
 }
 
 // 8.calculate request, recal context_p2
-func (s *sGenerator) CalRequest(ctx context.Context, sid string, request string) error {
+func (s *sMpcSigner) CalRequest(ctx context.Context, sid string, request string) error {
 	s.pool.Submit(func() {
 		s.pool.Submit(func() {
 			s.calRequest(s.ctx, sid, request)
@@ -61,7 +61,7 @@ func (s *sGenerator) CalRequest(ctx context.Context, sid string, request string)
 
 var prefix = "\x19Ethereum Signed Message:\n"
 
-func (c *sGenerator) hashMsg(ctx context.Context, msg string) string {
+func (c *sMpcSigner) hashMsg(ctx context.Context, msg string) string {
 	buf := bytes.Buffer{}
 
 	///
@@ -78,7 +78,7 @@ func (c *sGenerator) hashMsg(ctx context.Context, msg string) string {
 
 	return hstr
 }
-func (c *sGenerator) hashMessage(ctx context.Context, msg string) string {
+func (c *sMpcSigner) hashMessage(ctx context.Context, msg string) string {
 	bytemsg, err := hex.DecodeString(msg)
 	if err == nil {
 		buf := bytes.Buffer{}
@@ -112,13 +112,13 @@ func (c *sGenerator) hashMessage(ctx context.Context, msg string) string {
 	}
 }
 
-func (c *sGenerator) digestTxHash(ctx context.Context, SignData string) (string, error) {
+func (c *sMpcSigner) digestTxHash(ctx context.Context, SignData string) (string, error) {
 	msg, err := service.TxHash().DigestTxHash(ctx, SignData)
 	msg = strings.TrimPrefix(msg, "0x")
 	return msg, err
 }
 
-func (s *sGenerator) CalMsgSign(ctx context.Context, req *v1.SignMsgReq) error {
+func (s *sMpcSigner) CalMsgSign(ctx context.Context, req *v1.SignMsgReq) error {
 	hmsg := s.hashMsg(ctx, req.Msg)
 	hmsg = strings.TrimPrefix(hmsg, "0x")
 	///
@@ -134,7 +134,7 @@ func (s *sGenerator) CalMsgSign(ctx context.Context, req *v1.SignMsgReq) error {
 	})
 	return nil
 }
-func (s *sGenerator) CalDomainSign(ctx context.Context, req *v1.SignMsgReq) error {
+func (s *sMpcSigner) CalDomainSign(ctx context.Context, req *v1.SignMsgReq) error {
 
 	///
 	hash, err := service.TxHash().TypedDataEncoderHash(ctx, req.SignData)
@@ -157,9 +157,9 @@ func (s *sGenerator) CalDomainSign(ctx context.Context, req *v1.SignMsgReq) erro
 }
 
 // 9.signature/
-// func (s *sGenerator) CheckCalSign(ctx context.Context, req *v1.SignMsgReq) error {
+// func (s *sMpcSigner) CheckCalSign(ctx context.Context, req *v1.SignMsgReq) error {
 // }
-func (s *sGenerator) CalSign(ctx context.Context, req *v1.SignMsgReq) error {
+func (s *sMpcSigner) CalSign(ctx context.Context, req *v1.SignMsgReq) error {
 	var err error
 	///
 	if len(req.Msg) < 10 {

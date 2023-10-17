@@ -11,7 +11,7 @@ import (
 )
 
 type (
-	IGenerator interface {
+	IMpcSigner interface {
 		// GenContextP2
 		GenContextP2(ctx context.Context, sid string, private_key2, public_key string, submit bool) error
 		// 4.5.calculate p2_zk_proof by p1_hash_proof, need recal context_p2 by p1_hash_proof
@@ -23,7 +23,7 @@ type (
 		CalMsgSign(ctx context.Context, req *v1.SignMsgReq) error
 		CalDomainSign(ctx context.Context, req *v1.SignMsgReq) error
 		// 9.signature/
-		// func (s *sGenerator) CheckCalSign(ctx context.Context, req *v1.SignMsgReq) error {
+		// func (s *sMpcSigner) CheckCalSign(ctx context.Context, req *v1.SignMsgReq) error {
 		// }
 		CalSign(ctx context.Context, req *v1.SignMsgReq) error
 		// /
@@ -49,16 +49,16 @@ type (
 )
 
 var (
-	localGenerator IGenerator
+	localMpcSigner IMpcSigner
 )
 
-func Generator() IGenerator {
-	if localGenerator == nil {
-		panic("implement not found for interface IGenerator, forgot register?")
+func MpcSigner() IMpcSigner {
+	if localMpcSigner == nil {
+		panic("implement not found for interface IMpcSigner, forgot register?")
 	}
-	return localGenerator
+	return localMpcSigner
 }
 
-func RegisterGenerator(i IGenerator) {
-	localGenerator = i
+func RegisterMpcSigner(i IMpcSigner) {
+	localMpcSigner = i
 }

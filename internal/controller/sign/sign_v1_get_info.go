@@ -19,7 +19,7 @@ func (c *ControllerV1) GetInfo(ctx context.Context, req *v1.GetInfoReq) (res *v1
 	//
 	g.Log().Debug(ctx, "GetInfo:", req)
 	// ///
-	// userId, err := service.Generator().Sid2UserId(ctx, req.SessionId)
+	// userId, err := service.MpcSigner().Sid2UserId(ctx, req.SessionId)
 	// if err != nil {
 	// 	g.Log().Warning(ctx, "GetInfo:", err)
 	// 	return nil, gerror.NewCode(consts.CodeInternalError)
@@ -27,7 +27,7 @@ func (c *ControllerV1) GetInfo(ctx context.Context, req *v1.GetInfoReq) (res *v1
 	// ////
 
 	// ///
-	pubkey, err := service.Generator().FetchPubKey(ctx, req.SessionId)
+	pubkey, err := service.MpcSigner().FetchPubKey(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Warning(ctx, "GetInfo:", req.SessionId, err)
 		return nil, gerror.NewCode(consts.CodeStateError(consts.ErrSessionNotExist))

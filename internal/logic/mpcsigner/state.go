@@ -1,11 +1,11 @@
-package generator
+package mpcsigner
 
 import (
 	"fmt"
 	"li17server/internal/consts"
 )
 
-func (s *sGenerator) StateString(state int) string {
+func (s *sMpcSigner) StateString(state int) string {
 	switch state {
 	case consts.STATE_None:
 		return "none"

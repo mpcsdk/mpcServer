@@ -1,4 +1,4 @@
-package generator
+package mpcsigner
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 )
 
 // GenContextP2
-func (s *sGenerator) genContextP2(ctx context.Context, sid string, private_key2, public_key string) error {
+func (s *sMpcSigner) genContextP2(ctx context.Context, sid string, private_key2, public_key string) error {
 	p2 := service.Sign().GenContextP2(private_key2, public_key)
 	// err := s.RecordP2(ctx, key, p2)
 	err := s.recordSidVal(ctx, sid, KEY_context, p2)
@@ -18,7 +18,7 @@ func (s *sGenerator) genContextP2(ctx context.Context, sid string, private_key2,
 }
 
 // 1.2.3 cal zk_proof2 by zk_proof1, need recal private_key2_ and context_p2
-// func (s *sGenerator) calZKProof2(ctx context.Context, key string, zk_proof1 string) (err error) {
+// func (s *sMpcSigner) calZKProof2(ctx context.Context, key string, zk_proof1 string) (err error) {
 // 	p2, err := s.FetchP2(ctx, key)
 // 	if err != nil {
 // 		return
@@ -36,7 +36,7 @@ func (s *sGenerator) genContextP2(ctx context.Context, sid string, private_key2,
 // }
 
 // 4.5.calculate p2_zk_proof by p1_hash_proof, need recal context_p2 by p1_hash_proof
-func (s *sGenerator) calZKProofP2(ctx context.Context, sid string, p1_hash_proof string) error {
+func (s *sMpcSigner) calZKProofP2(ctx context.Context, sid string, p1_hash_proof string) error {
 	context_p2, err := s.fetchBySid(ctx, sid, KEY_context)
 	context_p2 = service.Sign().KeygenRecvHashProofP2(context_p2, p1_hash_proof)
 	s.recordSidVal(ctx, sid, KEY_context, context_p2)
@@ -47,7 +47,7 @@ func (s *sGenerator) calZKProofP2(ctx context.Context, sid string, p1_hash_proof
 }
 
 // 6.7.calculate v2_public_key by p1_zk_proof, recal context_p2 by p1_zk_proof
-func (s *sGenerator) calPublicKey2(ctx context.Context, sid string, p1_zk_proof string) error {
+func (s *sMpcSigner) calPublicKey2(ctx context.Context, sid string, p1_zk_proof string) error {
 	context_p2, err := s.fetchBySid(ctx, sid, KEY_context)
 	if err != nil {
 		return nil
@@ -66,7 +66,7 @@ func (s *sGenerator) calPublicKey2(ctx context.Context, sid string, p1_zk_proof 
 }
 
 // 8.calculate request, recal context_p2
-func (s *sGenerator) calRequest(ctx context.Context, sid string, request string) (string, error) {
+func (s *sMpcSigner) calRequest(ctx context.Context, sid string, request string) (string, error) {
 	userId, err := s.Sid2UserId(ctx, sid)
 	if err != nil {
 		return "", err
@@ -97,7 +97,7 @@ func (s *sGenerator) calRequest(ctx context.Context, sid string, request string)
 }
 
 // 9.signature
-func (s *sGenerator) CalSignTask(ctx context.Context, sid string, msg string, request string) error {
+func (s *sMpcSigner) CalSignTask(ctx context.Context, sid string, msg string, request string) error {
 	g.Log().Debug(ctx, "CalSignTask:", sid, msg, request)
 	s.recordSidVal(ctx, sid, KEY_signature, "")
 	userId, err := s.Sid2UserId(ctx, sid)

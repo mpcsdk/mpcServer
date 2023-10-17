@@ -1,4 +1,4 @@
-package generator
+package mpcsigner
 
 import (
 	"context"
@@ -16,28 +16,28 @@ var emptyErr error = errors.New("empty value")
 
 // /
 // /
-func (s *sGenerator) GetState(ctx context.Context, userId string) string {
+func (s *sMpcSigner) GetState(ctx context.Context, userId string) string {
 	info, err := s.fetchUserContext(ctx, userId)
 	// stat, err := service.Cache().Get(ctx, userId)
 	if err != nil {
 		g.Log().Warning(ctx, "GetState:", userId, err)
-		return service.Generator().StateString(consts.STATE_None)
+		return service.MpcSigner().StateString(consts.STATE_None)
 	}
 	if info == nil {
-		return service.Generator().StateString(consts.STATE_None)
+		return service.MpcSigner().StateString(consts.STATE_None)
 	}
 	if info.Context == "" {
-		return service.Generator().StateString(consts.STATE_Auth)
+		return service.MpcSigner().StateString(consts.STATE_Auth)
 	}
 	//
-	return service.Generator().StateString(consts.STATE_HandShake)
+	return service.MpcSigner().StateString(consts.STATE_HandShake)
 }
 
 // /
-func (s *sGenerator) FetchPubKey(ctx context.Context, sid string) (string, error) {
+func (s *sMpcSigner) FetchPubKey(ctx context.Context, sid string) (string, error) {
 	////
 	///
-	userId, err := service.Generator().Sid2UserId(ctx, sid)
+	userId, err := service.MpcSigner().Sid2UserId(ctx, sid)
 	if err != nil {
 		return "", gerror.NewCode(consts.CodeInternalError)
 	}
@@ -52,7 +52,7 @@ func (s *sGenerator) FetchPubKey(ctx context.Context, sid string) (string, error
 
 	return info.PubKey, err
 }
-func (s *sGenerator) FetchZKProofp2(ctx context.Context, sid string) (string, error) {
+func (s *sMpcSigner) FetchZKProofp2(ctx context.Context, sid string) (string, error) {
 	////
 	ZKProofp2, err := s.fetchBySid(ctx, sid, KEY_zkproof2)
 	if err != nil {
@@ -61,7 +61,7 @@ func (s *sGenerator) FetchZKProofp2(ctx context.Context, sid string) (string, er
 
 	return ZKProofp2, err
 }
-func (s *sGenerator) FetchSignature(ctx context.Context, sid string) (string, error) {
+func (s *sMpcSigner) FetchSignature(ctx context.Context, sid string) (string, error) {
 	////
 	signature, err := s.fetchBySid(ctx, sid, KEY_signature)
 	if err != nil {
@@ -73,14 +73,14 @@ func (s *sGenerator) FetchSignature(ctx context.Context, sid string) (string, er
 
 	return signature, err
 }
-func (s *sGenerator) CleanSignature(ctx context.Context, sid string) (string, error) {
+func (s *sMpcSigner) CleanSignature(ctx context.Context, sid string) (string, error) {
 	////
 	s.recordSidVal(ctx, sid, KEY_signature, "")
 	return "", nil
 }
 
 // ///
-func (s *sGenerator) FetchTxs(ctx context.Context, sid string) (string, error) {
+func (s *sMpcSigner) FetchTxs(ctx context.Context, sid string) (string, error) {
 	////
 	signature, err := s.fetchBySid(ctx, sid, KEY_txs)
 	if err != nil {
@@ -92,7 +92,7 @@ func (s *sGenerator) FetchTxs(ctx context.Context, sid string) (string, error) {
 
 	return signature, err
 }
-func (s *sGenerator) RecordTxs(ctx context.Context, sid string, val string) (string, error) {
+func (s *sMpcSigner) RecordTxs(ctx context.Context, sid string, val string) (string, error) {
 	////
 	s.recordSidVal(ctx, sid, KEY_txs, val)
 	return "", nil
@@ -108,7 +108,7 @@ func (s *sGenerator) RecordTxs(ctx context.Context, sid string, val string) (str
 
 // /
 // // key
-func (s *sGenerator) GenNewSid(ctx context.Context, userId string, token string) (string, error) {
+func (s *sMpcSigner) GenNewSid(ctx context.Context, userId string, token string) (string, error) {
 	var genid gvar.Var
 	genid.Set(idgen.NextId())
 	sid := genid.String()
@@ -133,7 +133,7 @@ func (s *sGenerator) GenNewSid(ctx context.Context, userId string, token string)
 	return sid, nil
 }
 
-func (s *sGenerator) Sid2UserId(ctx context.Context, sid string) (string, error) {
+func (s *sMpcSigner) Sid2UserId(ctx context.Context, sid string) (string, error) {
 	////
 	key, err := service.Cache().Get(ctx, sid+KEY_UserId)
 	if key.IsEmpty() {
@@ -141,7 +141,7 @@ func (s *sGenerator) Sid2UserId(ctx context.Context, sid string) (string, error)
 	}
 	return key.String(), err
 }
-func (s *sGenerator) Sid2Token(ctx context.Context, sid string) (string, error) {
+func (s *sMpcSigner) Sid2Token(ctx context.Context, sid string) (string, error) {
 	////
 	key, err := service.Cache().Get(ctx, sid+KEY_UserToken)
 	if key.IsEmpty() {

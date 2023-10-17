@@ -1,4 +1,4 @@
-package generator
+package mpcsigner
 
 import (
 	"context"
@@ -8,11 +8,11 @@ import (
 )
 
 // /
-func (s *sGenerator) recordSidVal(ctx context.Context, sid string, key string, val string) error {
+func (s *sMpcSigner) recordSidVal(ctx context.Context, sid string, key string, val string) error {
 	err := service.Cache().Set(ctx, sid+key, val, sessionDur)
 	return err
 }
-func (s *sGenerator) fetchBySid(ctx context.Context, sid string, key string) (string, error) {
+func (s *sMpcSigner) fetchBySid(ctx context.Context, sid string, key string) (string, error) {
 	val, err := service.Cache().Get(ctx, sid+key)
 	if val.IsEmpty() {
 		return "", emptyErr
@@ -20,7 +20,7 @@ func (s *sGenerator) fetchBySid(ctx context.Context, sid string, key string) (st
 	return val.String(), err
 }
 
-func (s *sGenerator) recordUserContext(ctx context.Context, userId string, context, request, pubkey *string) error {
+func (s *sMpcSigner) recordUserContext(ctx context.Context, userId string, context, request, pubkey *string) error {
 	err := service.DB().UpdateContext(ctx, userId, &do.MpcContext{
 		UserId:  userId,
 		Context: context,
@@ -29,7 +29,7 @@ func (s *sGenerator) recordUserContext(ctx context.Context, userId string, conte
 	})
 	return err
 }
-func (s *sGenerator) insertUserContext(ctx context.Context, userId string, context, request, pubkey *string) error {
+func (s *sMpcSigner) insertUserContext(ctx context.Context, userId string, context, request, pubkey *string) error {
 	err := service.DB().InertContext(ctx, userId, &do.MpcContext{
 		UserId:  userId,
 		Context: context,
@@ -39,7 +39,7 @@ func (s *sGenerator) insertUserContext(ctx context.Context, userId string, conte
 
 	return err
 }
-func (s *sGenerator) fetchUserContext(ctx context.Context, userId string) (*entity.MpcContext, error) {
+func (s *sMpcSigner) fetchUserContext(ctx context.Context, userId string) (*entity.MpcContext, error) {
 	data, err := service.DB().FetchContext(ctx, userId)
 	return data, err
 }

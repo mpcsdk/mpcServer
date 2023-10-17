@@ -19,14 +19,14 @@ func (c *ControllerV1) GetState(ctx context.Context, req *v1.GetStateReq) (res *
 	//
 	g.Log().Debug(ctx, "GetState:", req)
 	///
-	userId, err := service.Generator().Sid2UserId(ctx, req.SessionId)
+	userId, err := service.MpcSigner().Sid2UserId(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Warning(ctx, "GetState:", req.SessionId, err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	////
 	///
-	state := service.Generator().GetState(ctx, userId)
+	state := service.MpcSigner().GetState(ctx, userId)
 	// if err != nil {
 	// 	g.Log().Warning(ctx, "GetState:", userId, err)
 	// 	return nil, gerror.NewCode(consts.CodeStateError(consts.ErrSessionNotExist))
@@ -45,7 +45,7 @@ func (c *ControllerV1) GetZKProofP2(ctx context.Context, req *v1.GetZKProofP2Req
 	//
 	g.Log().Debug(ctx, "GetZKProofP2:", req)
 	///
-	ZKProofp2, err := service.Generator().FetchZKProofp2(ctx, req.SessionId)
+	ZKProofp2, err := service.MpcSigner().FetchZKProofp2(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Warning(ctx, "GetZKProofP2:", err)
 		return nil, gerror.NewCode(consts.CodeGetGeneratorError(consts.ErrZKProofP2NotExist))
@@ -63,8 +63,8 @@ func (c *ControllerV1) GetSignature(ctx context.Context, req *v1.GetSignatureReq
 	defer span.End()
 	//
 	////
-	// signature, err := service.Generator().FetchSignature(ctx, token)
-	signature, err := service.Generator().FetchSignature(ctx, req.SessionId)
+	// signature, err := service.MpcSigner().FetchSignature(ctx, token)
+	signature, err := service.MpcSigner().FetchSignature(ctx, req.SessionId)
 	if err != nil || signature == "" {
 		g.Log().Warning(ctx, "getsignature:", err)
 		return nil, gerror.NewCode(consts.CodeGetGeneratorError(consts.ErrSignatureNotExist))

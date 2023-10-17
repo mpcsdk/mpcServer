@@ -24,7 +24,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	//
 	g.Log().Debug(ctx, "SignMsg:", req)
 	// checksid
-	userId, err := service.Generator().Sid2UserId(ctx, req.SessionId)
+	userId, err := service.MpcSigner().Sid2UserId(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Error(ctx, "SignMsg no sid", req.SessionId, err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
@@ -33,13 +33,13 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	////if string msg
 	_, err = hex.DecodeString(req.Msg)
 	if err != nil {
-		service.Generator().CalMsgSign(ctx, req)
+		service.MpcSigner().CalMsgSign(ctx, req)
 		return nil, nil
 	}
 	///
 	///check isdomain
 	if strings.Index(req.SignData, "domain") != -1 {
-		err = service.Generator().CalDomainSign(ctx, req)
+		err = service.MpcSigner().CalDomainSign(ctx, req)
 		return nil, err
 	}
 
@@ -70,14 +70,14 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 			g.Log().Warning(ctx, "CalSign PerformRiskTxs err:", err, rst)
 			return nil, gerror.NewCode(consts.CodeInternalError)
 		}
-		service.Generator().RecordTxs(ctx, req.SessionId, string(val))
+		service.MpcSigner().RecordTxs(ctx, req.SessionId, string(val))
 
 		return &v1.SignMsgRes{
 			RiskSerial: rst.RiskSerial,
 			RiskKind:   rst.RiskKind,
 		}, gerror.NewCode(consts.CodePerformRiskNeedVerification)
 	case consts.RiskCodePass:
-		err = service.Generator().CalSign(ctx, req)
+		err = service.MpcSigner().CalSign(ctx, req)
 		if err != nil {
 			g.Log().Warning(ctx, "SignMsg:", err)
 			return nil, err

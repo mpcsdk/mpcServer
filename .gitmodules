@@ -1,6 +1,3 @@
-[submodule "manifest/riskcontrol-protobuf"]
-	path = manifest/riskcontrol-protobuf
-	url = git@github.com:franklihub/riskcontrol-protobuf.git
 [submodule "mpcCommon"]
 	path = mpcCommon
-	url = git@github.com:franklihub/mpcCommon.git
+	url = git@github.com:mpcsdk/mpcCommon.git

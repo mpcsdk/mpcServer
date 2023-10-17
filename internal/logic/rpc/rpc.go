@@ -127,7 +127,7 @@ func (s *sRPC) PerformAlive(ctx context.Context) error {
 // func (s *sRPC) CheckTxs(ctx context.Context, sid string, from string, txs []*model.SignTxData) (*v1.TxRiskRes, error) {
 // 	g.Log().Debug(ctx, "TxRisk().CheckTxs:", from, txs)
 
-// 	userId, err := service.Generator().Sid2UserId(ctx, sid)
+// 	userId, err := service.MpcSigner().Sid2UserId(ctx, sid)
 // 	if err != nil {
 // 		return nil, gerror.NewCode(consts.CodeInternalError)
 // 	}
