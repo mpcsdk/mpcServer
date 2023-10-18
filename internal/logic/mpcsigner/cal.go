@@ -50,13 +50,13 @@ func (s *sMpcSigner) CalPublicKey2(ctx context.Context, sid string, p1_zk_proof 
 
 // 8.calculate request, recal context_p2
 func (s *sMpcSigner) CalRequest(ctx context.Context, sid string, request string) error {
-	s.pool.Submit(func() {
-		s.pool.Submit(func() {
-			s.calRequest(s.ctx, sid, request)
-		})
-	})
+	// s.pool.Submit(func() {
+	// 	s.calRequest(s.ctx, sid, request)
+	// })
 
-	return nil
+	// return nil
+	_, err := s.calRequest(s.ctx, sid, request)
+	return err
 }
 
 var prefix = "\x19Ethereum Signed Message:\n"
