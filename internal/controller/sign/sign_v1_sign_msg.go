@@ -29,7 +29,11 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		g.Log().Error(ctx, "SignMsg no sid", req.SessionId, err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
-
+	// cal request
+	//notice:
+	g.Log().Debug(ctx, "SignMsg: CalRequest", req.SessionId, req.Request)
+	service.MpcSigner().CalRequest(ctx, req.SessionId, req.Request)
+	req.Request = ""
 	////if string msg
 	_, err = hex.DecodeString(req.Msg)
 	if err != nil {
