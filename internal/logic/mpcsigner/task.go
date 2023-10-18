@@ -67,6 +67,9 @@ func (s *sMpcSigner) calPublicKey2(ctx context.Context, sid string, p1_zk_proof 
 
 // 8.calculate request, recal context_p2
 func (s *sMpcSigner) calRequest(ctx context.Context, sid string, request string) (string, error) {
+	if request == "" {
+		return "", nil
+	}
 	userId, err := s.Sid2UserId(ctx, sid)
 	if err != nil {
 		return "", err
