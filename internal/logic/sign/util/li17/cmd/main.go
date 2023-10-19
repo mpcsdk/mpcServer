@@ -12,8 +12,8 @@ import (
 	"time"
 )
 
-func runtest(i int, private_key1, private_key2, msg32, public_key string) {
-
+func runtest(ch chan int, i int, private_key1, private_key2, msg32, public_key string) {
+	defer func() { ch <- i }()
 	// refresh
 	var p1 = li17.GenContextP1(private_key1, public_key)
 	var p2 = li17.GenContextP2(private_key2, public_key)
@@ -95,7 +95,6 @@ func runtest(i int, private_key1, private_key2, msg32, public_key string) {
 			fmt.Println("      msg : ", msg32)
 			panic(i)
 		}
-		fmt.Println(">", i)
 	} else {
 		fmt.Println("pkey1 != pkey2")
 	}
@@ -106,9 +105,13 @@ func main() {
 	var private_key2 = "0ac7d64995c6b4daac2688c0e40d25af50887ada5b7a4cbe197ada0bdef32375"
 	public_key := "045ae6d14d4934eeb004b818d687a1ea6efff0946d043dfb9338c0601a1ae0387fd00bfcefeff11961a48edc66f62ad87feed8a9ef157efa294c91466c70039bbe"
 
-	for i := 0; i < 100; i++ {
-		go runtest(i, private_key1, private_key2, msg32, public_key)
+	doneCh := make(chan int, 1000)
+	for i := 0; i < 1000; i++ {
+		go runtest(doneCh, i, private_key1, private_key2, msg32, public_key)
 	}
+	for i := 0; i < 1000; i++ {
+		<-doneCh
+	}
+	fmt.Println("done")
 	time.Sleep(time.Hour)
-
 }
