@@ -9,7 +9,6 @@ import "C"
 import (
 	"fmt"
 	"mpcServer/internal/logic/sign/util/li17"
-	"time"
 )
 
 func runtest(ch chan int, i int, private_key1, private_key2, msg32, public_key string) {
@@ -105,13 +104,13 @@ func main() {
 	var private_key2 = "0ac7d64995c6b4daac2688c0e40d25af50887ada5b7a4cbe197ada0bdef32375"
 	public_key := "045ae6d14d4934eeb004b818d687a1ea6efff0946d043dfb9338c0601a1ae0387fd00bfcefeff11961a48edc66f62ad87feed8a9ef157efa294c91466c70039bbe"
 
-	doneCh := make(chan int, 1000)
-	for i := 0; i < 1000; i++ {
+	taskNumber := 1000
+	doneCh := make(chan int, taskNumber)
+	for i := 0; i < taskNumber; i++ {
 		go runtest(doneCh, i, private_key1, private_key2, msg32, public_key)
 	}
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < taskNumber; i++ {
 		<-doneCh
 	}
 	fmt.Println("done")
-	time.Sleep(time.Hour)
 }
