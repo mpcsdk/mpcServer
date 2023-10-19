@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"mpcServer/internal/logic/sign/util/li17"
+	"runtime"
 	"testing"
 )
 
@@ -210,13 +211,15 @@ func Test_MpcSignThread(t *testing.T) {
 	var private_key2 = "0ac7d64995c6b4daac2688c0e40d25af50887ada5b7a4cbe197ada0bdef32375"
 	public_key := "045ae6d14d4934eeb004b818d687a1ea6efff0946d043dfb9338c0601a1ae0387fd00bfcefeff11961a48edc66f62ad87feed8a9ef157efa294c91466c70039bbe"
 
-	doneCh := make(chan int, 100)
-	signer := NewSigner(context.Background(), 4)
-	for i := 0; i < 100; i++ {
+	taskNum := 1000
+	doneCh := make(chan int, taskNum)
+	core := runtime.NumCPU()
+	signer := NewSigner(context.Background(), core)
+	for i := 0; i < taskNum; i++ {
 		n := i
 		go runThread(doneCh, n, t, signer, private_key1, private_key2, msg32, public_key)
 	}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < taskNum; i++ {
 		<-doneCh
 	}
 
