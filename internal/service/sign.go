@@ -5,40 +5,47 @@
 
 package service
 
+import (
+	"mpcServer/internal/model"
+)
+
 type (
-	ISign interface {
-		KeygenSendHashProofP1(context1 string) string
-		KeygenRecvHashProofP2(context2, proof1 string) string
-		KeygenSendZKProofP1(context1 string) string
-		KeygenRecvZKProofP1(context1, proof2 string) string
-		KeygenSendZKProofP2(context1 string) string
-		KeygenRecvZKProofP2(context2, proof1 string) string
-		PublicKeyP1(context1 string) string
-		PublicKeyP2(context2 string) string
-		GenContextP1(preivateKey, publicKey string) string
-		GenContextP2(preivateKey, publicKey string) string
-		SendZKProofP1(p1 string) string
-		RecvZKProofP1(p1, ZKProof2 string) string
-		SendZKProofP2(p2 string) string
-		RecvZKProofP2(p2, ZKProof1 string) string
-		SignSendRequestP1(context1 string) string
-		SignRecvRequestP2(context2 string, request string) string
-		SignSendPartialP2(context2, msg string) string
-		SignSendPartialP1(context1, sign2, msg string) string
+	ISigner interface {
+		KeygenSendHashProofP1(context1 string) model.ISignerPromise
+		KeygenRecvHashProofP2(context2, proof1 string) model.ISignerPromise
+		KeygenSendZKProofP1(context1 string) model.ISignerPromise
+		KeygenRecvZKProofP1(context1, proof2 string) model.ISignerPromise
+		KeygenSendZKProofP2(context1 string) model.ISignerPromise
+		KeygenRecvZKProofP2(context2, proof1 string) model.ISignerPromise
+		PublicKeyP1(context1 string) model.ISignerPromise
+		PublicKeyP2(context2 string) model.ISignerPromise
+		AddTask(task func())
+		TaskLen() int
+		Stop()
+		GenContextP1(preivateKey, publicKey string) model.ISignerPromise
+		GenContextP2(preivateKey, publicKey string) model.ISignerPromise
+		SendZKProofP1(p1 string) model.ISignerPromise
+		RecvZKProofP1(p1, ZKProof2 string) model.ISignerPromise
+		SendZKProofP2(p2 string) model.ISignerPromise
+		RecvZKProofP2(p2, ZKProof1 string) model.ISignerPromise
+		SignSendRequestP1(context1 string) model.ISignerPromise
+		SignRecvRequestP2(context2 string, request string) model.ISignerPromise
+		SignSendPartialP2(context2, msg string) model.ISignerPromise
+		SignSendPartialP1(context1, sign2, msg string) model.ISignerPromise
 	}
 )
 
 var (
-	localSign ISign
+	localSigner ISigner
 )
 
-func Sign() ISign {
-	if localSign == nil {
-		panic("implement not found for interface ISign, forgot register?")
+func Signer() ISigner {
+	if localSigner == nil {
+		panic("implement not found for interface ISigner, forgot register?")
 	}
-	return localSign
+	return localSigner
 }
 
-func RegisterSign(i ISign) {
-	localSign = i
+func RegisterSigner(i ISigner) {
+	localSigner = i
 }

@@ -11,7 +11,7 @@ import (
 
 // GenContextP2
 func (s *sMpcSigner) genContextP2(ctx context.Context, sid string, private_key2, public_key string) error {
-	p2 := service.Sign().GenContextP2(private_key2, public_key)
+	p2 := service.Signer().GenContextP2(private_key2, public_key).String()
 	// err := s.RecordP2(ctx, key, p2)
 	err := s.recordSidVal(ctx, sid, KEY_context, p2)
 	return err
@@ -23,13 +23,13 @@ func (s *sMpcSigner) genContextP2(ctx context.Context, sid string, private_key2,
 // 	if err != nil {
 // 		return
 // 	}
-// 	private_key2_ := service.Sign().RecvZKProofP2(p2, zk_proof1)
+// 	private_key2_ := service.Signer().RecvZKProofP2(p2, zk_proof1)
 // 	s.RecordPrivateKey2(ctx, key, private_key2_)
 
-// 	context_p2 := service.Sign().GenContextP2(private_key2_, "")
+// 	context_p2 := service.Signer().GenContextP2(private_key2_, "")
 // 	s.RecordContextp2(ctx, key, context_p2)
 
-// 	zk_proof2 := service.Sign().SendZKProofP2(p2)
+// 	zk_proof2 := service.Signer().SendZKProofP2(p2)
 // 	s.RecordZKProof2(ctx, key, zk_proof2)
 
 // 	return err
@@ -38,10 +38,10 @@ func (s *sMpcSigner) genContextP2(ctx context.Context, sid string, private_key2,
 // 4.5.calculate p2_zk_proof by p1_hash_proof, need recal context_p2 by p1_hash_proof
 func (s *sMpcSigner) calZKProofP2(ctx context.Context, sid string, p1_hash_proof string) error {
 	context_p2, err := s.fetchBySid(ctx, sid, KEY_context)
-	context_p2 = service.Sign().KeygenRecvHashProofP2(context_p2, p1_hash_proof)
+	context_p2 = service.Signer().KeygenRecvHashProofP2(context_p2, p1_hash_proof).String()
 	s.recordSidVal(ctx, sid, KEY_context, context_p2)
 	///
-	p2_zk_proof := service.Sign().KeygenSendZKProofP2(context_p2)
+	p2_zk_proof := service.Signer().KeygenSendZKProofP2(context_p2).String()
 	s.recordSidVal(ctx, sid, KEY_zkproof2, p2_zk_proof)
 	return err
 }
@@ -52,13 +52,13 @@ func (s *sMpcSigner) calPublicKey2(ctx context.Context, sid string, p1_zk_proof 
 	if err != nil {
 		return nil
 	}
-	context_p2 = service.Sign().KeygenRecvZKProofP2(context_p2, p1_zk_proof)
+	context_p2 = service.Signer().KeygenRecvZKProofP2(context_p2, p1_zk_proof).String()
 	userId, err := s.Sid2UserId(ctx, sid)
 	if err != nil {
 		return nil
 	}
 	///
-	v2_public_key := service.Sign().PublicKeyP2(context_p2)
+	v2_public_key := service.Signer().PublicKeyP2(context_p2).String()
 	// s.recordUserIdVal(ctx, userId, KEY_context, context_p2)
 	// s.recordUserIdVal(ctx, userId, KEY_publickey2, v2_public_key)
 	return s.recordUserContext(ctx, userId, &context_p2, nil, &v2_public_key)
@@ -90,7 +90,7 @@ func (s *sMpcSigner) calRequest(ctx context.Context, sid string, request string)
 		return "", errors.New("need handshake")
 	}
 
-	context_p2 = service.Sign().SignRecvRequestP2(context_p2, request)
+	context_p2 = service.Signer().SignRecvRequestP2(context_p2, request).String()
 
 	// s.recordUserIdVal(ctx, userId, KEY_context, context_p2)
 	s.recordUserContext(ctx, userId, &context_p2, &request, nil)
@@ -120,7 +120,7 @@ func (s *sMpcSigner) CalSignTask(ctx context.Context, sid string, msg string, re
 			return err
 		}
 	}
-	p2_sign := service.Sign().SignSendPartialP2(context_p2, msg)
+	p2_sign := service.Signer().SignSendPartialP2(context_p2, msg).String()
 	g.Log().Debug(ctx, "CalSignTask:", sid, msg, request, p2_sign)
 	s.recordSidVal(ctx, sid, KEY_signature, p2_sign)
 
