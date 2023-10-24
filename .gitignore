@@ -22,3 +22,5 @@ __debug_bin*
 config.yaml
 node_modules
 dist/
+build/
+mpcServer

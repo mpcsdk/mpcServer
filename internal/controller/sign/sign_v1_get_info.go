@@ -16,24 +16,13 @@ func (c *ControllerV1) GetInfo(ctx context.Context, req *v1.GetInfoReq) (res *v1
 	//trace
 	ctx, span := gtrace.NewSpan(ctx, "GetInfo")
 	defer span.End()
-	//
-	g.Log().Debug(ctx, "GetInfo:", req)
-	// ///
-	// userId, err := service.MpcSigner().Sid2UserId(ctx, req.SessionId)
-	// if err != nil {
-	// 	g.Log().Warning(ctx, "GetInfo:", err)
-	// 	return nil, gerror.NewCode(consts.CodeInternalError)
-	// }
-	// ////
-
 	// ///
 	pubkey, err := service.MpcSigner().FetchPubKey(ctx, req.SessionId)
 	if err != nil {
-		g.Log().Warning(ctx, "GetInfo:", req.SessionId, err)
+		g.Log().Errorf(ctx, "%+v", err)
 		return nil, gerror.NewCode(consts.CodeStateError(consts.ErrSessionNotExist))
 	}
 
-	g.Log().Debug(ctx, "GetInfo:", req, pubkey)
 	res = &v1.GetInfoRes{
 		PublicKey: pubkey,
 	}

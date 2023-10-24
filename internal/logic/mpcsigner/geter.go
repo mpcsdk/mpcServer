@@ -6,6 +6,8 @@ import (
 	"mpcServer/internal/consts"
 	"mpcServer/internal/service"
 
+	"github.com/mpcsdk/mpcCommon/mpccode"
+
 	"github.com/gogf/gf/v2/container/gvar"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
@@ -18,9 +20,11 @@ var emptyErr error = errors.New("empty value")
 // /
 func (s *sMpcSigner) GetState(ctx context.Context, userId string) string {
 	info, err := s.fetchUserContext(ctx, userId)
-	// stat, err := service.Cache().Get(ctx, userId)
 	if err != nil {
-		g.Log().Warning(ctx, "GetState:", userId, err)
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("userId", userId),
+		))
+		consts.ErrorG(ctx, err)
 		return service.MpcSigner().StateString(consts.STATE_None)
 	}
 	if info == nil {
@@ -39,7 +43,10 @@ func (s *sMpcSigner) FetchPubKey(ctx context.Context, sid string) (string, error
 	///
 	userId, err := service.MpcSigner().Sid2UserId(ctx, sid)
 	if err != nil {
-		return "", gerror.NewCode(consts.CodeInternalError)
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("sid", sid),
+		))
+		return "", err
 	}
 	////
 

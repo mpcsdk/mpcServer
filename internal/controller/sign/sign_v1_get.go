@@ -17,20 +17,15 @@ func (c *ControllerV1) GetState(ctx context.Context, req *v1.GetStateReq) (res *
 	ctx, span := gtrace.NewSpan(ctx, "GetState")
 	defer span.End()
 	//
-	g.Log().Debug(ctx, "GetState:", req)
 	///
 	userId, err := service.MpcSigner().Sid2UserId(ctx, req.SessionId)
 	if err != nil {
-		g.Log().Warning(ctx, "GetState:", req.SessionId, err)
+		g.Log().Errorf(ctx, "%+v", err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	////
 	///
 	state := service.MpcSigner().GetState(ctx, userId)
-	// if err != nil {
-	// 	g.Log().Warning(ctx, "GetState:", userId, err)
-	// 	return nil, gerror.NewCode(consts.CodeStateError(consts.ErrSessionNotExist))
-	// }
 
 	res = &v1.GetStateRes{
 		State: state,
@@ -65,11 +60,10 @@ func (c *ControllerV1) GetSignature(ctx context.Context, req *v1.GetSignatureReq
 	////
 	// signature, err := service.MpcSigner().FetchSignature(ctx, token)
 	signature, err := service.MpcSigner().FetchSignature(ctx, req.SessionId)
-	if err != nil || signature == "" {
-		g.Log().Warning(ctx, "getsignature:", err)
+	if err != nil {
+		g.Log().Errorf(ctx, "%+v", err)
 		return nil, gerror.NewCode(consts.CodeGetGeneratorError(consts.ErrSignatureNotExist))
 	}
-	g.Log().Debug(ctx, "GetSignature:", req, signature)
 
 	res = &v1.GetSignatureRes{
 		Signature: signature,

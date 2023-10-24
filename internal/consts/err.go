@@ -1,5 +1,15 @@
 package consts
 
+import (
+	"context"
+
+	"github.com/gogf/gf/v2/frame/g"
+)
+
+func ErrorG(ctx context.Context, err error) {
+	g.Log().Errorf(ctx, "%+v", err)
+}
+
 type errCode struct {
 	code    int
 	message string
@@ -71,7 +81,6 @@ func CalPublicKey2Error(msg string) *errCode {
 }
 
 func CalSignError(msg string) *errCode {
-
 	return &errCode{13, "failed to sign", nil}
 }
 func NeedSmsCodeError(msg string) *errCode {

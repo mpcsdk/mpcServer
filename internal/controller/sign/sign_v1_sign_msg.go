@@ -13,6 +13,7 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/gtrace"
+	"github.com/mpcsdk/mpcCommon/mpccode"
 	///
 	// "github.com/ethereum/go-ethereum/signer/core/apitypes"
 )
@@ -22,19 +23,17 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	ctx, span := gtrace.NewSpan(ctx, "SignMsg")
 	defer span.End()
 	//
-	g.Log().Debug(ctx, "SignMsg:", req)
 	// checksid
 	userId, err := service.MpcSigner().Sid2UserId(ctx, req.SessionId)
 	if err != nil {
-		g.Log().Error(ctx, "SignMsg no sid", req.SessionId, err)
+		consts.ErrorG(ctx, err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	// cal request
 	//notice:
-	g.Log().Debug(ctx, "SignMsg: CalRequest", req.SessionId, req.Request)
 	err = service.MpcSigner().CalRequest(ctx, req.SessionId, req.Request)
 	if err != nil {
-		g.Log().Error(ctx, "SignMsg Request err:", req.SessionId, err, req)
+		consts.ErrorG(ctx, err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	req.Request = ""
@@ -48,21 +47,22 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	///check isdomain
 	if strings.Index(req.SignData, "domain") != -1 {
 		err = service.MpcSigner().CalDomainSign(ctx, req)
-		return nil, err
+		if err != nil {
+			consts.ErrorG(ctx, err)
+			return nil, gerror.NewCode(mpccode.CodeInternalError)
+		}
+		return nil, nil
 	}
 
 	// ///Risktx
-	rst, err := service.RPC().PerformRiskTxs(ctx, userId, req.SignData)
+	rst, err := service.RPC().RpcRiskTxs(ctx, userId, req.SignData)
 	if err != nil {
-		g.Log().Warning(ctx, "CalSign PerformRiskTxs err:", err, rst)
+		g.Log().Warning(ctx, "RpcRiskTx:", "sid:", req.SessionId)
+		consts.ErrorG(ctx, err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
-	g.Log().Debug(ctx, "CalSign PerformRiskTxs:", rst)
-	// risk failure, need send verification code, and resign thetx
-	//or forbidden
-	// rst := riskv1.TxRiskRes{
-	// 	Ok:  consts.RiskCodePass,
-	// 	Msg: userId,
+	g.Log().Notice(ctx, "CalSign PerformRiskTxs:", rst)
+
 	// }
 	switch rst.Ok {
 	case consts.RiskCodeForbidden:
@@ -75,7 +75,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		//notice: record txjson for re-sign
 		val, err := json.Marshal(req)
 		if err != nil {
-			g.Log().Warning(ctx, "CalSign PerformRiskTxs err:", err, rst)
+			consts.ErrorG(ctx, err)
 			return nil, gerror.NewCode(consts.CodeInternalError)
 		}
 		service.MpcSigner().RecordTxs(ctx, req.SessionId, string(val))
@@ -88,7 +88,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		err = service.MpcSigner().CalSign(ctx, req)
 		if err != nil {
 			g.Log().Warning(ctx, "SignMsg:", err)
-			return nil, err
+			return nil, gerror.NewCode(mpccode.CodeInternalError)
 		}
 
 	default:

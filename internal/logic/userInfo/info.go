@@ -3,14 +3,13 @@ package userInfo
 import (
 	"context"
 	"encoding/json"
-	"errors"
-	"mpcServer/internal/consts"
 	"mpcServer/internal/model"
 	"mpcServer/internal/service"
 
+	"github.com/mpcsdk/mpcCommon/mpccode"
+
 	"github.com/go-resty/resty/v2"
 	"github.com/gogf/gf/v2/errors/gerror"
-	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gcache"
 	"github.com/gogf/gf/v2/os/gcfg"
 )
@@ -30,15 +29,8 @@ type respUserInfo struct {
 }
 
 func (s *sUserInfo) GetUserInfo(ctx context.Context, userToken string) (userInfo *model.UserInfo, err error) {
-
-	g.Log().Debug(ctx, "GetUserInfo:", userToken)
 	if userToken == "" {
-		g.Log().Error(ctx, "GetUserInfo:", userToken)
-		return nil, gerror.NewCode(consts.AuthError())
-	}
-	if err != nil {
-		g.Log().Error(ctx, "GetUserInfo:", userToken)
-		return nil, gerror.NewCode(consts.AuthError())
+		return nil, mpccode.ErrEmpty
 	}
 	///
 	// 用户信息示例
@@ -51,7 +43,10 @@ func (s *sUserInfo) GetUserInfo(ctx context.Context, userToken string) (userInfo
 	// "create_time": 1691118876
 	info, err := s.getUserInfo(ctx, userToken)
 	if info == nil {
-		return nil, errors.New("GetUserInfo: userInfo is nil")
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("userToken", userToken),
+		))
+		return nil, err
 	}
 	return info, err
 	// return &model.UserInfo{
@@ -73,14 +68,19 @@ func (s *sUserInfo) getUserInfo(ctx context.Context, token string) (*model.UserI
 		}).
 		// EnableTrace().
 		Get(s.url)
-	g.Log().Debug(ctx, "getuserInfo:", resp)
 	if err != nil {
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("token", token),
+		))
 		return nil, err
 	}
 	userInfo := respUserInfo{}
 	err = json.Unmarshal(resp.Body(), &userInfo)
 	if err != nil {
-		g.Log().Error(ctx, "getUserInfo:", err, token)
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("token", token),
+			mpccode.ErrDetail("resp", resp),
+		))
 		return nil, err
 	}
 
