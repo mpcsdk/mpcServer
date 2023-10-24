@@ -2,7 +2,6 @@ package txhash
 
 import (
 	"context"
-	"mpcServer/internal/consts"
 	"mpcServer/internal/service"
 	"os/exec"
 
@@ -12,6 +11,8 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gctx"
 	"google.golang.org/grpc"
+
+	"github.com/mpcsdk/mpcCommon/mpccode"
 )
 
 type sTxHash struct {
@@ -25,8 +26,10 @@ func (s *sTxHash) DigestTxHash(ctx context.Context, msg string) (string, error) 
 		Message: msg,
 	})
 	if err != nil {
-		g.Log().Warning(ctx, "DigestTxHash:", err)
-		return "", gerror.NewCode(consts.CodeInternalError)
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("msg", msg),
+		))
+		return "", err
 	}
 	return rst.Message, nil
 }
@@ -36,8 +39,10 @@ func (s *sTxHash) HasDomain(ctx context.Context, msg string) (string, error) {
 		Message: msg,
 	})
 	if err != nil {
-		g.Log().Warning(ctx, "HasDomain:", err)
-		return "", gerror.NewCode(consts.CodeInternalError)
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("msg", msg),
+		))
+		return "", err
 	}
 	return rst.Message, nil
 }
@@ -47,8 +52,10 @@ func (s *sTxHash) TypedDataEncoderHash(ctx context.Context, msg string) (string,
 		Message: msg,
 	})
 	if err != nil {
-		g.Log().Warning(ctx, "TypedDataEncoderHash:", err)
-		return "", gerror.NewCode(consts.CodeInternalError)
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("msg", msg),
+		))
+		return "", err
 	}
 	return rst.Message, nil
 }
@@ -73,7 +80,7 @@ func (s *sTxHash) connhash() {
 		panic(err)
 	}
 	conn.Connect()
-	g.Log().Info(s.ctx, "connhash server:", conn.GetState().String())
+	g.Log().Notice(s.ctx, "connhash server:", conn.GetState().String())
 	s.client = proto.NewTransactionClient(conn)
 	// rst, _ := s.client.DigestTxHash(s.ctx, &proto.TxRequest{
 	// 	Message: "msg",

@@ -6,7 +6,8 @@ import (
 	"mpcServer/internal/consts"
 	"mpcServer/internal/service"
 
-	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/mpcsdk/mpcCommon/mpccode"
 )
 
 // GenContextP2
@@ -14,7 +15,15 @@ func (s *sMpcSigner) genContextP2(ctx context.Context, sid string, private_key2,
 	p2 := service.Sign().GenContextP2(private_key2, public_key)
 	// err := s.RecordP2(ctx, key, p2)
 	err := s.recordSidVal(ctx, sid, KEY_context, p2)
-	return err
+	if err != nil {
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("sid", sid),
+			mpccode.ErrDetail("pubk", public_key),
+			mpccode.ErrDetail("pk", private_key2),
+		))
+		return err
+	}
+	return nil
 }
 
 // 1.2.3 cal zk_proof2 by zk_proof1, need recal private_key2_ and context_p2
@@ -38,12 +47,18 @@ func (s *sMpcSigner) genContextP2(ctx context.Context, sid string, private_key2,
 // 4.5.calculate p2_zk_proof by p1_hash_proof, need recal context_p2 by p1_hash_proof
 func (s *sMpcSigner) calZKProofP2(ctx context.Context, sid string, p1_hash_proof string) error {
 	context_p2, err := s.fetchBySid(ctx, sid, KEY_context)
+	if err != nil {
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("sid", sid),
+		))
+		return err
+	}
 	context_p2 = service.Sign().KeygenRecvHashProofP2(context_p2, p1_hash_proof)
 	s.recordSidVal(ctx, sid, KEY_context, context_p2)
 	///
 	p2_zk_proof := service.Sign().KeygenSendZKProofP2(context_p2)
 	s.recordSidVal(ctx, sid, KEY_zkproof2, p2_zk_proof)
-	return err
+	return nil
 }
 
 // 6.7.calculate v2_public_key by p1_zk_proof, recal context_p2 by p1_zk_proof
@@ -101,28 +116,37 @@ func (s *sMpcSigner) calRequest(ctx context.Context, sid string, request string)
 
 // 9.signature
 func (s *sMpcSigner) CalSignTask(ctx context.Context, sid string, msg string, request string) error {
-	g.Log().Debug(ctx, "CalSignTask:", sid, msg, request)
 	s.recordSidVal(ctx, sid, KEY_signature, "")
 	userId, err := s.Sid2UserId(ctx, sid)
 	if err != nil {
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("sid", sid),
+		))
 		return err
 	}
 	// context_p2, err := s.fetchByUserId(ctx, userId, KEY_context)
 	info, err := s.fetchUserContext(ctx, userId)
 	if err != nil {
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("sid", sid),
+			mpccode.ErrDetail("userid", userId),
+		))
 		return err
 	}
 	context_p2 := info.Context
 	if request != "" {
 		context_p2, err = s.calRequest(ctx, sid, request)
 		if err != nil {
-			g.Log().Warning(ctx, "calRequest:", err)
+			err = gerror.Wrap(err, mpccode.ErrDetails(
+				mpccode.ErrDetail("sid", sid),
+				mpccode.ErrDetail("userid", userId),
+				mpccode.ErrDetail("info", info),
+			))
 			return err
 		}
 	}
 	p2_sign := service.Sign().SignSendPartialP2(context_p2, msg)
-	g.Log().Debug(ctx, "CalSignTask:", sid, msg, request, p2_sign)
 	s.recordSidVal(ctx, sid, KEY_signature, p2_sign)
 
-	return err
+	return nil
 }

@@ -2,6 +2,7 @@ package scrapelogs
 
 import (
 	"context"
+	v1 "mpcServer/api/scrapelogs/v1"
 
 	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
 	"github.com/gogf/gf/v2/errors/gcode"

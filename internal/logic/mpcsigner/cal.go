@@ -13,6 +13,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/mpcsdk/mpcCommon/mpccode"
 )
 
 // GenContextP2
@@ -125,7 +126,7 @@ func (s *sMpcSigner) CalMsgSign(ctx context.Context, req *v1.SignMsgReq) error {
 	hash := s.hashMessage(ctx, hmsg)
 	hash = strings.TrimPrefix(hash, "0x")
 	//
-	g.Log().Info(ctx, "CalMsgSign:", hash, req.Msg)
+	g.Log().Notice(ctx, "CalMsgSign:", hash, req.Msg)
 	signMsg := hash
 
 	// /////sign
@@ -164,19 +165,25 @@ func (s *sMpcSigner) CalSign(ctx context.Context, req *v1.SignMsgReq) error {
 	///
 	if len(req.Msg) < 10 {
 		///impossible
-		panic("<10?")
+		g.Log().Error(ctx, "CalSign: msg len must > 10", req.Msg)
+		return mpccode.ErrArg
 	}
 	// checkmsghash
 	msg, err := s.digestTxHash(ctx, req.SignData)
 	if err != nil {
-		g.Log().Warning(ctx, "CalSign digestTxHash err", err)
-		return gerror.NewCode(consts.CodeInternalError)
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("signData", req.SignData),
+		))
+		return err
 	}
 	hash := s.hashMessage(ctx, msg)
 	hash = strings.TrimPrefix(hash, "0x")
 	if hash != req.Msg {
-		g.Log().Error(ctx, "SignMsg signMsg unmath", req.SessionId, err, hash)
-		return gerror.NewCode(consts.CodeInternalError)
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("signData", req.SignData),
+			mpccode.ErrDetail("hash", hash),
+		))
+		return err
 	}
 
 	// /////sign

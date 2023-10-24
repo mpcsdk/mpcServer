@@ -11,6 +11,7 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/gtrace"
+	"github.com/mpcsdk/mpcCommon/mpccode"
 )
 
 func (c *ControllerV1) SendMailCode(ctx context.Context, req *v1.SendMailCodeReq) (res *v1.SendMailCodeRes, err error) {
@@ -18,17 +19,17 @@ func (c *ControllerV1) SendMailCode(ctx context.Context, req *v1.SendMailCodeReq
 	ctx, span := gtrace.NewSpan(ctx, "SendMailCode")
 	defer span.End()
 	//
-	g.Log().Debug(ctx, "SendMailCode:", req)
 	sid := req.SessionId
 	token, err := service.MpcSigner().Sid2Token(ctx, sid)
 	if err != nil {
-		g.Log().Error(ctx, "not exist userId:", sid, token)
-		return res, err
+		g.Log().Errorf(ctx, "%+v", err)
+		return res, gerror.NewCode(mpccode.CodeSessionInvalid)
 	}
 	///
-	err = service.RPC().PerformMailCode(ctx, token, req.RiskSerial)
+	err = service.RPC().RpcSendMailCode(ctx, token, req.RiskSerial)
 	if err != nil {
-		g.Log().Error(ctx, "PerformMailCode:", sid, token, err)
+		g.Log().Warning(ctx, "RPcSendMailCode:", "token:", token, "riskserial:", req.RiskSerial)
+		g.Log().Errorf(ctx, "%+v", err)
 		return res, err
 	}
 	return res, err
@@ -40,37 +41,39 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 	ctx, span := gtrace.NewSpan(ctx, "VerifyCode")
 	defer span.End()
 	//
-	g.Log().Debug(ctx, "VerifyCode:", req)
 	// notice: clean oldsign
 	service.MpcSigner().CleanSignature(ctx, req.SessionId)
 	///
 
 	token, err := service.MpcSigner().Sid2Token(ctx, req.SessionId)
 	if err != nil {
-		g.Log().Error(ctx, "not exist userId:", req.SessionId, token)
-		return res, err
+		consts.ErrorG(ctx, err)
+		return res, gerror.NewCode(mpccode.CodeSessionInvalid)
 	}
-	err = service.RPC().PerformVerifyCode(ctx, token, req.RiskSerial, req.PhoneCode, req.MailCode)
+	err = service.RPC().RpcVerifyCode(ctx, token, req.RiskSerial, req.PhoneCode, req.MailCode)
 	if err != nil {
+		g.Log().Warning(ctx, "RpcVerifyCode:", "sid:", req.SessionId, "token:", token)
+		consts.ErrorG(ctx, err)
 		return nil, err
 	}
 	///
-
 	//fetch txs by sid
-	//todo: fetchtx by riskserial
 	val, err := service.MpcSigner().FetchTxs(ctx, req.SessionId)
 	if err != nil {
+		consts.ErrorG(ctx, err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	txreq := &v1.SignMsgReq{}
 	err = json.Unmarshal([]byte(val), txreq)
 	if err != nil {
+		consts.ErrorG(ctx, err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	///sign msg
 	err = service.MpcSigner().CalSign(ctx, txreq)
 	if err != nil {
-		g.Log().Warning(ctx, "SignMsg:", err)
+		g.Log().Warning(ctx, "RpcRiskTxs:", "sid:", req.SessionId, "token:", token)
+		consts.ErrorG(ctx, err)
 		return nil, gerror.NewCode(consts.CalSignError(""))
 	}
 
@@ -83,17 +86,17 @@ func (c *ControllerV1) SendSmsCode(ctx context.Context, req *v1.SendSmsCodeReq) 
 	ctx, span := gtrace.NewSpan(ctx, "SendSmsCode")
 	defer span.End()
 	//
-	g.Log().Debug(ctx, "SendMailCode:", req)
 	sid := req.SessionId
 	token, err := service.MpcSigner().Sid2Token(ctx, sid)
 	if err != nil {
-		g.Log().Error(ctx, "not exist userId:", sid, token)
-		return res, err
+		consts.ErrorG(ctx, err)
+		return res, gerror.NewCode(mpccode.CodeSessionInvalid)
 	}
 	///
-	err = service.RPC().PerformSmsCode(ctx, token, req.RiskSerial)
+	err = service.RPC().RpcSendSmsCode(ctx, token, req.RiskSerial)
 	if err != nil {
-		g.Log().Error(ctx, "PerformSmsCode:", token, sid, err)
+		g.Log().Warning(ctx, "RpcSendSmsCode:", "sid:", sid, "token:", token)
+		consts.ErrorG(ctx, err)
 		return res, err
 	}
 	return res, err
