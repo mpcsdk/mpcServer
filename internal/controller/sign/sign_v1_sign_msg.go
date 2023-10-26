@@ -23,7 +23,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	defer span.End()
 	//
 	// checksid
-	userId, err := service.MpcSigner().Sid2UserId(ctx, req.SessionId)
+	_, err = service.MpcSigner().Sid2UserId(ctx, req.SessionId)
 	if err != nil {
 		consts.ErrorG(ctx, err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
