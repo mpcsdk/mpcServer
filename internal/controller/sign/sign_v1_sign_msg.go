@@ -3,7 +3,6 @@ package sign
 import (
 	"context"
 	"encoding/hex"
-	"encoding/json"
 	"strings"
 
 	v1 "mpcServer/api/sign/v1"
@@ -55,48 +54,48 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	}
 
 	// ///Risktx
-	rst, err := service.RPC().RpcRiskTxs(ctx, userId, req.SignData)
-	if err != nil {
-		g.Log().Warning(ctx, "RpcRiskTx:", "sid:", req.SessionId)
-		consts.ErrorG(ctx, err)
-		return nil, gerror.NewCode(consts.CodeInternalError)
-	}
-	g.Log().Notice(ctx, "CalSign PerformRiskTxs:", rst)
+	// rst, err := service.RPC().RpcRiskTxs(ctx, userId, req.SignData)
+	// if err != nil {
+	// 	g.Log().Warning(ctx, "RpcRiskTx:", "sid:", req.SessionId)
+	// 	consts.ErrorG(ctx, err)
+	// 	return nil, gerror.NewCode(consts.CodeInternalError)
+	// }
+	// g.Log().Notice(ctx, "CalSign PerformRiskTxs:", rst)
 
 	// }
-	switch rst.Ok {
-	case consts.RiskCodeForbidden:
-		return &v1.SignMsgRes{
-			RiskSerial: rst.RiskSerial,
-			RiskKind:   rst.RiskKind,
-		}, gerror.NewCode(consts.CodePerformRiskForbidden)
+	// switch rst.Ok {
+	// case consts.RiskCodeForbidden:
+	// 	return &v1.SignMsgRes{
+	// 		RiskSerial: rst.RiskSerial,
+	// 		RiskKind:   rst.RiskKind,
+	// 	}, gerror.NewCode(consts.CodePerformRiskForbidden)
 
-	case consts.RiskCodeNeedVerification:
-		//notice: record txjson for re-sign
-		val, err := json.Marshal(req)
-		if err != nil {
-			consts.ErrorG(ctx, err)
-			return nil, gerror.NewCode(consts.CodeInternalError)
-		}
-		service.MpcSigner().RecordTxs(ctx, req.SessionId, string(val))
+	// case consts.RiskCodeNeedVerification:
+	// 	//notice: record txjson for re-sign
+	// 	val, err := json.Marshal(req)
+	// 	if err != nil {
+	// 		consts.ErrorG(ctx, err)
+	// 		return nil, gerror.NewCode(consts.CodeInternalError)
+	// 	}
+	// 	service.MpcSigner().RecordTxs(ctx, req.SessionId, string(val))
 
-		return &v1.SignMsgRes{
-			RiskSerial: rst.RiskSerial,
-			RiskKind:   rst.RiskKind,
-		}, gerror.NewCode(consts.CodePerformRiskNeedVerification)
-	case consts.RiskCodePass:
-		err = service.MpcSigner().CalSign(ctx, req)
-		if err != nil {
-			g.Log().Warning(ctx, "SignMsg:", err)
-			return nil, gerror.NewCode(mpccode.CodeInternalError)
-		}
-
-	default:
-		return &v1.SignMsgRes{
-			RiskSerial: rst.RiskSerial,
-			RiskKind:   rst.RiskKind,
-		}, gerror.NewCode(consts.CodePerformRiskError)
+	// 	return &v1.SignMsgRes{
+	// 		RiskSerial: rst.RiskSerial,
+	// 		RiskKind:   rst.RiskKind,
+	// 	}, gerror.NewCode(consts.CodePerformRiskNeedVerification)
+	// case consts.RiskCodePass:
+	err = service.MpcSigner().CalSign(ctx, req)
+	if err != nil {
+		g.Log().Warning(ctx, "SignMsg:", err)
+		return nil, gerror.NewCode(mpccode.CodeInternalError)
 	}
+
+	// default:
+	// 	return &v1.SignMsgRes{
+	// 		RiskSerial: rst.RiskSerial,
+	// 		RiskKind:   rst.RiskKind,
+	// 	}, gerror.NewCode(consts.CodePerformRiskError)
+	// }
 
 	return nil, nil
 }
