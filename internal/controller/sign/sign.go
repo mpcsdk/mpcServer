@@ -9,9 +9,6 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-var tmp_privkey2 string = "0ac7d64995c6b4daac2688c0e40d25af50887ada5b7a4cbe197ada0bdef32375"
-var tmp_publickey string = "045ae6d14d4934eeb004b818d687a1ea6efff0946d043dfb9338c0601a1ae0387fd00bfcefeff11961a48edc66f62ad87feed8a9ef157efa294c91466c70039bbe"
-
 func randPrivateKey() string {
 	pk, _ := crypto.GenerateKey()
 	pkBytes := crypto.FromECDSA(pk)

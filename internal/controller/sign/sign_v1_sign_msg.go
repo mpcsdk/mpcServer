@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/hex"
 	"encoding/json"
-	"strings"
-
+	riskv1 "mpcServer/api/risk/v1"
 	v1 "mpcServer/api/sign/v1"
+	"mpcServer/internal/config"
 	"mpcServer/internal/consts"
 	"mpcServer/internal/service"
+	"strings"
 
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
@@ -53,16 +54,24 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		}
 		return nil, nil
 	}
-
-	// ///Risktx
-	rst, err := service.RPC().RpcRiskTxs(ctx, userId, req.SignData)
-	if err != nil {
-		g.Log().Warning(ctx, "RpcRiskTx:", "sid:", req.SessionId)
-		consts.ErrorG(ctx, err)
-		return nil, gerror.NewCode(consts.CodeInternalError)
+	////
+	rst := riskv1.TxRiskRes{
+		Ok: 0,
 	}
-	g.Log().Notice(ctx, "CalSign PerformRiskTxs:", rst)
+	if config.Config.Server.HasRisk {
+		// ///Risktx
+		rst, err := service.RPC().RpcRiskTxs(ctx, userId, req.SignData)
+		if err != nil {
+			g.Log().Warning(ctx, "RpcRiskTx:", "sid:", req.SessionId)
+			consts.ErrorG(ctx, err)
+			return nil, gerror.NewCode(consts.CodeInternalError)
+		}
+		g.Log().Notice(ctx, "CalSign PerformRiskTxs:", rst)
+	} else {
 
+	}
+
+	///
 	// }
 	switch rst.Ok {
 	case consts.RiskCodeForbidden:

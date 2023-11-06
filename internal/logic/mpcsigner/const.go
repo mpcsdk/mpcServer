@@ -1,12 +1,5 @@
 package mpcsigner
 
-import (
-	"time"
-
-	"github.com/gogf/gf/v2/os/gcfg"
-	"github.com/gogf/gf/v2/os/gctx"
-)
-
 const (
 	KEY_context     string = "context2"
 	KEY_privatekey2 string = "privatekey2"
@@ -23,12 +16,3 @@ const (
 	KEY_UserToken  string = "userToken"
 	KEY_UserId     string = "userId"
 )
-
-var SessionDur time.Duration = 0
-var TokenDur time.Duration = 0
-
-func init() {
-	ctx := gctx.GetInitCtx()
-	SessionDur = time.Duration(gcfg.Instance().MustGet(ctx, "cache.sessionDur", 1000).Int())
-	SessionDur *= time.Second
-}

@@ -2,6 +2,7 @@ package mpcsigner
 
 import (
 	"context"
+	"mpcServer/internal/config"
 	"mpcServer/internal/service"
 	"time"
 
@@ -28,6 +29,7 @@ var sessionDur time.Duration = 0
 var core = 2
 
 func init() {
+	sessionDur = time.Duration(config.Config.Cache.SessionDuration)
 	ctx := gctx.GetInitCtx()
 	cfg := gcfg.Instance()
 	v, err := cfg.Get(ctx, "server.cpuCore")
