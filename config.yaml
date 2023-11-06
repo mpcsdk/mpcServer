@@ -19,7 +19,7 @@ database:
   - link: "pgsql:postgres:123456@tcp(127.0.0.1:10100)/mpc"
 
 cache:
-  sessionDuration: 1000
+  sessionDuration: 2000
 
 
 # redis 

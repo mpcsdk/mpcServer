@@ -115,13 +115,13 @@ func (s *sMpcSigner) RecordTxs(ctx context.Context, sid string, val string) (str
 
 // /
 // // key
-func (s *sMpcSigner) GenNewSid(ctx context.Context, userId string, token string) (string, error) {
+func (s *sMpcSigner) GenNewSid(ctx context.Context, userId string, token string, tokenData string) (string, error) {
 	var genid gvar.Var
 	genid.Set(idgen.NextId())
 	sid := genid.String()
 	//
 	// err := s.recordUserIdVal(ctx, sid, KEY_UserId, userId)
-	err := s.insertUserContext(ctx, userId, nil, nil, nil)
+	err := s.insertUserContext(ctx, userId, nil, nil, nil, &token, &tokenData)
 	if err != nil {
 		g.Log().Warning(ctx, err)
 		return "", err
@@ -143,16 +143,34 @@ func (s *sMpcSigner) GenNewSid(ctx context.Context, userId string, token string)
 func (s *sMpcSigner) Sid2UserId(ctx context.Context, sid string) (string, error) {
 	////
 	key, err := service.Cache().Get(ctx, sid+KEY_UserId)
-	if key.IsEmpty() {
-		return "", emptyErr
+	if err != nil {
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("sid", sid),
+		))
+		return "", err
 	}
-	return key.String(), err
+	if key.IsEmpty() {
+		err = gerror.Wrap(emptyErr, mpccode.ErrDetails(
+			mpccode.ErrDetail("sid", sid),
+		))
+		return "", err
+	}
+	return key.String(), nil
 }
 func (s *sMpcSigner) Sid2Token(ctx context.Context, sid string) (string, error) {
 	////
 	key, err := service.Cache().Get(ctx, sid+KEY_UserToken)
+	if err != nil {
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("sid", sid),
+		))
+		return "", err
+	}
 	if key.IsEmpty() {
-		return "", emptyErr
+		err = gerror.Wrap(emptyErr, mpccode.ErrDetails(
+			mpccode.ErrDetail("sid", sid),
+		))
+		return "", err
 	}
 	return key.String(), err
 }

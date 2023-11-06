@@ -29,12 +29,14 @@ func (s *sMpcSigner) recordUserContext(ctx context.Context, userId string, conte
 	})
 	return err
 }
-func (s *sMpcSigner) insertUserContext(ctx context.Context, userId string, context, request, pubkey *string) error {
+func (s *sMpcSigner) insertUserContext(ctx context.Context, userId string, context, request, pubkey *string, token, tokenData *string) error {
 	err := service.DB().InertContext(ctx, userId, &do.MpcContext{
-		UserId:  userId,
-		Context: context,
-		Request: request,
-		PubKey:  pubkey,
+		UserId:    userId,
+		Context:   context,
+		Request:   request,
+		PubKey:    pubkey,
+		Token:     token,
+		TokenData: tokenData,
 	})
 
 	return err

@@ -18,4 +18,5 @@ type MpcContext struct {
 	CreatedAt *gtime.Time `json:"createdAt" ` //
 	DeletedAt *gtime.Time `json:"deletedAt" ` //
 	PubKey    string      `json:"pubKey"    ` //
+	TokenData string `json:"tokenData"`
 }

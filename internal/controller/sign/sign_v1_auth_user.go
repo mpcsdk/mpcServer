@@ -32,7 +32,7 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 		return nil, gerror.NewCode(consts.AuthError())
 	}
 	////
-	sid, err := service.MpcSigner().GenNewSid(ctx, userId, req.UserToken)
+	sid, err := service.MpcSigner().GenNewSid(ctx, userId, req.UserToken, info.String())
 	if err != nil {
 		g.Log().Errorf(ctx, "%+v", err)
 		return nil, gerror.NewCode(consts.CodeInternalError)

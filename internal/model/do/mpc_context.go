@@ -20,4 +20,5 @@ type MpcContext struct {
 	CreatedAt *gtime.Time //
 	DeletedAt *gtime.Time //
 	PubKey    interface{} //
+	TokenData interface{}
 }
