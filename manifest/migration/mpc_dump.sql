@@ -27,12 +27,13 @@ SET default_table_access_method = heap;
 CREATE TABLE public.mpc_context (
     user_id character varying NOT NULL,
     context character varying,
-    updated_at timestamp(6) without time zone,
+    updated_at timestamp(6) with time zone,
     request character varying,
     token character varying,
-    created_at timestamp(6) without time zone,
-    deleted_at timestamp(6) without time zone,
-    pub_key character varying
+    created_at timestamp(6) with time zone,
+    deleted_at timestamp(6) with time zone,
+    pub_key character varying,
+    token_data character varying
 );
 
 
