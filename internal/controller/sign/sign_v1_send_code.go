@@ -30,7 +30,7 @@ func (c *ControllerV1) SendMailCode(ctx context.Context, req *v1.SendMailCodeReq
 	if err != nil {
 		g.Log().Warning(ctx, "RPcSendMailCode:", "token:", token, "riskserial:", req.RiskSerial)
 		g.Log().Errorf(ctx, "%+v", err)
-		return res, err
+		return res, gerror.NewCode(mpccode.CodeTFASendMailFailed)
 	}
 	return res, err
 }
@@ -54,7 +54,7 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 	if err != nil {
 		g.Log().Warning(ctx, "RpcVerifyCode:", "sid:", req.SessionId, "token:", token)
 		consts.ErrorG(ctx, err)
-		return nil, err
+		return nil, gerror.NewCode(mpccode.CodeRiskVerifyCodeInvalid)
 	}
 	///
 	//fetch txs by sid

@@ -9,9 +9,11 @@ import (
 
 	"github.com/gogf/gf/contrib/registry/etcd/v2"
 	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gcfg"
 	"github.com/gogf/gf/v2/os/gctx"
+	"github.com/mpcsdk/mpcCommon/mpccode"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	v1 "mpcServer/api/risk/v1"
@@ -102,6 +104,10 @@ func (s *sRPC) RpcRiskTxs(ctx context.Context, userId string, signTxData string)
 	}
 	///
 	if err != nil {
+		err = gerror.Wrap(err, mpccode.ErrDetails(
+			mpccode.ErrDetail("useid", userId),
+			mpccode.ErrDetail("signtx", signTxData),
+		))
 		return nil, err
 	}
 	///

@@ -27,15 +27,15 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	// checksid
 	userId, err := service.MpcSigner().Sid2UserId(ctx, req.SessionId)
 	if err != nil {
-		consts.ErrorG(ctx, err)
-		return nil, gerror.NewCode(consts.CodeInternalError)
+		g.Log().Errorf(ctx, "%+v", err)
+		return nil, gerror.NewCode(mpccode.CodeSessionInvalid)
 	}
 	// cal request
 	//notice:
 	err = service.MpcSigner().CalRequest(ctx, req.SessionId, req.Request)
 	if err != nil {
-		consts.ErrorG(ctx, err)
-		return nil, gerror.NewCode(consts.CodeInternalError)
+		g.Log().Errorf(ctx, "%+v", err)
+		return nil, gerror.NewCode(mpccode.CodeInternalError)
 	}
 	req.Request = ""
 	////if string msg
@@ -49,22 +49,22 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	if strings.Index(req.SignData, "domain") != -1 {
 		err = service.MpcSigner().CalDomainSign(ctx, req)
 		if err != nil {
-			consts.ErrorG(ctx, err)
+			g.Log().Errorf(ctx, "%+v", err)
 			return nil, gerror.NewCode(mpccode.CodeInternalError)
 		}
 		return nil, nil
 	}
 	////
-	rst := riskv1.TxRiskRes{
+	rst := &riskv1.TxRiskRes{
 		Ok: 0,
 	}
 	if config.Config.Server.HasRisk {
 		// ///Risktx
-		rst, err := service.RPC().RpcRiskTxs(ctx, userId, req.SignData)
+		rst, err = service.RPC().RpcRiskTxs(ctx, userId, req.SignData)
 		if err != nil {
 			g.Log().Warning(ctx, "RpcRiskTx:", "sid:", req.SessionId)
-			consts.ErrorG(ctx, err)
-			return nil, gerror.NewCode(consts.CodeInternalError)
+			g.Log().Errorf(ctx, "%+v", err)
+			return nil, gerror.NewCode(consts.CodePerformRiskError)
 		}
 		g.Log().Notice(ctx, "CalSign PerformRiskTxs:", rst)
 	} else {
@@ -85,7 +85,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		val, err := json.Marshal(req)
 		if err != nil {
 			consts.ErrorG(ctx, err)
-			return nil, gerror.NewCode(consts.CodeInternalError)
+			return nil, gerror.NewCode(mpccode.CodeInternalError)
 		}
 		service.MpcSigner().RecordTxs(ctx, req.SessionId, string(val))
 

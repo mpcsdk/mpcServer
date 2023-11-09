@@ -38,5 +38,4 @@ func init() {
 	}
 	core = v.Int()
 	service.RegisterMpcSigner(New())
-
 }
