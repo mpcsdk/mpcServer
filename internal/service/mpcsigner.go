@@ -39,7 +39,7 @@ type (
 		RecordTxs(ctx context.Context, sid string, val string) (string, error)
 		// /
 		// // key
-		GenNewSid(ctx context.Context, userId string, token string,  tokenData string) (string, error)
+		GenNewSid(ctx context.Context, userId string, token string, tokenData string) (string, error)
 		Sid2UserId(ctx context.Context, sid string) (string, error)
 		Sid2Token(ctx context.Context, sid string) (string, error)
 		StateString(state int) string

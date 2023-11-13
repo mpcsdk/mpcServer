@@ -10,6 +10,7 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/gtrace"
+	"github.com/mpcsdk/mpcCommon/mpccode"
 )
 
 func (c *ControllerV1) GetState(ctx context.Context, req *v1.GetStateReq) (res *v1.GetStateRes, err error) {
@@ -62,7 +63,7 @@ func (c *ControllerV1) GetSignature(ctx context.Context, req *v1.GetSignatureReq
 	signature, err := service.MpcSigner().FetchSignature(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Errorf(ctx, "%+v", err)
-		return nil, gerror.NewCode(consts.CodeGetGeneratorError(consts.ErrSignatureNotExist))
+		return nil, gerror.NewCode(mpccode.CodeSessionInvalid)
 	}
 
 	res = &v1.GetSignatureRes{

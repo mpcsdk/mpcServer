@@ -21,6 +21,8 @@ database:
 cache:
   sessionDuration: 2000
 
+nrpc:
+  natsUrl: "127.0.0.1:4222"
 
 # redis 
 redis:

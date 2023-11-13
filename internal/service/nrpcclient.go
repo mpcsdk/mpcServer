@@ -7,11 +7,11 @@ package service
 
 import (
 	"context"
-	v1 "mpcServer/api/risk/v1"
+	v1 "mpcServer/api/risk/nrpc/v1"
 )
 
 type (
-	IRPC interface {
+	INrpcClient interface {
 		RpcSendMailCode(ctx context.Context, token, serial string) error
 		RpcSendSmsCode(ctx context.Context, token, serial string) error
 		RpcVerifyCode(ctx context.Context, token, serial, phoneCode, mailCode string) error
@@ -21,16 +21,16 @@ type (
 )
 
 var (
-	localRPC IRPC
+	localNrpcClient INrpcClient
 )
 
-func RPC() IRPC {
-	if localRPC == nil {
-		panic("implement not found for interface IRPC, forgot register?")
+func NrpcClient() INrpcClient {
+	if localNrpcClient == nil {
+		panic("implement not found for interface INrpcClient, forgot register?")
 	}
-	return localRPC
+	return localNrpcClient
 }
 
-func RegisterRPC(i IRPC) {
-	localRPC = i
+func RegisterNrpcClient(i INrpcClient) {
+	localNrpcClient = i
 }

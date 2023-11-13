@@ -22,6 +22,9 @@ type Server struct {
 	HasRisk    bool   `json:"hasRisk" v:"required"`
 	PrivateKey string `json:"privateKey" v:"required"`
 }
+type Nrpcfg struct {
+	NatsUrl string `json:"natsUrl" v:"required"`
+}
 
 // //
 type Cfg struct {
@@ -30,6 +33,7 @@ type Cfg struct {
 	Etcd         *Etcd   `json:"etcd" v:"required"`
 	UserTokenUrl string  `json:"userToken" v:"required"`
 	JaegerUrl    string  `json:"jaegerUrl" v:"required"`
+	Nrpc         *Nrpcfg `json:"nrpc" v:"required"`
 }
 
 var Config = &Cfg{}

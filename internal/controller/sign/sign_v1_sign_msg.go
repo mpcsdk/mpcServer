@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/hex"
 	"encoding/json"
-	riskv1 "mpcServer/api/risk/v1"
+	riskv1 "mpcServer/api/risk/nrpc/v1"
 	v1 "mpcServer/api/sign/v1"
 	"mpcServer/internal/config"
 	"mpcServer/internal/consts"
@@ -60,7 +60,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	}
 	if config.Config.Server.HasRisk {
 		// ///Risktx
-		rst, err = service.RPC().RpcRiskTxs(ctx, userId, req.SignData)
+		rst, err = service.NrpcClient().RpcRiskTxs(ctx, userId, req.SignData)
 		if err != nil {
 			g.Log().Warning(ctx, "RpcRiskTx:", "sid:", req.SessionId)
 			g.Log().Errorf(ctx, "%+v", err)

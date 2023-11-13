@@ -26,7 +26,7 @@ func (c *ControllerV1) SendMailCode(ctx context.Context, req *v1.SendMailCodeReq
 		return res, gerror.NewCode(mpccode.CodeSessionInvalid)
 	}
 	///
-	err = service.RPC().RpcSendMailCode(ctx, token, req.RiskSerial)
+	err = service.NrpcClient().RpcSendMailCode(ctx, token, req.RiskSerial)
 	if err != nil {
 		g.Log().Warning(ctx, "RPcSendMailCode:", "token:", token, "riskserial:", req.RiskSerial)
 		g.Log().Errorf(ctx, "%+v", err)
@@ -50,7 +50,7 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 		consts.ErrorG(ctx, err)
 		return res, gerror.NewCode(mpccode.CodeSessionInvalid)
 	}
-	err = service.RPC().RpcVerifyCode(ctx, token, req.RiskSerial, req.PhoneCode, req.MailCode)
+	err = service.NrpcClient().RpcVerifyCode(ctx, token, req.RiskSerial, req.PhoneCode, req.MailCode)
 	if err != nil {
 		g.Log().Warning(ctx, "RpcVerifyCode:", "sid:", req.SessionId, "token:", token)
 		consts.ErrorG(ctx, err)
@@ -93,7 +93,7 @@ func (c *ControllerV1) SendSmsCode(ctx context.Context, req *v1.SendSmsCodeReq) 
 		return res, gerror.NewCode(mpccode.CodeSessionInvalid)
 	}
 	///
-	err = service.RPC().RpcSendSmsCode(ctx, token, req.RiskSerial)
+	err = service.NrpcClient().RpcSendSmsCode(ctx, token, req.RiskSerial)
 	if err != nil {
 		g.Log().Warning(ctx, "RpcSendSmsCode:", "sid:", sid, "token:", token)
 		consts.ErrorG(ctx, err)
