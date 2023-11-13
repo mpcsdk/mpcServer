@@ -12,8 +12,10 @@ import (
 var tmp_privkey2 string = ""
 
 
-type ControllerV1 struct{}
+type ControllerV1 struct{
+}
 func NewV1() sign.ISignV1 {
 	tmp_privkey2 = config.Config.Server.PrivateKey
-	return &ControllerV1{}
+	return &ControllerV1{
+	}
 }

@@ -26,6 +26,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	//
 	// checksid
 	userId, err := service.MpcSigner().Sid2UserId(ctx, req.SessionId)
+
 	if err != nil {
 		g.Log().Errorf(ctx, "%+v", err)
 		return nil, gerror.NewCode(mpccode.CodeSessionInvalid)
