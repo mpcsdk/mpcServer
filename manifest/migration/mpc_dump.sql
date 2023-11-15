@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 12.3 (Debian 12.3-1.pgdg100+1)
--- Dumped by pg_dump version 12.16
+-- Dumped by pg_dump version 12.16 (Ubuntu 12.16-0ubuntu0.20.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -27,11 +27,11 @@ SET default_table_access_method = heap;
 CREATE TABLE public.mpc_context (
     user_id character varying NOT NULL,
     context character varying,
-    updated_at timestamp(6) with time zone,
+    updated_at timestamp(6) without time zone,
     request character varying,
     token character varying,
-    created_at timestamp(6) with time zone,
-    deleted_at timestamp(6) with time zone,
+    created_at timestamp(6) without time zone,
+    deleted_at timestamp(6) without time zone,
     pub_key character varying,
     token_data character varying
 );

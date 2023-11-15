@@ -11,6 +11,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gcfg"
 	"github.com/gogf/gf/v2/os/gctx"
+	"github.com/gogf/gf/v2/os/gtime"
 
 	"mpcServer/internal/cmd"
 
@@ -22,6 +23,7 @@ func main() {
 	g.Log().SetAsync(true)
 	g.Log().SetWriterColorEnable(true)
 	///
+	gtime.SetTimeZone("Asia/Shanghai")
 	///
 	ctx := gctx.New()
 	cfg := gcfg.Instance()
