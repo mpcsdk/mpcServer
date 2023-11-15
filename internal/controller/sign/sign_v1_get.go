@@ -63,7 +63,7 @@ func (c *ControllerV1) GetSignature(ctx context.Context, req *v1.GetSignatureReq
 	signature, err := service.MpcSigner().FetchSignature(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Errorf(ctx, "%+v", err)
-		return nil, gerror.NewCode(mpccode.CodeSessionInvalid)
+		return nil, gerror.NewCode(mpccode.CodeParamInvalid)
 	}
 
 	res = &v1.GetSignatureRes{
