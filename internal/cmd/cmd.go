@@ -9,6 +9,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gcmd"
+	"github.com/gogf/gf/v2/os/gctx"
 )
 
 func MiddlewareCORS(r *ghttp.Request) {
@@ -16,6 +17,8 @@ func MiddlewareCORS(r *ghttp.Request) {
 	r.Middleware.Next()
 }
 func ResponseHandler(r *ghttp.Request) {
+	ctx := gctx.GetInitCtx()
+	g.Log().Info(ctx, "Request:", r.GetBodyString())
 	r.Middleware.Next()
 	// There's custom buffer content, it then exits current handler.
 	if r.Response.BufferLength() > 0 {
@@ -33,6 +36,7 @@ func ResponseHandler(r *ghttp.Request) {
 			code = gcode.CodeOK
 		}
 	}
+	g.Log().Info(ctx, "Response:", res)
 	r.Response.WriteJson(ghttp.DefaultHandlerResponse{
 		Code:    code.Code(),
 		Message: code.Message(),
