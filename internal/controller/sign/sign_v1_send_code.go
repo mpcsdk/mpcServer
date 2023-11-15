@@ -54,7 +54,7 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 	if err != nil {
 		g.Log().Warning(ctx, "RpcVerifyCode:", "sid:", req.SessionId, "token:", token)
 		consts.ErrorG(ctx, err)
-		return nil, gerror.NewCode(mpccode.CodeRiskVerifyCodeInvalid)
+		return nil, err
 	}
 	///
 	//fetch txs by sid
