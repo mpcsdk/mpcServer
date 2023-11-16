@@ -3,6 +3,7 @@ package sign
 import (
 	"context"
 	"encoding/json"
+	"strings"
 
 	v1 "mpcServer/api/sign/v1"
 	"mpcServer/internal/consts"
@@ -34,6 +35,13 @@ func (c *ControllerV1) SendMailCode(ctx context.Context, req *v1.SendMailCodeReq
 	}
 	return res, err
 }
+func nrpcErrIs(nrpcerr error, target error) bool {
+	str := nrpcerr.Error()
+	if strings.Index(str, target.Error()) == -1 {
+		return false
+	}
+	return true
+}
 
 // /
 func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (res *v1.VerifyCodeRes, err error) {
@@ -52,29 +60,35 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 	}
 	err = service.NrpcClient().RpcVerifyCode(ctx, token, req.RiskSerial, req.PhoneCode, req.MailCode)
 	if err != nil {
-		g.Log().Warning(ctx, "RpcVerifyCode:", "sid:", req.SessionId, "token:", token)
-		consts.ErrorG(ctx, err)
+		g.Log().Warningf(ctx, "%s", err.Error())
+		if nrpcErrIs(err, mpccode.CodeRiskVerifyMailInvalid.Error()) {
+			err = gerror.NewCode(mpccode.CodeRiskVerifyMailInvalid)
+		} else if nrpcErrIs(err, mpccode.CodeRiskVerifyPhoneInvalid.Error()) {
+			err = gerror.NewCode(mpccode.CodeRiskVerifyPhoneInvalid)
+		} else {
+			err = gerror.NewCode(mpccode.CodeRiskVerifyCodeInvalid)
+		}
 		return nil, err
 	}
 	///
 	//fetch txs by sid
 	val, err := service.MpcSigner().FetchTxs(ctx, req.SessionId)
 	if err != nil {
-		consts.ErrorG(ctx, err)
+		g.Log().Error(ctx, "%+v", err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	txreq := &v1.SignMsgReq{}
 	err = json.Unmarshal([]byte(val), txreq)
 	if err != nil {
-		consts.ErrorG(ctx, err)
+		g.Log().Error(ctx, "%+v", err)
 		return nil, gerror.NewCode(consts.CodeInternalError)
 	}
 	///sign msg
 	err = service.MpcSigner().CalSign(ctx, txreq)
 	if err != nil {
 		g.Log().Warning(ctx, "RpcRiskTxs:", "sid:", req.SessionId, "token:", token)
-		consts.ErrorG(ctx, err)
-		return nil, gerror.NewCode(consts.CalSignError(""))
+		g.Log().Error(ctx, "%+v", err)
+		return nil, gerror.NewCode(mpccode.CodeInternalError)
 	}
 
 	return nil, nil
