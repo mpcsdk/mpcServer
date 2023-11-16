@@ -60,11 +60,13 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 	}
 	err = service.NrpcClient().RpcVerifyCode(ctx, token, req.RiskSerial, req.PhoneCode, req.MailCode)
 	if err != nil {
-		g.Log().Warningf(ctx, "%s", err.Error())
+		g.Log().Warningf(ctx, "%+v", err)
 		if nrpcErrIs(err, mpccode.CodeRiskVerifyMailInvalid.Error()) {
 			err = gerror.NewCode(mpccode.CodeRiskVerifyMailInvalid)
 		} else if nrpcErrIs(err, mpccode.CodeRiskVerifyPhoneInvalid.Error()) {
 			err = gerror.NewCode(mpccode.CodeRiskVerifyPhoneInvalid)
+		} else if nrpcErrIs(err, mpccode.CodeRiskSerialNotExist.Error()) {
+			err = gerror.NewCode(mpccode.CodeRiskSerialNotExist)
 		} else {
 			err = gerror.NewCode(mpccode.CodeRiskVerifyCodeInvalid)
 		}
