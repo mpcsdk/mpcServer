@@ -29,10 +29,17 @@ func (c *ControllerV1) SendMailCode(ctx context.Context, req *v1.SendMailCodeReq
 	///
 	err = service.NrpcClient().RpcSendMailCode(ctx, token, req.RiskSerial)
 	if err != nil {
-		g.Log().Warning(ctx, "RPcSendMailCode:", "token:", token, "riskserial:", req.RiskSerial)
-		g.Log().Errorf(ctx, "%+v", err)
-		return res, gerror.NewCode(mpccode.CodeTFASendMailFailed)
+		g.Log().Warningf(ctx, "%+v", err)
+		if nrpcErrIs(err, mpccode.CodeLimitSendMailCode.Error()) {
+			err = gerror.NewCode(mpccode.CodeLimitSendMailCode)
+		} else if nrpcErrIs(err, mpccode.CodeRiskSerialNotExist.Error()) {
+			err = gerror.NewCode(mpccode.CodeRiskSerialNotExist)
+		} else {
+			err = gerror.NewCode(mpccode.CodeTFASendMailFailed)
+		}
+		return nil, err
 	}
+
 	return res, err
 }
 func nrpcErrIs(nrpcerr error, target error) bool {
@@ -111,9 +118,16 @@ func (c *ControllerV1) SendSmsCode(ctx context.Context, req *v1.SendSmsCodeReq) 
 	///
 	err = service.NrpcClient().RpcSendSmsCode(ctx, token, req.RiskSerial)
 	if err != nil {
-		g.Log().Warning(ctx, "RpcSendSmsCode:", "sid:", sid, "token:", token)
-		consts.ErrorG(ctx, err)
-		return res, err
+		g.Log().Warningf(ctx, "%+v", err)
+		if nrpcErrIs(err, mpccode.CodeLimitSendPhoneCode.Error()) {
+			err = gerror.NewCode(mpccode.CodeLimitSendPhoneCode)
+		} else if nrpcErrIs(err, mpccode.CodeRiskSerialNotExist.Error()) {
+			err = gerror.NewCode(mpccode.CodeRiskSerialNotExist)
+		} else {
+			err = gerror.NewCode(mpccode.CodeTFASendSmsFailed)
+		}
+		return nil, err
 	}
+
 	return res, err
 }
