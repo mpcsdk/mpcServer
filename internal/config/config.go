@@ -32,7 +32,7 @@ type Cfg struct {
 	Cache        *Cache  `json:"cache" v:"required"`
 	Etcd         *Etcd   `json:"etcd" v:"required"`
 	UserTokenUrl string  `json:"userToken" v:"required"`
-	JaegerUrl    string  `json:"jaegerUrl" v:"required"`
+	JaegerUrl    string  `json:"jaegerUrl" `
 	Nrpc         *Nrpcfg `json:"nrpc" v:"required"`
 }
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"mpcServer/internal/config"
 	_ "mpcServer/internal/packed"
 
 	_ "mpcServer/internal/logic"
@@ -32,14 +33,15 @@ func main() {
 	option := idgen.NewIdGeneratorOptions(workId.Uint16())
 	idgen.SetIdGenerator(option)
 	// ///jaeger
-	name := cfg.MustGet(ctx, "server.name", "mpc-signer").String()
-	jaegerUrl, err := cfg.Get(ctx, "jaegerUrl")
+	// name := cfg.MustGet(ctx, "server.name", "mpc-signer").String()
+	// jaegerUrl, err := cfg.Get(ctx, "jaegerUrl")
+	// if err != nil {
+	// 	panic(err)
+	// }
+	tp, err := jaeger.Init(config.Config.Server.Name, config.Config.JaegerUrl)
 	if err != nil {
-		panic(err)
-	}
-	tp, err := jaeger.Init(name, jaegerUrl.String())
-	if err != nil {
-		panic(err)
+		g.Log().Error(ctx, err)
+		// panic(err)
 	}
 	defer tp.Shutdown(ctx)
 	// ///

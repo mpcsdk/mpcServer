@@ -7,6 +7,8 @@ import (
 	"mpcServer/internal/service"
 	"time"
 
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gctx"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/nats-io/nats.go"
 )
@@ -18,11 +20,12 @@ type sNrpcClient struct {
 }
 
 func init() {
-
+	ctx := gctx.GetInitCtx()
 	// Connect to the NATS server.
 	nc, err := nats.Connect(config.Config.Nrpc.NatsUrl, nats.Timeout(3*time.Second))
 	if err != nil {
-		panic(err)
+		g.Log().Error(ctx, err)
+		// panic(err)
 	}
 	// defer nc.Close()
 
@@ -31,14 +34,16 @@ func init() {
 	// Contact the server and print out its response.
 	_, err = riskcli.RpcAlive(&empty.Empty{})
 	if err != nil {
-		panic(err)
+		g.Log().Error(ctx, err)
+		// panic(err)
 	}
 	////
 	tfacli := tfav1.NewTFAClient(nc)
 	// Contact the server and print out its response.
 	_, err = tfacli.RpcAlive(&empty.Empty{})
 	if err != nil {
-		panic(err)
+		g.Log().Error(ctx, err)
+		// panic(err)
 	}
 	///
 	s := &sNrpcClient{
