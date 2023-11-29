@@ -25,7 +25,9 @@ func init() {
 	nc, err := nats.Connect(config.Config.Nrpc.NatsUrl, nats.Timeout(3*time.Second))
 	if err != nil {
 		g.Log().Error(ctx, err)
-		// panic(err)
+		if config.Config.Server.HasRisk {
+			panic(err)
+		}
 	}
 	// defer nc.Close()
 
@@ -35,7 +37,9 @@ func init() {
 	_, err = riskcli.RpcAlive(&empty.Empty{})
 	if err != nil {
 		g.Log().Error(ctx, err)
-		// panic(err)
+		if config.Config.Server.HasRisk {
+			panic(err)
+		}
 	}
 	////
 	tfacli := tfav1.NewTFAClient(nc)
@@ -43,7 +47,9 @@ func init() {
 	_, err = tfacli.RpcAlive(&empty.Empty{})
 	if err != nil {
 		g.Log().Error(ctx, err)
-		// panic(err)
+		if config.Config.Server.HasRisk {
+			panic(err)
+		}
 	}
 	///
 	s := &sNrpcClient{
