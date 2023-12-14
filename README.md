@@ -19,7 +19,7 @@ psql   -U postgres -h localhost -p 5432 -d mpc -f ./manifest/migration/mpc_dump.
 ## run
 
 ```
-docker run -it -v /path/config.yaml:/server/config.yaml -p 8000:8000 apiserver
+docker run -it -v /path/config.yaml:/server/config.yaml -p 8000:8000 mpcserver
 ```
 
 ## local run

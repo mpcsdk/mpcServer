@@ -9,7 +9,6 @@ import (
 
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gctx"
-	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/nats-io/nats.go"
 )
 
@@ -34,23 +33,23 @@ func init() {
 	// This is our generated client.
 	riskcli := v1.NewRiskClient(nc)
 	// Contact the server and print out its response.
-	_, err = riskcli.RpcAlive(&empty.Empty{})
-	if err != nil {
-		g.Log().Error(ctx, err)
-		if config.Config.Server.HasRisk {
-			panic(err)
-		}
-	}
+	// _, err = riskcli.RpcAlive(&empty.Empty{})
+	// if err != nil {
+	// 	g.Log().Error(ctx, err)
+	// 	if config.Config.Server.HasRisk {
+	// 		panic(err)
+	// 	}
+	// }
 	////
 	tfacli := tfav1.NewTFAClient(nc)
 	// Contact the server and print out its response.
-	_, err = tfacli.RpcAlive(&empty.Empty{})
-	if err != nil {
-		g.Log().Error(ctx, err)
-		if config.Config.Server.HasRisk {
-			panic(err)
-		}
-	}
+	// _, err = tfacli.RpcAlive(&empty.Empty{})
+	// if err != nil {
+	// 	g.Log().Error(ctx, err)
+	// 	if config.Config.Server.HasRisk {
+	// 		panic(err)
+	// 	}
+	// }
 	///
 	s := &sNrpcClient{
 		riskcli: riskcli,

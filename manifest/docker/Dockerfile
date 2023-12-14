@@ -12,10 +12,10 @@ ENV BUILD_DATE=${BUILD_DATE:-unknown}
 EXPOSE 8000
 VOLUME /tmp/server
 
-ADD ./.build/bin/ $WORKDIR/
+ADD ./build $WORKDIR/
 ADD ./manifest/docker/start.sh $WORKDIR/
 ADD ../internal/logic/sign/util/li17/libs/libli17.so $WORKDIR/
-
+RUN chmod +x $WORKDIR/start.sh
 ###############################################################################
 #                                   START
 ###############################################################################
