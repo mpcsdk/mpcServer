@@ -4,7 +4,7 @@ server:
   workId: 1
   cpuCore: 2
   privateKey: "0ac7d64995c6b4daac2688c0e40d25af50887ada5b7a4cbe197ada0bdef32375"
-  hasRisk: true
+  hasRisk:  true
 
 jaegerUrl: "127.0.0.1:6831"
 

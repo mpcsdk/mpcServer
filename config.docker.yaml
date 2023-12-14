@@ -4,9 +4,9 @@ server:
   workId: 1
   cpuCore: 2
   privateKey: "0ac7d64995c6b4daac2688c0e40d25af50887ada5b7a4cbe197ada0bdef32375"
-  hasRisk: true
+  hasRisk:  true
 
-jaegerUrl: "127.0.0.1:6831"
+jaegerUrl: ""
 
 logger:
   level : "all"
@@ -16,31 +16,33 @@ logger:
 
 database:
   default:
-  - link: "pgsql:postgres:123456@tcp(127.0.0.1:10100)/mpc"
+  - link: "pgsql:postgres:123456@tcp(172.22.104.148:10100)/mpc"
 
 cache:
-  sessionDuration: 1000
+  sessionDuration: 2000
 
+nrpc:
+  natsUrl: "172.22.104.148:4222"
 
 # redis 
 redis:
   default:
-    address: 127.0.0.1:6379
+    address: 172.22.104.148:6379
     db:      1
   cache:
-    address:     127.0.0.1:6379
+    address:     172.22.104.148:6379
     db:          2
 
 userToken: "https://auth-dev.mixmarvel-sdk.com/info"
 # ?token=xxxxxxxxx
 etcd:
-  address: "127.0.0.1:2379"
+  address: "172.22.104.148:2379"
   riskRpc: "riskRpc"
 
 
 gfcli:
   gen:
     dao:
-    - link:     "pgsql:postgres:123456@tcp(127.0.0.1:10100)/mpc"
+    - link:     "pgsql:postgres:123456@tcp(172.22.104.148:10100)/mpc"
       tables:   "mpc_context"
       jsonCase: "CamelLower"
