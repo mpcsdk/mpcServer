@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/hex"
 	v1 "mpcServer/api/sign/v1"
-	"mpcServer/internal/consts"
 	"mpcServer/internal/service"
 	"strconv"
 	"strings"
@@ -147,7 +146,7 @@ func (s *sMpcSigner) CalDomainSign(ctx context.Context, req *v1.SignMsgReq) erro
 	msg := strings.TrimPrefix(hash, "0x")
 	if msg != req.Msg {
 		g.Log().Error(ctx, "CalDomainSign unmath", req.SessionId, err, msg, req.Msg)
-		return gerror.NewCode(consts.CodeInternalError)
+		return mpccode.CodeInternalError()
 	}
 
 	// /////sign
@@ -166,7 +165,7 @@ func (s *sMpcSigner) CalSign(ctx context.Context, req *v1.SignMsgReq) error {
 	if len(req.Msg) < 10 {
 		///impossible
 		g.Log().Error(ctx, "CalSign: msg len must > 10", req.Msg)
-		return mpccode.ErrArg
+		return mpccode.CodeParamInvalid()
 	}
 	// checkmsghash
 	msg, err := s.digestTxHash(ctx, req.SignData)

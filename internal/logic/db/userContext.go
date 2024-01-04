@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"mpcServer/internal/consts"
 	"mpcServer/internal/dao"
 	"mpcServer/internal/model/do"
 	"mpcServer/internal/model/entity"
@@ -10,8 +9,8 @@ import (
 	"time"
 
 	"github.com/gogf/gf/v2/database/gdb"
-	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/mpcsdk/mpcCommon/mpccode"
 )
 
 func (s *sDB) InertContext(ctx context.Context, userId string, data *do.MpcContext) error {
@@ -59,7 +58,7 @@ func (s *sDB) FetchContext(ctx context.Context, userId string) (*entity.MpcConte
 		UserId: userId,
 	}).One()
 	if err != nil {
-		return nil, gerror.NewCode(consts.CodeInternalError)
+		return nil, mpccode.CodeInternalError()
 	}
 
 	err = rst.Struct(&data)

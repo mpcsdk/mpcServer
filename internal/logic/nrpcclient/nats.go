@@ -1,7 +1,7 @@
 package nrpcclient
 
 import (
-	v1 "mpcServer/api/risk/nrpc/v1"
+	"mpcServer/api/riskserver"
 	tfav1 "mpcServer/api/tfa/nrpc/v1"
 	"mpcServer/internal/config"
 	"mpcServer/internal/service"
@@ -9,11 +9,12 @@ import (
 
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gctx"
+	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/nats-io/nats.go"
 )
 
 type sNrpcClient struct {
-	riskcli *v1.RiskClient
+	riskcli *riskserver.RiskServerClient
 	tfacli  *tfav1.TFAClient
 	nc      *nats.Conn
 }
@@ -31,19 +32,19 @@ func init() {
 	// defer nc.Close()
 
 	// This is our generated client.
-	riskcli := v1.NewRiskClient(nc)
+	riskcli := riskserver.NewRiskServerClient(nc)
 	// Contact the server and print out its response.
-	// _, err = riskcli.RpcAlive(&empty.Empty{})
-	// if err != nil {
-	// 	g.Log().Error(ctx, err)
-	// 	if config.Config.Server.HasRisk {
-	// 		panic(err)
-	// 	}
-	// }
+	_, err = riskcli.RpcAlive(&empty.Empty{})
+	if err != nil {
+		g.Log().Error(ctx, err)
+		if config.Config.Server.HasRisk {
+			panic(err)
+		}
+	}
 	////
-	tfacli := tfav1.NewTFAClient(nc)
 	// Contact the server and print out its response.
-	// _, err = tfacli.RpcAlive(&empty.Empty{})
+	tfacli := tfav1.NewTFAClient(nc)
+	_, err = tfacli.RpcAlive(&empty.Empty{})
 	// if err != nil {
 	// 	g.Log().Error(ctx, err)
 	// 	if config.Config.Server.HasRisk {
@@ -63,6 +64,6 @@ func (s *sNrpcClient) Flush() {
 	if err != nil {
 		panic(err)
 	}
-	s.riskcli = v1.NewRiskClient(s.nc)
+	s.riskcli = riskserver.NewRiskServerClient(s.nc)
 	s.tfacli = tfav1.NewTFAClient(s.nc)
 }

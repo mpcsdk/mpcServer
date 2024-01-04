@@ -3,9 +3,9 @@ package sign
 import (
 	"context"
 
-	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/gtrace"
+	"github.com/mpcsdk/mpcCommon/mpccode"
 
 	v1 "mpcServer/api/sign/v1"
 	"mpcServer/internal/consts"
@@ -22,20 +22,20 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 		g.Log().Error(ctx, "AuthUser : ", req, err)
 		g.Log().Errorf(ctx, "%+v", err)
 		g.RequestFromCtx(ctx).Response.WriteStatusExit(500)
-		return nil, gerror.NewCode(consts.AuthError())
+		return nil, mpccode.CodeTokenInvalid()
 	}
 	///userid
 	userId := info.AppPubKey
 	if userId == "" {
 		g.Log().Error(ctx, "AuthUser no appKey:", "req:", req, "info:", info)
 		g.RequestFromCtx(ctx).Response.WriteStatusExit(500)
-		return nil, gerror.NewCode(consts.AuthError())
+		return nil, mpccode.CodeTokenInvalid()
 	}
 	////
 	sid, err := service.MpcSigner().GenNewSid(ctx, userId, req.UserToken, info.String())
 	if err != nil {
 		g.Log().Errorf(ctx, "%+v", err)
-		return nil, gerror.NewCode(consts.CodeInternalError)
+		return nil, mpccode.CodeInternalError()
 	}
 	///
 	state := service.MpcSigner().GetState(ctx, userId)
@@ -47,11 +47,11 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 		if err != nil {
 			g.Log().Warning(ctx, "GenContextP2:", "req:", req, "info:", info, "sid:", sid)
 			g.Log().Errorf(ctx, "%+v", err)
-			return nil, gerror.NewCode(consts.CodeInternalError)
+			return nil, mpccode.CodeInternalError()
 		}
 	default:
 		g.Log().Warning(ctx, "AuthUser unknow stat:", "req:", req, "info:", info, "sid:", sid, "stat:", state)
-		return nil, gerror.NewCode(consts.CodeInternalError)
+		return nil, mpccode.CodeInternalError()
 	}
 	////
 

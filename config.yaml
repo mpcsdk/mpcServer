@@ -3,6 +3,8 @@ server:
   address:     ":8000"
   workId: 1
   cpuCore: 2
+  openapiPath: "/api.json"
+  swaggerPath: "/swagger"
   privateKey: "0ac7d64995c6b4daac2688c0e40d25af50887ada5b7a4cbe197ada0bdef32375"
   hasRisk:  true
 

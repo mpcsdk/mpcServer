@@ -30,7 +30,7 @@ type respUserInfo struct {
 
 func (s *sUserInfo) GetUserInfo(ctx context.Context, userToken string) (userInfo *model.UserInfo, err error) {
 	if userToken == "" {
-		return nil, mpccode.ErrEmpty
+		return nil, mpccode.CodeParamInvalid()
 	}
 	///
 	// 用户信息示例

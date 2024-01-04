@@ -4,10 +4,8 @@ import (
 	"context"
 
 	v1 "mpcServer/api/sign/v1"
-	"mpcServer/internal/consts"
 	"mpcServer/internal/service"
 
-	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/gtrace"
 	"github.com/mpcsdk/mpcCommon/mpccode"
@@ -22,7 +20,7 @@ func (c *ControllerV1) GetState(ctx context.Context, req *v1.GetStateReq) (res *
 	userId, err := service.MpcSigner().Sid2UserId(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Errorf(ctx, "%+v", err)
-		return nil, gerror.NewCode(consts.CodeInternalError)
+		return nil, mpccode.CodeInternalError()
 	}
 	////
 	///
@@ -44,7 +42,7 @@ func (c *ControllerV1) GetZKProofP2(ctx context.Context, req *v1.GetZKProofP2Req
 	ZKProofp2, err := service.MpcSigner().FetchZKProofp2(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Warning(ctx, "GetZKProofP2:", err)
-		return nil, gerror.NewCode(consts.CodeGetGeneratorError(consts.ErrZKProofP2NotExist))
+		return nil, mpccode.CodeInternalError()
 	}
 
 	res = &v1.GetZKProofP2Res{
@@ -63,7 +61,8 @@ func (c *ControllerV1) GetSignature(ctx context.Context, req *v1.GetSignatureReq
 	signature, err := service.MpcSigner().FetchSignature(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Errorf(ctx, "%+v", err)
-		return nil, gerror.NewCode(mpccode.CodeParamInvalid)
+		// return nil, gerror.NewCode(mpccode.CodeParamInvalid)
+		return nil, mpccode.CodeParamInvalid()
 	}
 
 	res = &v1.GetSignatureRes{

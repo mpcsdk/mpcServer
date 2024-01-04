@@ -24,7 +24,7 @@ func (s *sMpcSigner) GetState(ctx context.Context, userId string) string {
 		err = gerror.Wrap(err, mpccode.ErrDetails(
 			mpccode.ErrDetail("userId", userId),
 		))
-		consts.ErrorG(ctx, err)
+		g.Log().Warning(ctx, "GetStat:", "userId:", userId, "err:", err)
 		return service.MpcSigner().StateString(consts.STATE_None)
 	}
 	if info == nil {
@@ -54,7 +54,7 @@ func (s *sMpcSigner) FetchPubKey(ctx context.Context, sid string) (string, error
 	// pubkey, err := s.fetchByUserId(ctx, userId, KEY_publickey2)
 	info, err := s.fetchUserContext(ctx, userId)
 	if err != nil {
-		return "", gerror.NewCode(consts.CodeInternalError)
+		return "", mpccode.CodeInternalError()
 	}
 
 	return info.PubKey, err
@@ -63,7 +63,7 @@ func (s *sMpcSigner) FetchZKProofp2(ctx context.Context, sid string) (string, er
 	////
 	ZKProofp2, err := s.fetchBySid(ctx, sid, KEY_zkproof2)
 	if err != nil {
-		return "", gerror.NewCode(consts.CodeInternalError)
+		return "", mpccode.CodeInternalError()
 	}
 
 	return ZKProofp2, err
@@ -72,10 +72,10 @@ func (s *sMpcSigner) FetchSignature(ctx context.Context, sid string) (string, er
 	////
 	signature, err := s.fetchBySid(ctx, sid, KEY_signature)
 	if err != nil {
-		return "", gerror.NewCode(consts.CodeInternalError)
+		return "", mpccode.CodeInternalError()
 	}
 	if signature == "" {
-		return "", gerror.NewCode(consts.CodeInternalError)
+		return "", mpccode.CodeInternalError()
 	}
 
 	return signature, err
@@ -91,10 +91,10 @@ func (s *sMpcSigner) FetchTxs(ctx context.Context, sid string) (string, error) {
 	////
 	signature, err := s.fetchBySid(ctx, sid, KEY_txs)
 	if err != nil {
-		return "", gerror.NewCode(consts.CodeInternalError)
+		return "", mpccode.CodeInternalError()
 	}
 	if signature == "" {
-		return "", gerror.NewCode(consts.CodeInternalError)
+		return "", mpccode.CodeInternalError()
 	}
 
 	return signature, err
@@ -104,10 +104,10 @@ func (s *sMpcSigner) RecordTxs(ctx context.Context, sid string, val string) (str
 	s.recordSidVal(ctx, sid, KEY_txs, val)
 	return "", nil
 	// if err != nil {
-	// 	return "", gerror.NewCode(consts.CodeInternalError)
+	// 	return "", mpccode.CodeInternalError()
 	// }
 	// if signature == "" {
-	// 	return "", gerror.NewCode(consts.CodeInternalError)
+	// 	return "", mpccode.CodeInternalError()
 	// }
 
 	// return signature, err

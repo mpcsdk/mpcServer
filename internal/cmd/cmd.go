@@ -57,6 +57,7 @@ var (
 				group.Bind(
 					sign.NewV1(),
 				)
+
 			})
 			s.Run()
 			return nil

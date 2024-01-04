@@ -7,16 +7,17 @@ package service
 
 import (
 	"context"
-	v1 "mpcServer/api/risk/nrpc/v1"
+	"mpcServer/api/riskserver"
 )
 
 type (
 	INrpcClient interface {
+		Flush()
+		RpcRiskTxs(ctx context.Context, userId string, signTxData string) (*riskserver.TxRiskRes, error)
+		RpcAlive(ctx context.Context) error
 		RpcSendMailCode(ctx context.Context, token, serial string) error
 		RpcSendSmsCode(ctx context.Context, token, serial string) error
 		RpcVerifyCode(ctx context.Context, token, serial, phoneCode, mailCode string) error
-		RpcRiskTxs(ctx context.Context, userId string, signTxData string) (*v1.TxRiskRes, error)
-		RpcAlive(ctx context.Context) error
 	}
 )
 

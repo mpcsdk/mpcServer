@@ -6,10 +6,8 @@ import (
 	"strings"
 
 	v1 "mpcServer/api/sign/v1"
-	"mpcServer/internal/consts"
 	"mpcServer/internal/service"
 
-	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/gtrace"
 	"github.com/mpcsdk/mpcCommon/mpccode"
@@ -24,18 +22,19 @@ func (c *ControllerV1) SendMailCode(ctx context.Context, req *v1.SendMailCodeReq
 	token, err := service.MpcSigner().Sid2Token(ctx, sid)
 	if err != nil {
 		g.Log().Errorf(ctx, "%+v", err)
-		return res, gerror.NewCode(mpccode.CodeSessionInvalid)
+		// return res, gerror.NewCode(mpccode.CodeSessionInvalid)
+		return res, mpccode.CodeSessionInvalid()
 	}
 	///
 	err = service.NrpcClient().RpcSendMailCode(ctx, token, req.RiskSerial)
 	if err != nil {
 		g.Log().Warningf(ctx, "%+v", err)
-		if nrpcErrIs(err, mpccode.CodeLimitSendMailCode.Error()) {
-			err = gerror.NewCode(mpccode.CodeLimitSendMailCode)
-		} else if nrpcErrIs(err, mpccode.CodeRiskSerialNotExist.Error()) {
-			err = gerror.NewCode(mpccode.CodeRiskSerialNotExist)
+		if nrpcErrIs(err, mpccode.CodeLimitSendMailCode()) {
+			err = mpccode.CodeLimitSendMailCode()
+		} else if nrpcErrIs(err, mpccode.CodeRiskSerialNotExist()) {
+			err = mpccode.CodeRiskSerialNotExist()
 		} else {
-			err = gerror.NewCode(mpccode.CodeTFASendMailFailed)
+			err = mpccode.CodeTFASendMailFailed()
 		}
 		return nil, err
 	}
@@ -62,20 +61,20 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 
 	token, err := service.MpcSigner().Sid2Token(ctx, req.SessionId)
 	if err != nil {
-		consts.ErrorG(ctx, err)
-		return res, gerror.NewCode(mpccode.CodeSessionInvalid)
+		g.Log().Warning(ctx, "VerifyCode:", "req:", req, "err:", err)
+		return res, mpccode.CodeSessionInvalid()
 	}
 	err = service.NrpcClient().RpcVerifyCode(ctx, token, req.RiskSerial, req.PhoneCode, req.MailCode)
 	if err != nil {
 		g.Log().Warningf(ctx, "%+v", err)
-		if nrpcErrIs(err, mpccode.CodeRiskVerifyMailInvalid.Error()) {
-			err = gerror.NewCode(mpccode.CodeRiskVerifyMailInvalid)
-		} else if nrpcErrIs(err, mpccode.CodeRiskVerifyPhoneInvalid.Error()) {
-			err = gerror.NewCode(mpccode.CodeRiskVerifyPhoneInvalid)
-		} else if nrpcErrIs(err, mpccode.CodeRiskSerialNotExist.Error()) {
-			err = gerror.NewCode(mpccode.CodeRiskSerialNotExist)
+		if nrpcErrIs(err, mpccode.CodeRiskVerifyMailInvalid()) {
+			err = mpccode.CodeRiskVerifyMailInvalid()
+		} else if nrpcErrIs(err, mpccode.CodeRiskVerifyPhoneInvalid()) {
+			err = mpccode.CodeRiskVerifyPhoneInvalid()
+		} else if nrpcErrIs(err, mpccode.CodeRiskSerialNotExist()) {
+			err = mpccode.CodeRiskSerialNotExist()
 		} else {
-			err = gerror.NewCode(mpccode.CodeRiskVerifyCodeInvalid)
+			err = mpccode.CodeRiskVerifyCodeInvalid()
 		}
 		return nil, err
 	}
@@ -84,20 +83,20 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 	val, err := service.MpcSigner().FetchTxs(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Error(ctx, "%+v", err)
-		return nil, gerror.NewCode(consts.CodeInternalError)
+		return nil, mpccode.CodeInternalError()
 	}
 	txreq := &v1.SignMsgReq{}
 	err = json.Unmarshal([]byte(val), txreq)
 	if err != nil {
 		g.Log().Error(ctx, "%+v", err)
-		return nil, gerror.NewCode(consts.CodeInternalError)
+		return nil, mpccode.CodeInternalError()
 	}
 	///sign msg
 	err = service.MpcSigner().CalSign(ctx, txreq)
 	if err != nil {
 		g.Log().Warning(ctx, "RpcRiskTxs:", "sid:", req.SessionId, "token:", token)
 		g.Log().Error(ctx, "%+v", err)
-		return nil, gerror.NewCode(mpccode.CodeInternalError)
+		return nil, mpccode.CodeInternalError()
 	}
 
 	return nil, nil
@@ -112,19 +111,19 @@ func (c *ControllerV1) SendSmsCode(ctx context.Context, req *v1.SendSmsCodeReq) 
 	sid := req.SessionId
 	token, err := service.MpcSigner().Sid2Token(ctx, sid)
 	if err != nil {
-		consts.ErrorG(ctx, err)
-		return res, gerror.NewCode(mpccode.CodeSessionInvalid)
+		g.Log().Warning(ctx, "SendSmsCode:", "sid:", sid, "token:", token, "err:", err)
+		return res, mpccode.CodeSessionInvalid()
 	}
 	///
 	err = service.NrpcClient().RpcSendSmsCode(ctx, token, req.RiskSerial)
 	if err != nil {
 		g.Log().Warningf(ctx, "%+v", err)
-		if nrpcErrIs(err, mpccode.CodeLimitSendPhoneCode.Error()) {
-			err = gerror.NewCode(mpccode.CodeLimitSendPhoneCode)
-		} else if nrpcErrIs(err, mpccode.CodeRiskSerialNotExist.Error()) {
-			err = gerror.NewCode(mpccode.CodeRiskSerialNotExist)
+		if nrpcErrIs(err, mpccode.CodeLimitSendPhoneCode()) {
+			err = mpccode.CodeLimitSendPhoneCode()
+		} else if nrpcErrIs(err, mpccode.CodeRiskSerialNotExist()) {
+			err = mpccode.CodeRiskSerialNotExist()
 		} else {
-			err = gerror.NewCode(mpccode.CodeTFASendSmsFailed)
+			err = mpccode.CodeTFASendSmsFailed()
 		}
 		return nil, err
 	}
