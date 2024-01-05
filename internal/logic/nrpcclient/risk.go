@@ -24,7 +24,7 @@ func (s *sNrpcClient) RpcRiskTxs(ctx context.Context, userId string, signTxData 
 	///
 	if err != nil {
 		if err.Error() == errDeadLine.Error() {
-			g.Log().Warning(ctx, "RpcRiskTxs TimeOut:")
+			g.Log().Warning(ctx, "RpcRiskTxs TimeOut:", "userId:", userId, "signTxData:", signTxData)
 			s.Flush()
 			return &riskserver.TxRiskRes{
 				Ok: consts.RiskCodePass,
