@@ -3,20 +3,18 @@ package nrpcclient
 import (
 	"context"
 	"errors"
-	"mpcServer/api/riskserver"
+	"mpcServer/api/riskctrl"
 	"mpcServer/internal/consts"
 
-	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
-	"github.com/mpcsdk/mpcCommon/mpccode"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 var errDeadLine = errors.New("nats: timeout")
 
-func (s *sNrpcClient) RpcRiskTxs(ctx context.Context, userId string, signTxData string) (*riskserver.TxRiskRes, error) {
+func (s *sNrpcClient) RpcRiskTxs(ctx context.Context, userId string, signTxData string) (*riskctrl.TxRequestRes, error) {
 
-	rst, err := s.riskcli.RpcRiskTxs(&riskserver.TxRiskReq{
+	rst, err := s.riskcli.RpcTxsRequest(&riskctrl.TxRequestReq{
 		UserId:     userId,
 		SignTxData: signTxData,
 	})
@@ -26,14 +24,10 @@ func (s *sNrpcClient) RpcRiskTxs(ctx context.Context, userId string, signTxData 
 		if err.Error() == errDeadLine.Error() {
 			g.Log().Warning(ctx, "RpcRiskTxs TimeOut:", "userId:", userId, "signTxData:", signTxData)
 			s.Flush()
-			return &riskserver.TxRiskRes{
+			return &riskctrl.TxRequestRes{
 				Ok: consts.RiskCodePass,
 			}, nil
 		}
-		err = gerror.Wrap(err, mpccode.ErrDetails(
-			mpccode.ErrDetail("useid", userId),
-			mpccode.ErrDetail("signtx", signTxData),
-		))
 		return nil, err
 	}
 	///
