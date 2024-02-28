@@ -12,11 +12,13 @@ import (
 
 var errDeadLine = errors.New("nats: timeout")
 
-func (s *sNrpcClient) RpcRiskTxs(ctx context.Context, userId string, signTxData string) (*riskctrl.TxRequestRes, error) {
+func (s *sNrpcClient) RpcRiskTxs(ctx context.Context, userId string, signTxData string, chainId string, sceneNo string) (*riskctrl.TxRequestRes, error) {
 
 	rst, err := s.riskcli.RpcTxsRequest(&riskctrl.TxRequestReq{
 		UserId:     userId,
 		SignTxData: signTxData,
+		ChainId:    chainId,
+		SceneNo:    sceneNo,
 	})
 
 	///
