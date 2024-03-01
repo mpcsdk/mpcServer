@@ -1,3 +1,3 @@
 #! /bin/bash
 export LD_LIBRARY_PATH=.
-./mpcserver -c config.yaml
+./mpcServer -c config.yaml
