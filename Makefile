@@ -3,7 +3,7 @@ USER_ID ?= $(shell id -u)
 GROUP_ID ?= $(shell id -g)
 BUILD_IMAGE_SERVER  = golang:1.20
 BUILD_IMAGE_NODE = node:18
-PROJECT_NAME        = "mpcserver"
+PROJECT_NAME        = "mpcServer"
 Image_NAME = "mpcserver"
 ifeq ($(TAGS_OPT),)
 TAGS_OPT            = latest
@@ -20,17 +20,17 @@ build-local:
 	if [ -d "build" ];then rm -rf build; else echo "build OK!"; fi \
 	&& mkdir build \
 	&& if [ -f "/.dockerenv" ];then echo "dockerenv OK!"; else  make build-server-local; fi \
-	&& cp ./mpcserver build/ && cp -r ./config.docker.yaml build/config.yaml \
+	&& cp ./mpcServer build/ && cp -r ./config.docker.yaml build/config.yaml \
 	&& make build-hash
 
 
 build-server-local:
-	if [ -f "mpcserver" ];then rm -rf mpcserver; else echo "mpcserver OK!"; fi \
-	&& go env -w GOPROXY=https://goproxy.cn,direct \
-	&& go env -w CGO_ENABLED=1 && go env  && go mod tidy \
-	&& git config --global --add safe.directory /go/src/mpcserver\
-	&& go build -ldflags "-B 0x$(shell head -c20 /dev/urandom|od -An -tx1|tr -d ' \n') -X main.Version=${TAGS_OPT}" -v  -o mpcserver\
-	&& chown -R $(USER_ID):$(GROUP_ID) ./mpcserver
+	if [ -f "mpcServer" ];then rm -rf mpcServer; else echo "mpcServer OK!"; fi 
+	 go env -w GOPROXY=https://goproxy.cn,direct 
+	 go env -w CGO_ENABLED=1 && go env  && go mod tidy 
+	 git config --global --add safe.directory /go/src/mpcServer
+	 go build -ldflags "-B 0x$(shell head -c20 /dev/urandom|od -An -tx1|tr -d ' \n') -X main.Version=${TAGS_OPT}" -v  -o mpcServer
+	 chown -R $(USER_ID):$(GROUP_ID) ./mpcServer
 
 build-hash:
 	rm ./build/utility -rf && mkdir -p ./build/utility/txhash/dist \
