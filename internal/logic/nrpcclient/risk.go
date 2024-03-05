@@ -14,7 +14,7 @@ var errDeadLine = errors.New("nats: timeout")
 
 func (s *sNrpcClient) RpcRiskTxs(ctx context.Context, userId string, signTxData string, chainId string, sceneNo string) (*riskctrl.TxRequestRes, error) {
 
-	rst, err := s.riskcli.RpcTxsRequest(&riskctrl.TxRequestReq{
+	rst, err := s.riskctrl.RpcTxsRequest(&riskctrl.TxRequestReq{
 		UserId:     userId,
 		SignTxData: signTxData,
 		ChainId:    chainId,
@@ -38,7 +38,7 @@ func (s *sNrpcClient) RpcRiskTxs(ctx context.Context, userId string, signTxData 
 }
 func (s *sNrpcClient) RpcAlive(ctx context.Context) error {
 
-	_, err := s.riskcli.RpcAlive(&emptypb.Empty{})
+	_, err := s.riskctrl.RpcAlive(&emptypb.Empty{})
 	if err != nil {
 		if err.Error() == errDeadLine.Error() {
 			g.Log().Warning(ctx, "RpcAlive TimeOut:")

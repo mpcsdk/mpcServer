@@ -178,7 +178,7 @@ func (s *sMpcSigner) CalSign(ctx context.Context, req *v1.SignMsgReq) error {
 	hash := s.hashMessage(ctx, msg)
 	hash = strings.TrimPrefix(hash, "0x")
 	if hash != req.Msg {
-		err = gerror.Wrap(err, mpccode.ErrDetails(
+		err = gerror.Wrap(mpccode.CodeParamInvalid(), mpccode.ErrDetails(
 			mpccode.ErrDetail("signData", req.SignData),
 			mpccode.ErrDetail("hash", hash),
 		))

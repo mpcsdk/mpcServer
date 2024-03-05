@@ -18,15 +18,16 @@ func (c *ControllerV1) SendMailCode(ctx context.Context, req *v1.SendMailCodeReq
 	ctx, span := gtrace.NewSpan(ctx, "SendMailCode")
 	defer span.End()
 	//
-	sid := req.SessionId
-	token, err := service.MpcSigner().Sid2Token(ctx, sid)
+	// sid := req.SessionId
+	userId, err := service.MpcSigner().Sid2UserId(ctx, req.SessionId)
+	// token, err := service.MpcSigner().Sid2Token(ctx, sid)
 	if err != nil {
 		g.Log().Errorf(ctx, "%+v", err)
 		// return res, gerror.NewCode(mpccode.CodeSessionInvalid)
 		return res, mpccode.CodeSessionInvalid()
 	}
 	///
-	err = service.NrpcClient().RpcSendMailCode(ctx, token, req.RiskSerial)
+	err = service.NrpcClient().RpcSendMailCode(ctx, userId, req.RiskSerial)
 	if err != nil {
 		g.Log().Warningf(ctx, "%+v", err)
 		if nrpcErrIs(err, mpccode.CodeLimitSendMailCode()) {
@@ -59,12 +60,13 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 	service.MpcSigner().CleanSignature(ctx, req.SessionId)
 	///
 
-	token, err := service.MpcSigner().Sid2Token(ctx, req.SessionId)
+	// token, err := service.MpcSigner().Sid2Token(ctx, req.SessionId)
+	userId, err := service.MpcSigner().Sid2UserId(ctx, req.SessionId)
 	if err != nil {
 		g.Log().Warning(ctx, "VerifyCode:", "req:", req, "err:", err)
 		return res, mpccode.CodeSessionInvalid()
 	}
-	err = service.NrpcClient().RpcVerifyCode(ctx, token, req.RiskSerial, req.PhoneCode, req.MailCode)
+	err = service.NrpcClient().RpcVerifyCode(ctx, userId, req.RiskSerial, req.PhoneCode, req.MailCode)
 	if err != nil {
 		g.Log().Warningf(ctx, "%+v", err)
 		if nrpcErrIs(err, mpccode.CodeRiskVerifyMailInvalid()) {
@@ -94,7 +96,7 @@ func (c *ControllerV1) VerifyCode(ctx context.Context, req *v1.VerifyCodeReq) (r
 	///sign msg
 	err = service.MpcSigner().CalSign(ctx, txreq)
 	if err != nil {
-		g.Log().Warning(ctx, "RpcRiskTxs:", "sid:", req.SessionId, "token:", token)
+		g.Log().Warning(ctx, "RpcRiskTxs:", "sid:", req.SessionId, "userId:", userId)
 		g.Log().Error(ctx, "%+v", err)
 		return nil, mpccode.CodeInternalError()
 	}
@@ -108,14 +110,15 @@ func (c *ControllerV1) SendSmsCode(ctx context.Context, req *v1.SendSmsCodeReq) 
 	ctx, span := gtrace.NewSpan(ctx, "SendSmsCode")
 	defer span.End()
 	//
-	sid := req.SessionId
-	token, err := service.MpcSigner().Sid2Token(ctx, sid)
+	// sid := req.SessionId
+	// token, err := service.MpcSigner().Sid2Token(ctx, sid)
+	userId, err := service.MpcSigner().Sid2UserId(ctx, req.SessionId)
 	if err != nil {
-		g.Log().Warning(ctx, "SendSmsCode:", "sid:", sid, "token:", token, "err:", err)
+		g.Log().Warning(ctx, "SendSmsCode:", "sid:", req.SessionId, "userId:", userId, "err:", err)
 		return res, mpccode.CodeSessionInvalid()
 	}
 	///
-	err = service.NrpcClient().RpcSendSmsCode(ctx, token, req.RiskSerial)
+	err = service.NrpcClient().RpcSendSmsCode(ctx, userId, req.RiskSerial)
 	if err != nil {
 		g.Log().Warningf(ctx, "%+v", err)
 		if nrpcErrIs(err, mpccode.CodeLimitSendPhoneCode()) {

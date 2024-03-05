@@ -2,16 +2,16 @@ package nrpcclient
 
 import (
 	"context"
-	v1 "mpcServer/api/tfa/nrpc/v1"
+	"mpcServer/api/riskctrl"
 
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-func (s *sNrpcClient) RpcSendMailCode(ctx context.Context, token, serial string) error {
+func (s *sNrpcClient) RpcSendMailCode(ctx context.Context, userId, serial string) error {
 
-	rst, err := s.tfacli.RpcSendMailCode(&v1.MailCodekReq{
+	rst, err := s.riskctrl.RpcSendMailCode(&riskctrl.SendMailCodeReq{
 		RiskSerial: serial,
-		Token:      token,
+		UserId:     userId,
 	})
 
 	if err != nil {
@@ -26,11 +26,11 @@ func (s *sNrpcClient) RpcSendMailCode(ctx context.Context, token, serial string)
 	return nil
 }
 
-func (s *sNrpcClient) RpcSendSmsCode(ctx context.Context, token, serial string) error {
+func (s *sNrpcClient) RpcSendSmsCode(ctx context.Context, userId, serial string) error {
 
-	rst, err := s.tfacli.RpcSendSmsCode(&v1.SmsCodeReq{
+	rst, err := s.riskctrl.RpcSendPhoneCode(&riskctrl.SendPhoneCodeReq{
 		RiskSerial: serial,
-		Token:      token,
+		UserId:     userId,
 	})
 
 	if err != nil {
@@ -45,10 +45,10 @@ func (s *sNrpcClient) RpcSendSmsCode(ctx context.Context, token, serial string) 
 	return nil
 }
 
-func (s *sNrpcClient) RpcVerifyCode(ctx context.Context, token, serial, phoneCode, mailCode string) error {
+func (s *sNrpcClient) RpcVerifyCode(ctx context.Context, userId, serial, phoneCode, mailCode string) error {
 
-	rst, err := s.tfacli.RpcSendVerifyCode(&v1.VerifyCodekReq{
-		Token:      token,
+	rst, err := s.riskctrl.RpcVerifyCode(&riskctrl.VerifyCodeReq{
+		UserId:     userId,
 		RiskSerial: serial,
 		PhoneCode:  phoneCode,
 		MailCode:   mailCode,
