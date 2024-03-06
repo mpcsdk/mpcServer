@@ -25,12 +25,12 @@ build-local:
 
 
 build-server-local:
-	if [ -f "mpcServer" ];then rm -rf mpcServer; else echo "mpcServer OK!"; fi \
-	&& go env -w GOPROXY=https://goproxy.cn,direct \
-	&& go env -w CGO_ENABLED=1 && go env  && go mod tidy \
-	&& git config --global --add safe.directory /go/src/mpcServer\
-	&& go build -ldflags "-B 0x$(shell head -c20 /dev/urandom|od -An -tx1|tr -d ' \n') -X main.Version=${TAGS_OPT}" -v  -o mpcServer\
-	&& chown -R $(USER_ID):$(GROUP_ID) ./mpcServer
+	if [ -f "mpcServer" ];then rm -rf mpcServer; else echo "mpcServer OK!"; fi 
+	 go env -w GOPROXY=https://goproxy.cn,direct 
+	 go env -w CGO_ENABLED=1 && go env  && go mod tidy 
+	 git config --global --add safe.directory /go/src/mpcServer
+	 go build -ldflags "-B 0x$(shell head -c20 /dev/urandom|od -An -tx1|tr -d ' \n') -X main.Version=${TAGS_OPT}" -v  -o mpcServer
+	 chown -R $(USER_ID):$(GROUP_ID) ./mpcServer
 
 build-hash:
 	rm ./build/utility -rf && mkdir -p ./build/utility/txhash/dist \
