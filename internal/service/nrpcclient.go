@@ -13,11 +13,11 @@ import (
 type (
 	INrpcClient interface {
 		Flush()
-		RpcRiskTxs(ctx context.Context, userId string, signTxData string, chainId string, sceneNo string) (*riskctrl.TxRequestRes, error)
+		RpcRiskTxs(ctx context.Context, userId string, signTxData string, sceneNo string) (*riskctrl.TxRequestRes, error)
 		RpcAlive(ctx context.Context) error
-		RpcSendMailCode(ctx context.Context, token, serial string) error
-		RpcSendSmsCode(ctx context.Context, token, serial string) error
-		RpcVerifyCode(ctx context.Context, token, serial, phoneCode, mailCode string) error
+		RpcSendMailCode(ctx context.Context, userId, serial string) error
+		RpcSendSmsCode(ctx context.Context, userId, serial string) error
+		RpcVerifyCode(ctx context.Context, userId, serial, phoneCode, mailCode string) error
 	}
 )
 
