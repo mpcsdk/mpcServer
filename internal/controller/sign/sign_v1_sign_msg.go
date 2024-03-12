@@ -60,7 +60,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	}
 	if config.Config.Server.HasRisk {
 		// ///Risktx
-		rst, err = service.NrpcClient().RpcRiskTxs(ctx, userId, req.SignData, req.SceneNo)
+		rst, err = service.NrpcClient().RpcRiskTxs(ctx, userId, req.SignData)
 		if err != nil {
 			g.Log().Warning(ctx, "RpcRiskTx:", "sid:", req.SessionId, "err:", err)
 			return nil, mpccode.CodePerformRiskError()

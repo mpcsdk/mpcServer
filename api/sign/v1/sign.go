@@ -56,7 +56,7 @@ type SignMsgReq struct {
 	Msg       string `json:"msg"`
 	Request   string `json:"request,omitempty"`
 	SignData  string `json:"signData,omitempty"`
-	SceneNo   string `json:"sceneNo" d:"0"`
+	// SceneNo   string `json:"sceneNo" d:"0"`
 }
 
 type SignMsgRes struct {
