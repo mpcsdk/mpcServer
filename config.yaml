@@ -6,7 +6,8 @@ server:
   openapiPath: "/api.json"
   swaggerPath: "/swagger"
   privateKey: "0ac7d64995c6b4daac2688c0e40d25af50887ada5b7a4cbe197ada0bdef32375"
-  hasRisk:  true
+  hasRisk:  false
+  hashCore: 4
 
 jaegerUrl: "127.0.0.1:6831"
 

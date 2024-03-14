@@ -18,6 +18,7 @@ type Server struct {
 	CpuCore    int    `json:"cpuCore" v:"required|min:2"`
 	HasRisk    bool   `json:"hasRisk" v:"required"`
 	PrivateKey string `json:"privateKey" v:"required"`
+	HashCore   uint   `json:"hashCore" v:"required"`
 }
 type Nrpcfg struct {
 	NatsUrl string `json:"natsUrl" v:"required"`

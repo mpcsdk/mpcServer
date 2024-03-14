@@ -39,7 +39,7 @@ function HashDomain(call: any, callback: any){
     callback(null, { message: has })
 }
 
-export function createServer() {
+export function createServer(url: string) {
     var server = new grpc.Server()
     server.addService(txhash_proto.Transaction.service, { 
         DigestTxHash: DigestTxHash,
@@ -47,7 +47,7 @@ export function createServer() {
         HasDomain:HashDomain,
     })
 
-    server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
+    server.bindAsync(url, grpc.ServerCredentials.createInsecure(), () => {
         server.start()
         console.log('grpc server started')
     })
