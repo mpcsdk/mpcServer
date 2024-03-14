@@ -11,6 +11,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 
 	"github.com/gogf/gf/v2/os/gcache"
+	"github.com/gogf/gf/v2/os/gctx"
 )
 
 type sCache struct {
@@ -27,7 +28,10 @@ func init() {
 			c: gcache.New(),
 		}
 		r := g.Redis("cache")
-
+		_, err := r.Conn(gctx.GetInitCtx())
+		if err != nil {
+			panic(err)
+		}
 		cache.c.SetAdapter(gcache.NewAdapterRedis(r))
 		if err := cache.c.Set(nil, "test", "test", 0); err != nil {
 			panic(err)

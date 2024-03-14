@@ -16,6 +16,7 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 	//trace
 	ctx, span := gtrace.NewSpan(ctx, "AuthUser")
 	defer span.End()
+	g.Log().Debug(ctx, "AuthUser : ", req)
 	//
 	info, err := service.UserInfo().GetUserInfo(ctx, req.UserToken)
 	if err != nil {
@@ -25,7 +26,8 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 		return nil, mpccode.CodeTokenInvalid()
 	}
 	///userid
-	userId := info.AppPubKey
+	g.Log().Debug(ctx, "UserInfo:", info)
+	userId := info.UserId
 	if userId == "" {
 		g.Log().Error(ctx, "AuthUser no appKey:", "req:", req, "info:", info)
 		g.RequestFromCtx(ctx).Response.WriteStatusExit(500)
@@ -39,6 +41,7 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 	}
 	///
 	state := service.MpcSigner().GetState(ctx, userId)
+	g.Log().Debug(ctx, "mpcstat", "sid:", sid, "state:", state)
 	switch state {
 	case service.MpcSigner().StateString(consts.STATE_HandShake):
 		//

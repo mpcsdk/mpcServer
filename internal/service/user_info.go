@@ -7,12 +7,13 @@ package service
 
 import (
 	"context"
-	"mpcServer/internal/model"
+
+	"github.com/mpcsdk/mpcCommon/userInfoGeter"
 )
 
 type (
 	IUserInfo interface {
-		GetUserInfo(ctx context.Context, userToken string) (userInfo *model.UserInfo, err error)
+		GetUserInfo(ctx context.Context, userToken string) (userInfo *userInfoGeter.UserInfo, err error)
 	}
 )
 

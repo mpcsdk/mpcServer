@@ -10,10 +10,7 @@ import (
 type Cache struct {
 	SessionDuration int `json:"sessionDuration" v:"required|min:100"`
 }
-type Etcd struct {
-	Address string `json:"address" v:"required"`
-	RiskRpc string `json:"riskRpc" v:"required"`
-}
+
 type Server struct {
 	Address    string `json:"address" v:"required"`
 	WorkId     int    `json:"workId" v:"required|min:1"`
@@ -30,7 +27,6 @@ type Nrpcfg struct {
 type Cfg struct {
 	Server       *Server `json:"server" v:"required"`
 	Cache        *Cache  `json:"cache" v:"required"`
-	Etcd         *Etcd   `json:"etcd" v:"required"`
 	UserTokenUrl string  `json:"userToken" v:"required"`
 	JaegerUrl    string  `json:"jaegerUrl" `
 	Nrpc         *Nrpcfg `json:"nrpc" v:"required"`

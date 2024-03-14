@@ -23,6 +23,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	ctx, span := gtrace.NewSpan(ctx, "SignMsg")
 	defer span.End()
 	//
+	g.Log().Debug(ctx, "AuthUser : ", req)
 	// checksid
 	userId, err := service.MpcSigner().Sid2UserId(ctx, req.SessionId)
 
@@ -67,7 +68,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		}
 		g.Log().Notice(ctx, "CalSign PerformRiskTxs:", rst)
 	} else {
-
+		rst.Ok = mpccode.RiskCodePass
 	}
 
 	///
@@ -95,7 +96,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	case consts.RiskCodePass:
 		err = service.MpcSigner().CalSign(ctx, req)
 		if err != nil {
-			g.Log().Warning(ctx, "SignMsg:", err)
+			g.Log().Warning(ctx, "SignMsg err:", err)
 			return nil, mpccode.CodeInternalError()
 		}
 
