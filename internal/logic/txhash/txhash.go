@@ -84,12 +84,20 @@ func (s *sTxHash) start(i uint) {
 		fmt.Println("start txhash server:", url)
 		// hashserver
 		cmd := exec.Command("node", "./utility/txhash/dist/main.js", "--url", url)
-		err := cmd.Start()
-		if err != nil {
-			panic(err)
-		}
+		go func(cmd *exec.Cmd) {
+			err := cmd.Run()
+			if err != nil {
+				panic(err)
+			}
+		}(cmd)
 		s.cmds = append(s.cmds, cmd)
 		s.connhash(url)
+		// go func(cmd *exec.Cmd) {
+		// 	err := cmd.Wait()
+		// 	if err != nil {
+		// 		panic(err)
+		// 	}
+		// }(cmd)
 		// err = s.cmd.Wait()
 		//notice: need txhash service
 		// panic(err)

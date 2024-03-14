@@ -4,6 +4,7 @@ import (
 	"context"
 	"mpcServer/internal/config"
 	"mpcServer/internal/service"
+	"time"
 
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gcache"
@@ -17,6 +18,8 @@ type sUserInfo struct {
 	///
 	userGeter *userInfoGeter.UserTokenInfoGeter
 	c         *gcache.Cache
+
+	dur time.Duration
 }
 
 func (s *sUserInfo) GetUserInfo(ctx context.Context, userToken string) (userInfo *userInfoGeter.UserInfo, err error) {
@@ -47,7 +50,7 @@ func (s *sUserInfo) GetUserInfo(ctx context.Context, userToken string) (userInfo
 		g.Log().Error(ctx, "GetUserInfo:", "toekn:", userToken, "err:", err)
 		return info, mpccode.CodeInternalError()
 	}
-	s.c.Set(ctx, userToken, info, 0)
+	s.c.Set(ctx, userToken, info, s.dur)
 	return info, err
 }
 
@@ -68,6 +71,7 @@ func new() *sUserInfo {
 	s := &sUserInfo{
 		userGeter: userGeter,
 		c:         gcache.New(),
+		dur:       time.Duration(config.Config.Cache.SessionDuration) * time.Second,
 	}
 	///
 	r := g.Redis("cache")
