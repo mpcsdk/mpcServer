@@ -26,7 +26,7 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 		return nil, mpccode.CodeTokenInvalid()
 	}
 	///userid
-	g.Log().Debug(ctx, "UserInfo:", info)
+	g.Log().Debug(ctx, "AuthUser UserInfo:", info)
 	userId := info.UserId
 	if userId == "" {
 		g.Log().Error(ctx, "AuthUser no appKey:", "req:", req, "info:", info)
@@ -41,7 +41,7 @@ func (c *ControllerV1) AuthUser(ctx context.Context, req *v1.AuthUserReq) (res *
 	}
 	///
 	state := service.MpcSigner().GetState(ctx, userId)
-	g.Log().Debug(ctx, "mpcstat", "sid:", sid, "state:", state)
+	g.Log().Debug(ctx, "AuthUser mpcstat", "sid:", sid, "state:", state)
 	switch state {
 	case service.MpcSigner().StateString(consts.STATE_HandShake):
 		//

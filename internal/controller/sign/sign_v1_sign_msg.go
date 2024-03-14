@@ -23,7 +23,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	ctx, span := gtrace.NewSpan(ctx, "SignMsg")
 	defer span.End()
 	//
-	g.Log().Debug(ctx, "AuthUser : ", req)
+	g.Log().Debug(ctx, "SignMsg : ", req)
 	// checksid
 	userId, err := service.MpcSigner().Sid2UserId(ctx, req.SessionId)
 
