@@ -8,19 +8,19 @@ import (
 )
 
 // /
-func (s *sMpcSigner) recordSidVal(ctx context.Context, sid string, key string, val string) error {
-	err := service.Cache().Set(ctx, sid+key, val, sessionDur)
+func (s *sMpcSigner) putSidVal(ctx context.Context, sid string, key string, val string) error {
+	err := s.cache.Set(ctx, sid+key, val, sessionDur)
 	return err
 }
-func (s *sMpcSigner) fetchBySid(ctx context.Context, sid string, key string) (string, error) {
-	val, err := service.Cache().Get(ctx, sid+key)
+func (s *sMpcSigner) getBySid(ctx context.Context, sid string, key string) (string, error) {
+	val, err := s.cache.Get(ctx, sid+key)
 	if val.IsEmpty() {
 		return "", emptyErr
 	}
 	return val.String(), err
 }
 
-func (s *sMpcSigner) recordUserContext(ctx context.Context, userId string, context, request, pubkey *string) error {
+func (s *sMpcSigner) updateUserContext(ctx context.Context, userId string, context, request, pubkey *string) error {
 	err := service.DB().UpdateContext(ctx, userId, &do.MpcContext{
 		UserId:  userId,
 		Context: context,

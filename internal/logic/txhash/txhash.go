@@ -3,8 +3,8 @@ package txhash
 import (
 	"context"
 	"fmt"
-	"mpcServer/internal/config"
 	"mpcServer/internal/service"
+	"os"
 	"os/exec"
 	"sync"
 
@@ -13,6 +13,7 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gctx"
+	"github.com/gogf/gf/v2/os/gproc"
 	"google.golang.org/grpc"
 
 	"github.com/mpcsdk/mpcCommon/mpccode"
@@ -81,26 +82,22 @@ func (s *sTxHash) start(i uint) {
 	s.maxcli = i
 	for x := uint(0); x < i; x++ {
 		url := fmt.Sprintf("127.0.0.1:%d", 50000+x)
-		fmt.Println("start txhash server:", url)
+		g.Log().Info(s.ctx, "start txhash server:", url)
 		// hashserver
 		cmd := exec.Command("node", "./utility/txhash/dist/main.js", "--url", url)
 		go func(cmd *exec.Cmd) {
-			err := cmd.Run()
+			err := cmd.Start()
 			if err != nil {
 				panic(err)
 			}
+			////
+			err = cmd.Wait()
+			panic(err)
+			///
 		}(cmd)
 		s.cmds = append(s.cmds, cmd)
 		s.connhash(url)
-		// go func(cmd *exec.Cmd) {
-		// 	err := cmd.Wait()
-		// 	if err != nil {
-		// 		panic(err)
-		// 	}
-		// }(cmd)
-		// err = s.cmd.Wait()
-		//notice: need txhash service
-		// panic(err)
+
 	}
 }
 
@@ -117,7 +114,15 @@ func (s *sTxHash) connhash(url string) {
 }
 
 func (s *sTxHash) daemon() {
-	s.start(config.Config.Server.HashCore)
+	gproc.AddSigHandlerShutdown(
+		func(sig os.Signal) {
+			g.Log().Warning(s.ctx, "kill cmd :receive signal:", sig.String())
+			for _, cmd := range s.cmds {
+				cmd.Process.Kill()
+			}
+		})
+	go gproc.Listen()
+
 	for {
 		select {
 		case <-s.ctx.Done():

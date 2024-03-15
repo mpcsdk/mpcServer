@@ -5,7 +5,6 @@
 package logic
 
 import (
-	_ "mpcServer/internal/logic/cache"
 	_ "mpcServer/internal/logic/db"
 	_ "mpcServer/internal/logic/mpcsigner"
 	_ "mpcServer/internal/logic/nrpcclient"

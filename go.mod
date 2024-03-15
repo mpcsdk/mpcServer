@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/ethereum/go-ethereum v1.13.2
-	github.com/go-resty/resty/v2 v2.9.1
+	github.com/gogf/gf v1.16.9
 	github.com/gogf/gf/contrib/drivers/pgsql/v2 v2.5.4
 	github.com/gogf/gf/contrib/nosql/redis/v2 v2.5.4
 	github.com/gogf/gf/contrib/rpc/grpcx/v2 v2.5.4
@@ -31,6 +31,7 @@ require (
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
+	github.com/go-resty/resty/v2 v2.9.1 // indirect
 	github.com/gogf/gf/contrib/registry/file/v2 v2.5.4 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/grokify/html-strip-tags-go v0.0.1 // indirect

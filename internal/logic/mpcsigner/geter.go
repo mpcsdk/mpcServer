@@ -51,7 +51,6 @@ func (s *sMpcSigner) FetchPubKey(ctx context.Context, sid string) (string, error
 	////
 
 	///
-	// pubkey, err := s.fetchByUserId(ctx, userId, KEY_publickey2)
 	info, err := s.fetchUserContext(ctx, userId)
 	if err != nil {
 		return "", mpccode.CodeInternalError()
@@ -61,7 +60,7 @@ func (s *sMpcSigner) FetchPubKey(ctx context.Context, sid string) (string, error
 }
 func (s *sMpcSigner) FetchZKProofp2(ctx context.Context, sid string) (string, error) {
 	////
-	ZKProofp2, err := s.fetchBySid(ctx, sid, KEY_zkproof2)
+	ZKProofp2, err := s.getBySid(ctx, sid, KEY_zkproof2)
 	if err != nil {
 		return "", mpccode.CodeInternalError()
 	}
@@ -70,26 +69,28 @@ func (s *sMpcSigner) FetchZKProofp2(ctx context.Context, sid string) (string, er
 }
 func (s *sMpcSigner) FetchSignature(ctx context.Context, sid string) (string, error) {
 	////
-	signature, err := s.fetchBySid(ctx, sid, KEY_signature)
+	signature, err := s.getBySid(ctx, sid, KEY_signature)
 	if err != nil {
-		return "", mpccode.CodeInternalError()
+		return "", err
 	}
 	if signature == "" {
-		return "", mpccode.CodeInternalError()
+		return "", gerror.Wrap(emptyErr, mpccode.ErrDetails(mpccode.ErrDetail(
+			"sid", sid,
+		)))
 	}
 
 	return signature, err
 }
 func (s *sMpcSigner) CleanSignature(ctx context.Context, sid string) (string, error) {
 	////
-	s.recordSidVal(ctx, sid, KEY_signature, "")
+	s.putSidVal(ctx, sid, KEY_signature, "")
 	return "", nil
 }
 
 // ///
 func (s *sMpcSigner) FetchTxs(ctx context.Context, sid string) (string, error) {
 	////
-	signature, err := s.fetchBySid(ctx, sid, KEY_txs)
+	signature, err := s.getBySid(ctx, sid, KEY_txs)
 	if err != nil {
 		return "", mpccode.CodeInternalError()
 	}
@@ -101,16 +102,9 @@ func (s *sMpcSigner) FetchTxs(ctx context.Context, sid string) (string, error) {
 }
 func (s *sMpcSigner) RecordTxs(ctx context.Context, sid string, val string) (string, error) {
 	////
-	s.recordSidVal(ctx, sid, KEY_txs, val)
+	s.putSidVal(ctx, sid, KEY_txs, val)
 	return "", nil
-	// if err != nil {
-	// 	return "", mpccode.CodeInternalError()
-	// }
-	// if signature == "" {
-	// 	return "", mpccode.CodeInternalError()
-	// }
 
-	// return signature, err
 }
 
 // /
@@ -120,19 +114,18 @@ func (s *sMpcSigner) GenNewSid(ctx context.Context, userId string, token string,
 	genid.Set(idgen.NextId())
 	sid := genid.String()
 	//
-	// err := s.recordUserIdVal(ctx, sid, KEY_UserId, userId)
 	err := s.insertUserContext(ctx, userId, nil, nil, nil, &token, &tokenData)
 	if err != nil {
 		g.Log().Warning(ctx, err)
 		return "", err
 	}
 	///
-	err = s.recordSidVal(ctx, sid, KEY_UserId, userId)
+	err = s.putSidVal(ctx, sid, KEY_UserId, userId)
 	if err != nil {
 		g.Log().Warning(ctx, err)
 		return "", err
 	}
-	err = s.recordSidVal(ctx, sid, KEY_UserToken, token)
+	err = s.putSidVal(ctx, sid, KEY_UserToken, token)
 	if err != nil {
 		g.Log().Warning(ctx, err)
 		return "", err
@@ -142,24 +135,24 @@ func (s *sMpcSigner) GenNewSid(ctx context.Context, userId string, token string,
 
 func (s *sMpcSigner) Sid2UserId(ctx context.Context, sid string) (string, error) {
 	////
-	key, err := service.Cache().Get(ctx, sid+KEY_UserId)
+	key, err := s.getBySid(ctx, sid, KEY_UserId)
 	if err != nil {
 		err = gerror.Wrap(err, mpccode.ErrDetails(
 			mpccode.ErrDetail("sid", sid),
 		))
 		return "", err
 	}
-	if key.IsEmpty() {
+	if key == "" {
 		err = gerror.Wrap(emptyErr, mpccode.ErrDetails(
 			mpccode.ErrDetail("sid", sid),
 		))
 		return "", err
 	}
-	return key.String(), nil
+	return key, nil
 }
 func (s *sMpcSigner) Sid2Token(ctx context.Context, sid string) (string, error) {
 	////
-	key, err := service.Cache().Get(ctx, sid+KEY_UserToken)
+	key, err := s.cache.Get(ctx, sid+KEY_UserToken)
 	if err != nil {
 		err = gerror.Wrap(err, mpccode.ErrDetails(
 			mpccode.ErrDetail("sid", sid),

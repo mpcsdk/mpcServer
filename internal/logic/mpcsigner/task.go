@@ -14,8 +14,7 @@ import (
 // GenContextP2
 func (s *sMpcSigner) genContextP2(ctx context.Context, sid string, private_key2, public_key string) error {
 	p2 := service.Signer().GenContextP2(private_key2, public_key).String()
-	// err := s.RecordP2(ctx, key, p2)
-	err := s.recordSidVal(ctx, sid, KEY_context, p2)
+	err := s.putSidVal(ctx, sid, KEY_context, p2)
 	if err != nil {
 		err = gerror.Wrap(err, mpccode.ErrDetails(
 			mpccode.ErrDetail("sid", sid),
@@ -47,7 +46,7 @@ func (s *sMpcSigner) genContextP2(ctx context.Context, sid string, private_key2,
 
 // 4.5.calculate p2_zk_proof by p1_hash_proof, need recal context_p2 by p1_hash_proof
 func (s *sMpcSigner) calZKProofP2(ctx context.Context, sid string, p1_hash_proof string) error {
-	context_p2, err := s.fetchBySid(ctx, sid, KEY_context)
+	context_p2, err := s.getBySid(ctx, sid, KEY_context)
 	if err != nil {
 		err = gerror.Wrap(err, mpccode.ErrDetails(
 			mpccode.ErrDetail("sid", sid),
@@ -55,16 +54,16 @@ func (s *sMpcSigner) calZKProofP2(ctx context.Context, sid string, p1_hash_proof
 		return err
 	}
 	context_p2 = service.Signer().KeygenRecvHashProofP2(context_p2, p1_hash_proof).String()
-	s.recordSidVal(ctx, sid, KEY_context, context_p2)
+	s.putSidVal(ctx, sid, KEY_context, context_p2)
 	///
 	p2_zk_proof := service.Signer().KeygenSendZKProofP2(context_p2).String()
-	s.recordSidVal(ctx, sid, KEY_zkproof2, p2_zk_proof)
+	s.putSidVal(ctx, sid, KEY_zkproof2, p2_zk_proof)
 	return nil
 }
 
 // 6.7.calculate v2_public_key by p1_zk_proof, recal context_p2 by p1_zk_proof
 func (s *sMpcSigner) calPublicKey2(ctx context.Context, sid string, p1_zk_proof string) error {
-	context_p2, err := s.fetchBySid(ctx, sid, KEY_context)
+	context_p2, err := s.getBySid(ctx, sid, KEY_context)
 	if err != nil {
 		return nil
 	}
@@ -75,10 +74,7 @@ func (s *sMpcSigner) calPublicKey2(ctx context.Context, sid string, p1_zk_proof 
 	}
 	///
 	v2_public_key := service.Signer().PublicKeyP2(context_p2).String()
-	// s.recordUserIdVal(ctx, userId, KEY_context, context_p2)
-	// s.recordUserIdVal(ctx, userId, KEY_publickey2, v2_public_key)
-	return s.recordUserContext(ctx, userId, &context_p2, nil, &v2_public_key)
-	// s.UpState(ctx, userId, s.StateString(consts.STATE_HandShake), nil)
+	return s.updateUserContext(ctx, userId, &context_p2, nil, &v2_public_key)
 }
 
 // 8.calculate request, recal context_p2
@@ -96,7 +92,6 @@ func (s *sMpcSigner) calRequest(ctx context.Context, sid string, request string)
 		return "", err
 	}
 	if state == s.StateString(consts.STATE_HandShake) {
-		// context_p2, err = s.fetchByUserId(ctx, userId, KEY_context)
 		info, err := s.fetchUserContext(ctx, userId)
 		if err != nil {
 			return "", err
@@ -108,16 +103,15 @@ func (s *sMpcSigner) calRequest(ctx context.Context, sid string, request string)
 
 	context_p2 = service.Signer().SignRecvRequestP2(context_p2, request).String()
 
-	// s.recordUserIdVal(ctx, userId, KEY_context, context_p2)
-	s.recordUserContext(ctx, userId, &context_p2, &request, nil)
-	s.recordSidVal(ctx, sid, KEY_request, request)
+	s.updateUserContext(ctx, userId, &context_p2, &request, nil)
+	s.putSidVal(ctx, sid, KEY_request, request)
 
 	return context_p2, err
 }
 
 // 9.signature
 func (s *sMpcSigner) CalSignTask(ctx context.Context, sid string, msg string, request string) error {
-	s.recordSidVal(ctx, sid, KEY_signature, "")
+	s.putSidVal(ctx, sid, KEY_signature, "")
 	userId, err := s.Sid2UserId(ctx, sid)
 	if err != nil {
 		err = gerror.Wrap(err, mpccode.ErrDetails(
@@ -125,7 +119,6 @@ func (s *sMpcSigner) CalSignTask(ctx context.Context, sid string, msg string, re
 		))
 		return err
 	}
-	// context_p2, err := s.fetchByUserId(ctx, userId, KEY_context)
 	info, err := s.fetchUserContext(ctx, userId)
 	if err != nil {
 		err = gerror.Wrap(err, mpccode.ErrDetails(
@@ -148,7 +141,7 @@ func (s *sMpcSigner) CalSignTask(ctx context.Context, sid string, msg string, re
 	}
 	p2_sign := service.Signer().SignSendPartialP2(context_p2, msg).String()
 	g.Log().Debug(ctx, "CalSignTask:", sid, msg, request, p2_sign)
-	s.recordSidVal(ctx, sid, KEY_signature, p2_sign)
+	s.putSidVal(ctx, sid, KEY_signature, p2_sign)
 
 	return nil
 }
