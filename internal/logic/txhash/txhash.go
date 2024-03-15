@@ -3,6 +3,7 @@ package txhash
 import (
 	"context"
 	"fmt"
+	"mpcServer/internal/config"
 	"mpcServer/internal/service"
 	"os"
 	"os/exec"
@@ -102,7 +103,6 @@ func (s *sTxHash) start(i uint) {
 }
 
 func (s *sTxHash) connhash(url string) {
-	// conn, err := grpcx.Client.NewGrpcClientConn("localhost:50051")
 	conn, err := grpc.Dial(url, grpc.WithInsecure())
 
 	if err != nil {
@@ -114,6 +114,7 @@ func (s *sTxHash) connhash(url string) {
 }
 
 func (s *sTxHash) daemon() {
+	s.start(config.Config.Server.HashCore)
 	gproc.AddSigHandlerShutdown(
 		func(sig os.Signal) {
 			g.Log().Warning(s.ctx, "kill cmd :receive signal:", sig.String())
