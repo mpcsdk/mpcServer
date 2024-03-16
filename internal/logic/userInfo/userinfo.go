@@ -17,7 +17,6 @@ type sUserInfo struct {
 	url string
 	///
 	userGeter *userInfoGeter.UserTokenInfoGeter
-	c         *gcache.Cache
 
 	dur time.Duration
 }
@@ -35,22 +34,22 @@ func (s *sUserInfo) GetUserInfo(ctx context.Context, userToken string) (userInfo
 	// "address": "0xe73E35d8Ecc3972481138D01799ED3934cc57853",
 	// "keyHash": "U2FsdGVkX1/O6j9czaWzdjjDo/XPjk1hI8pIoaxSuS52zIxVuStK/nS07ucgiM5si8NjN97rAux3aH7Ld2i5oO8UuL6tpNZmLMG9ZpwVTxvGkCa3H14vTxWNz+yBoWG8",
 	// "create_time": 1691118876
-	if v, ok := s.c.Get(ctx, userToken); ok == nil && !v.IsEmpty() {
-		info := &userInfoGeter.UserInfo{}
-		err = v.Struct(info)
-		if err != nil {
-			g.Log().Error(ctx, "GetUserInfo:", "toekn:", userToken, "err:", err)
-			return nil, mpccode.CodeInternalError()
-		}
-		return info, nil
-	}
+	// if v, ok := s..Get(ctx, userToken); ok == nil && !v.IsEmpty() {
+	// 	info := &userInfoGeter.UserInfo{}
+	// 	err = v.Struct(info)
+	// 	if err != nil {
+	// 		g.Log().Error(ctx, "GetUserInfo:", "toekn:", userToken, "err:", err)
+	// 		return nil, mpccode.CodeInternalError()
+	// 	}
+	// 	return info, nil
+	// }
 	///
 	info, err := s.userGeter.GetUserInfo(ctx, userToken)
 	if err != nil {
 		g.Log().Error(ctx, "GetUserInfo:", "toekn:", userToken, "err:", err)
 		return info, mpccode.CodeInternalError()
 	}
-	s.c.Set(ctx, userToken, info, s.dur)
+	// s.c.Set(ctx, userToken, info, s.dur)
 	return info, err
 }
 
@@ -61,26 +60,28 @@ func new() *sUserInfo {
 	// 	panic(err)
 	// }
 	url := config.Config.UserTokenUrl
-	///
-	userGeter := userInfoGeter.NewUserInfoGeter(url)
-	_, err := userGeter.GetUserInfo(context.Background(), "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBQdWJLZXkiOiIwMjI1YmI1MmU5NTcyMDUwZmZjMGM4MGRjZDBhYTBmNjQyNDFjMDk5ZDAzZjFlYTFjODEzMmZkMzViY2Q3MDBiMWMiLCJpYXQiOjE2OTQ0Mjk5OTEsImV4cCI6MTcyNTk2NTk5MX0.8YaF5spnD1SjI-NNbBCIBj9H5pspXMMkPJrKk23LdnM")
-	if err != nil {
-		panic(err)
-	}
 	//
 	s := &sUserInfo{
-		userGeter: userGeter,
-		c:         gcache.New(),
-		dur:       time.Duration(config.Config.Cache.SessionDuration) * time.Second,
+		// userGeter: userGeter,
+
+		dur: time.Duration(config.Config.Cache.SessionDuration) * time.Second,
 	}
 	///
 	r := g.Redis("cache")
-	_, err = r.Conn(gctx.GetInitCtx())
+	_, err := r.Conn(gctx.GetInitCtx())
 	if err != nil {
 		panic(err)
 	}
-	s.c.SetAdapter(gcache.NewAdapterRedis(r))
+	cache := gcache.New()
+	cache.SetAdapter(gcache.NewAdapterRedis(r))
 	///
+	userGeter := userInfoGeter.NewUserInfoGeter(url, cache, s.dur)
+	_, err = userGeter.GetUserInfo(context.Background(), "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBQdWJLZXkiOiIwMjI1YmI1MmU5NTcyMDUwZmZjMGM4MGRjZDBhYTBmNjQyNDFjMDk5ZDAzZjFlYTFjODEzMmZkMzViY2Q3MDBiMWMiLCJpYXQiOjE2OTQ0Mjk5OTEsImV4cCI6MTcyNTk2NTk5MX0.8YaF5spnD1SjI-NNbBCIBj9H5pspXMMkPJrKk23LdnM")
+	if err != nil {
+		panic(err)
+	}
+	///
+	s.userGeter = userGeter
 
 	return s
 }
