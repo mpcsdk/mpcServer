@@ -17,6 +17,9 @@ import (
 	"mpcServer/internal/cmd"
 
 	"github.com/yitter/idgenerator-go/idgen"
+
+	"net/http"
+	_ "net/http/pprof"
 )
 
 func main() {
@@ -45,6 +48,9 @@ func main() {
 	}
 	defer tp.Shutdown(ctx)
 	// ///
-
+	go func() {
+		g.Log().Info(ctx, http.ListenAndServe("localhost:6060", nil))
+	}()
+	///
 	cmd.Main.Run(ctx)
 }

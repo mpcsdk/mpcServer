@@ -130,7 +130,6 @@ func (s *sTxHash) daemon() {
 			for _, cmd := range s.cmds {
 				cmd.Process.Kill()
 			}
-		default:
 		}
 	}
 }
