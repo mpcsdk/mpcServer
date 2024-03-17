@@ -45,6 +45,7 @@ func (s *sDB) UpdateContext(ctx context.Context, userId string, data *do.MpcCont
 }
 
 func (s *sDB) FetchContext(ctx context.Context, userId string) (*entity.MpcContext, error) {
+	g.Log().Debug(ctx, "FetchContext:", userId)
 	var data *entity.MpcContext
 	if userId == "" {
 		return nil, nil
@@ -62,5 +63,7 @@ func (s *sDB) FetchContext(ctx context.Context, userId string) (*entity.MpcConte
 	}
 
 	err = rst.Struct(&data)
+	g.Log().Debug(ctx, "FetchContext data:", data)
+
 	return data, err
 }

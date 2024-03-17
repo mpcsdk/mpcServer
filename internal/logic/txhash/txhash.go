@@ -42,9 +42,12 @@ func (s *sTxHash) client() proto.TransactionClient {
 }
 
 func (s *sTxHash) DigestTxHash(ctx context.Context, msg string) (string, error) {
+	g.Log().Debug(ctx, "DigestTxHash:", msg)
 	rst, err := s.client().DigestTxHash(ctx, &proto.TxRequest{
 		Message: msg,
 	})
+	g.Log().Debug(ctx, "DigestTxHash rst:", rst)
+
 	if err != nil {
 		err = gerror.Wrap(err, mpccode.ErrDetails(
 			mpccode.ErrDetail("msg", msg),
@@ -55,9 +58,11 @@ func (s *sTxHash) DigestTxHash(ctx context.Context, msg string) (string, error) 
 }
 
 func (s *sTxHash) HasDomain(ctx context.Context, msg string) (string, error) {
+	g.Log().Debug(ctx, "HasDomain:", msg)
 	rst, err := s.client().HasDomain(ctx, &proto.TxRequest{
 		Message: msg,
 	})
+	g.Log().Debug(ctx, "HasDomain rst:", rst)
 	if err != nil {
 		err = gerror.Wrap(err, mpccode.ErrDetails(
 			mpccode.ErrDetail("msg", msg),
@@ -144,7 +149,7 @@ func new() *sTxHash {
 		poscli: 0,
 		maxcli: 0,
 	}
-	go s.daemon()
+	// go s.daemon()
 	return s
 }
 func init() {
