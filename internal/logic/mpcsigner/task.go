@@ -104,7 +104,6 @@ func (s *sMpcSigner) calRequest(ctx context.Context, sid string, request string)
 	context_p2 = service.Signer().SignRecvRequestP2(context_p2, request).String()
 
 	s.updateUserContext(ctx, userId, &context_p2, &request, nil)
-	s.putSidVal(ctx, sid, KEY_request, request)
 
 	return context_p2, err
 }

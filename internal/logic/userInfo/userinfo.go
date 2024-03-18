@@ -6,6 +6,7 @@ import (
 	"mpcServer/internal/service"
 	"time"
 
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gcache"
 	"github.com/gogf/gf/v2/os/gctx"
@@ -77,10 +78,10 @@ func new() *sUserInfo {
 	///
 	userGeter := userInfoGeter.NewUserInfoGeter(url, cache, s.dur)
 	_, err = userGeter.GetUserInfo(context.Background(), "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBQdWJLZXkiOiIwMjI1YmI1MmU5NTcyMDUwZmZjMGM4MGRjZDBhYTBmNjQyNDFjMDk5ZDAzZjFlYTFjODEzMmZkMzViY2Q3MDBiMWMiLCJpYXQiOjE2OTQ0Mjk5OTEsImV4cCI6MTcyNTk2NTk5MX0.8YaF5spnD1SjI-NNbBCIBj9H5pspXMMkPJrKk23LdnM")
-	if err != nil {
+	if err != nil && !gerror.HasError(err, mpccode.CodeTokenInvalid()) {
 		panic(err)
 	}
-	///
+	//
 	s.userGeter = userGeter
 
 	return s

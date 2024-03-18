@@ -4,7 +4,6 @@ go 1.20
 
 require (
 	github.com/ethereum/go-ethereum v1.13.2
-	github.com/gogf/gf v1.16.9
 	github.com/gogf/gf/contrib/drivers/pgsql/v2 v2.5.4
 	github.com/gogf/gf/contrib/nosql/redis/v2 v2.5.4
 	github.com/gogf/gf/contrib/rpc/grpcx/v2 v2.5.4

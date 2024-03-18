@@ -35,9 +35,7 @@ func init() {
 	_, err = riskctrl.RpcAlive(&empty.Empty{})
 	if err != nil {
 		g.Log().Error(ctx, err)
-		if config.Config.Server.HasRisk {
-			panic(err)
-		}
+
 	}
 	////
 	// Contact the server and print out its response.
