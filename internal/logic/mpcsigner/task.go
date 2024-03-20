@@ -79,10 +79,11 @@ func (s *sMpcSigner) calPublicKey2(ctx context.Context, sid string, p1_zk_proof 
 
 // 8.calculate request, recal context_p2
 func (s *sMpcSigner) calRequest(ctx context.Context, sid string, request string) (string, error) {
+	g.Log().Debug(ctx, "calRequest")
 	if request == "" {
+		g.Log().Debug(ctx, "calRequest empty request")
 		return "", nil
 	}
-	g.Log().Debug(ctx, "calRequest")
 	userId, err := s.Sid2UserId(ctx, sid)
 	g.Log().Debug(ctx, "calRequest userId:", userId)
 	if err != nil {
@@ -104,9 +105,9 @@ func (s *sMpcSigner) calRequest(ctx context.Context, sid string, request string)
 		return "", errors.New("need handshake")
 	}
 
-	g.Log().Debug(ctx, "calRequest context p2 ")
+	g.Log().Debug(ctx, "calRequest context p2")
 	context_p2 = service.Signer().SignRecvRequestP2(context_p2, request).String()
-	g.Log().Debug(ctx, "calRequest context p2", context_p2)
+	g.Log().Debug(ctx, "calRequest context p2:", context_p2)
 
 	s.updateUserContext(ctx, userId, &context_p2, &request, nil)
 	g.Log().Debug(ctx, "calRequest update context")
