@@ -55,7 +55,7 @@ func (s *sMpcSigner) CalRequest(ctx context.Context, sid string, request string)
 	// })
 
 	// return nil
-	_, err := s.calRequest(s.ctx, sid, request)
+	_, err := s.calRequest(ctx, sid, request)
 	return err
 }
 
