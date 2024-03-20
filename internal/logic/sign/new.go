@@ -3,6 +3,7 @@ package sign
 import (
 	"container/list"
 	"context"
+	"mpcServer/internal/config"
 	"mpcServer/internal/service"
 	"runtime"
 	"sync"
@@ -86,8 +87,8 @@ func NewSigner(ctx context.Context, num int) *sSigner {
 func new() *sSigner {
 	numCPU := runtime.NumCPU()
 	numCPU = numCPU - 1
-	if numCPU > 1 {
-		numCPU = 1
+	if numCPU > config.Config.Server.CpuCore {
+		numCPU = config.Config.Server.CpuCore
 	}
 
 	return NewSigner(gctx.GetInitCtx(), numCPU)
