@@ -26,7 +26,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	g.Log().Debug(ctx, "SignMsg : ", req)
 	// checksid
 	userId, err := service.MpcSigner().Sid2UserId(ctx, req.SessionId)
-
+	g.Log().Debug(ctx, "SignMsg : ", userId)
 	if err != nil {
 		g.Log().Errorf(ctx, "%+v", err)
 		return nil, mpccode.CodeSessionInvalid()
@@ -38,6 +38,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		g.Log().Errorf(ctx, "%+v", err)
 		return nil, mpccode.CodeInternalError()
 	}
+	g.Log().Debug(ctx, "SignMsg Request: ", userId)
 	req.Request = ""
 	////if string msg
 	_, err = hex.DecodeString(req.Msg)
@@ -60,6 +61,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		Ok: 0,
 	}
 	if config.Config.Server.HasRisk {
+		g.Log().Debug(ctx, "SignMsg HasRisk ")
 		// ///Risktx
 		rst, err = service.NrpcClient().RpcRiskTxs(ctx, userId, req.SignData)
 		if err != nil {
@@ -68,6 +70,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		}
 		g.Log().Notice(ctx, "CalSign PerformRiskTxs:", rst)
 	} else {
+		g.Log().Debug(ctx, "SignMsg HasRisk no ")
 		rst.Ok = mpccode.RiskCodePass
 	}
 
