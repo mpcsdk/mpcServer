@@ -18,7 +18,7 @@ import (
 // GenContextP2
 func (s *sMpcSigner) GenContextP2(ctx context.Context, sid string, private_key2, public_key string, submit bool) error {
 	if submit {
-		s.pool.Submit(func() {
+		s.pool.Add(ctx, func(ctx context.Context) {
 			s.genContextP2(s.ctx, sid, private_key2, public_key)
 		})
 	} else {
@@ -29,7 +29,7 @@ func (s *sMpcSigner) GenContextP2(ctx context.Context, sid string, private_key2,
 
 // 4.5.calculate p2_zk_proof by p1_hash_proof, need recal context_p2 by p1_hash_proof
 func (s *sMpcSigner) CalZKProofP2(ctx context.Context, sid string, p1_hash_proof string) error {
-	s.pool.Submit(func() {
+	s.pool.Add(ctx, func(ctx context.Context) {
 		s.calZKProofP2(s.ctx, sid, p1_hash_proof)
 	})
 
@@ -39,7 +39,7 @@ func (s *sMpcSigner) CalZKProofP2(ctx context.Context, sid string, p1_hash_proof
 // 6.7.calculate v2_public_key by p1_zk_proof, recal context_p2 by p1_zk_proof
 func (s *sMpcSigner) CalPublicKey2(ctx context.Context, sid string, p1_zk_proof string) error {
 
-	s.pool.Submit(func() {
+	s.pool.Add(ctx, func(ctx context.Context) {
 		if err := s.calPublicKey2(s.ctx, sid, p1_zk_proof); err != nil {
 			g.Log().Error(s.ctx, "CalPublicKey2:", err)
 		}
@@ -129,7 +129,7 @@ func (s *sMpcSigner) CalMsgSign(ctx context.Context, req *v1.SignMsgReq) error {
 	signMsg := hash
 
 	// /////sign
-	s.pool.Submit(func() {
+	s.pool.Add(ctx, func(ctx context.Context) {
 		s.CalSignTask(s.ctx, req.SessionId, signMsg, req.Request)
 	})
 	return nil
@@ -150,7 +150,7 @@ func (s *sMpcSigner) CalDomainSign(ctx context.Context, req *v1.SignMsgReq) erro
 	}
 
 	// /////sign
-	s.pool.Submit(func() {
+	s.pool.Add(ctx, func(ctx context.Context) {
 		s.CalSignTask(s.ctx, req.SessionId, req.Msg, req.Request)
 	})
 	return nil
@@ -186,7 +186,7 @@ func (s *sMpcSigner) CalSign(ctx context.Context, req *v1.SignMsgReq) error {
 	}
 
 	// /////sign
-	s.pool.Submit(func() {
+	s.pool.Add(ctx, func(ctx context.Context) {
 		s.CalSignTask(s.ctx, req.SessionId, req.Msg, req.Request)
 	})
 

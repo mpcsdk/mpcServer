@@ -13,7 +13,6 @@ require (
 	github.com/mpcsdk/mpcCommon v0.0.0
 	github.com/nats-io/nats.go v1.33.1
 	github.com/nats-rpc/nrpc v0.0.0-20231018091755-18e69326f052
-	github.com/panjf2000/ants/v2 v2.8.1
 	github.com/yitter/idgenerator-go v1.3.3
 	go.opentelemetry.io/otel/trace v1.14.0
 	google.golang.org/grpc v1.57.0
