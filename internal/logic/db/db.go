@@ -10,13 +10,10 @@ import (
 )
 
 type sDB struct {
-	cache *gcache.Cache
 }
 
 func new() *sDB {
-	return &sDB{
-		cache: gcache.New(),
-	}
+	return &sDB{}
 }
 
 // 初始化
