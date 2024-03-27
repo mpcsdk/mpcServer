@@ -7,6 +7,7 @@ import (
 	"mpcServer/internal/service"
 	"runtime"
 	"sync"
+	"time"
 
 	"github.com/gogf/gf/v2/os/gctx"
 )
@@ -26,9 +27,9 @@ type sSigner struct {
 	// taskCh chan func()
 	ctx context.Context
 	///
-	taskList  *list.List
-	lock      sync.Mutex
-	addTaskCh chan struct{}
+	taskList *list.List
+	lock     sync.Mutex
+	// addTaskCh chan struct{}
 	// threadPool []
 }
 
@@ -37,7 +38,7 @@ func (s *sSigner) AddTask(task func()) {
 	s.taskList.PushBack(task)
 	s.lock.Unlock()
 	///
-	s.addTaskCh <- struct{}{}
+	// s.addTaskCh <- struct{}{}
 }
 
 func (s *sSigner) fetchTask() func() {
@@ -57,26 +58,38 @@ func (s *sSigner) TaskLen() int {
 func (s *sSigner) thread() {
 	go func() {
 		runtime.LockOSThread()
-		for range s.addTaskCh {
-			task := s.fetchTask()
-			task()
+		defer func() {
+			runtime.UnlockOSThread()
+			panic("UnlockOSThread")
+		}()
+		for {
+			select {
+			case <-s.ctx.Done():
+				return
+
+			default:
+				task := s.fetchTask()
+				if task == nil {
+					time.Sleep(time.Second)
+					continue
+				}
+				task()
+			}
 		}
-		runtime.UnlockOSThread()
-		panic("UnlockOSThread")
 	}()
 }
 func (s *sSigner) Stop() {
-	close(s.addTaskCh)
+	// close(s.addTaskCh)
 }
 func (s *sSigner) monitoring() {
 
 }
 func NewSigner(ctx context.Context, num int) *sSigner {
 	s := &sSigner{
-		ctx:       ctx,
-		core:      num,
-		taskList:  list.New(),
-		addTaskCh: make(chan struct{}, num),
+		ctx:      ctx,
+		core:     num,
+		taskList: list.New(),
+		// addTaskCh: make(chan struct{}, num*10),
 	}
 
 	for i := 0; i < s.core; i++ {
