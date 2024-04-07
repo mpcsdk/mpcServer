@@ -22,7 +22,9 @@ func CString2G(s *C.char) string {
 
 func GenContextP1(preivateKey, publicKey string) string {
 	c_private_key1 := C.CString(preivateKey)
+	defer C.free(unsafe.Pointer(c_private_key1))
 	c_public_key := C.CString(publicKey)
+	defer C.free(unsafe.Pointer(c_public_key))
 
 	if publicKey == "" {
 		var p1 = C.li17_p1_context(c_private_key1, nil)
@@ -39,7 +41,9 @@ func GenContextP1(preivateKey, publicKey string) string {
 
 func GenContextP2(preivateKey, publicKey string) string {
 	c_private_key1 := C.CString(preivateKey)
+	defer C.free(unsafe.Pointer(c_private_key1))
 	c_public_key := C.CString(publicKey)
+	defer C.free(unsafe.Pointer(c_public_key))
 
 	var p1 = C.li17_p2_context(c_private_key1, c_public_key)
 	return (C.GoString(p1))
@@ -47,6 +51,7 @@ func GenContextP2(preivateKey, publicKey string) string {
 
 func SendZKProofP1(p1 string) string {
 	c_p1 := C.CString(p1)
+	defer C.free(unsafe.Pointer(c_p1))
 	var zk_proof1 = C.li17_p1_refresh_send_zk_proof(c_p1)
 
 	return C.GoString(zk_proof1)
@@ -54,7 +59,9 @@ func SendZKProofP1(p1 string) string {
 
 func RecvZKProofP1(p1, ZKProof2 string) string {
 	c_p1 := C.CString(p1)
+	defer C.free(unsafe.Pointer(c_p1))
 	c_ZKProof2 := C.CString(ZKProof2)
+	defer C.free(unsafe.Pointer(c_ZKProof2))
 	var priv_key1 = C.li17_p1_refresh_recv_zk_proof(c_p1, c_ZKProof2)
 
 	return C.GoString(priv_key1)
@@ -62,6 +69,7 @@ func RecvZKProofP1(p1, ZKProof2 string) string {
 
 func SendZKProofP2(p2 string) string {
 	c_p2 := C.CString(p2)
+	defer C.free(unsafe.Pointer(c_p2))
 	var zk_proof2 = C.li17_p2_refresh_send_zk_proof(c_p2)
 
 	return C.GoString(zk_proof2)
@@ -69,7 +77,9 @@ func SendZKProofP2(p2 string) string {
 
 func RecvZKProofP2(p2, ZKProof1 string) string {
 	c_p2 := C.CString(p2)
+	defer C.free(unsafe.Pointer(c_p2))
 	c_ZKProof1 := C.CString(ZKProof1)
+	defer C.free(unsafe.Pointer(c_ZKProof1))
 	var priv_key2 = C.li17_p2_refresh_recv_zk_proof(c_p2, c_ZKProof1)
 
 	return C.GoString(priv_key2)

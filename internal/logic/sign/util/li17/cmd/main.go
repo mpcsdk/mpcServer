@@ -9,11 +9,11 @@ import "C"
 import (
 	"fmt"
 	"mpcServer/internal/logic/sign/util/li17"
-	"time"
+	"sync"
 )
 
-func runtest(i int, private_key1, private_key2, msg32, public_key string) {
-
+func runtest(i int, private_key1, private_key2, msg32, public_key string, wg *sync.WaitGroup) {
+	defer wg.Done()
 	// refresh
 	var p1 = li17.GenContextP1(private_key1, public_key)
 	var p2 = li17.GenContextP2(private_key2, public_key)
@@ -99,6 +99,7 @@ func runtest(i int, private_key1, private_key2, msg32, public_key string) {
 	} else {
 		fmt.Println("pkey1 != pkey2")
 	}
+
 }
 func main() {
 	var msg32 = "4a2d6a86fc1bd9421f78ab5eb3805f7ebf9dc8480c25a86141e4712810ea0102"
@@ -106,9 +107,10 @@ func main() {
 	var private_key2 = "0ac7d64995c6b4daac2688c0e40d25af50887ada5b7a4cbe197ada0bdef32375"
 	public_key := "045ae6d14d4934eeb004b818d687a1ea6efff0946d043dfb9338c0601a1ae0387fd00bfcefeff11961a48edc66f62ad87feed8a9ef157efa294c91466c70039bbe"
 
-	for i := 0; i < 100; i++ {
-		go runtest(i, private_key1, private_key2, msg32, public_key)
+	wg := new(sync.WaitGroup)
+	for i := 0; i < 2; i++ {
+		wg.Add(1)
+		go runtest(i, private_key1, private_key2, msg32, public_key, wg)
 	}
-	time.Sleep(time.Hour)
-
+	wg.Wait()
 }

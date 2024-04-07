@@ -62,7 +62,11 @@ func (s *sMpcSigner) FetchZKProofp2(ctx context.Context, sid string) (string, er
 	////
 	ZKProofp2, err := s.getBySid(ctx, sid, KEY_zkproof2)
 	if err != nil {
-		return "", mpccode.CodeInternalError()
+		return "", gerror.Wrap(mpccode.CodeInternalError(), mpccode.ErrDetails(
+			mpccode.ErrDetail("sid", sid),
+			mpccode.ErrDetail("key", KEY_zkproof2),
+			mpccode.ErrDetail("err", err),
+		))
 	}
 
 	return ZKProofp2, err
