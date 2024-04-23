@@ -4,7 +4,6 @@ import (
 	"context"
 	"mpcServer/internal/config"
 	"mpcServer/internal/service"
-	"time"
 
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
@@ -19,7 +18,7 @@ type sUserInfo struct {
 	///
 	userGeter *userInfoGeter.UserTokenInfoGeter
 
-	dur time.Duration
+	dur int
 }
 
 func (s *sUserInfo) GetUserInfo(ctx context.Context, userToken string) (userInfo *userInfoGeter.UserInfo, err error) {
@@ -65,7 +64,7 @@ func new() *sUserInfo {
 	s := &sUserInfo{
 		// userGeter: userGeter,
 
-		dur: time.Duration(config.Config.Cache.SessionDuration) * time.Second,
+		dur: config.Config.Cache.SessionDuration,
 	}
 	///
 	r := g.Redis("cache")
@@ -76,7 +75,7 @@ func new() *sUserInfo {
 	cache := gcache.New()
 	cache.SetAdapter(gcache.NewAdapterRedis(r))
 	///
-	userGeter := userInfoGeter.NewUserInfoGeter(url, cache, s.dur)
+	userGeter := userInfoGeter.NewUserInfoGeter(url, s.dur)
 	_, err = userGeter.GetUserInfo(context.Background(), "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBQdWJLZXkiOiIwMjI1YmI1MmU5NTcyMDUwZmZjMGM4MGRjZDBhYTBmNjQyNDFjMDk5ZDAzZjFlYTFjODEzMmZkMzViY2Q3MDBiMWMiLCJpYXQiOjE2OTQ0Mjk5OTEsImV4cCI6MTcyNTk2NTk5MX0.8YaF5spnD1SjI-NNbBCIBj9H5pspXMMkPJrKk23LdnM")
 	if err != nil && !gerror.HasError(err, mpccode.CodeTokenInvalid()) {
 		panic(err)
