@@ -45,11 +45,6 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		return nil, nil
 	}
 	// //else is tx
-	// _, err = hex.DecodeString(req.Msg)
-	// if err != nil {
-	// 	service.MpcSigner().CalMsgSign(ctx, req)
-	// 	return nil, nil
-	// }
 	///
 	///check isdomain
 	if strings.Index(req.SignData, "domain") != -1 {
