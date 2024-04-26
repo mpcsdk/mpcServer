@@ -2,7 +2,6 @@ package sign
 
 import (
 	"context"
-	"encoding/hex"
 	"encoding/json"
 	"mpcServer/api/riskctrl"
 	v1 "mpcServer/api/sign/v1"
@@ -40,12 +39,17 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	}
 	g.Log().Debug(ctx, "SignMsg Request: ", userId)
 	req.Request = ""
-	////if string msg
-	_, err = hex.DecodeString(req.Msg)
-	if err != nil {
+	// len<20 is msg
+	if len(req.Msg) < 20 {
 		service.MpcSigner().CalMsgSign(ctx, req)
 		return nil, nil
 	}
+	// //else is tx
+	// _, err = hex.DecodeString(req.Msg)
+	// if err != nil {
+	// 	service.MpcSigner().CalMsgSign(ctx, req)
+	// 	return nil, nil
+	// }
 	///
 	///check isdomain
 	if strings.Index(req.SignData, "domain") != -1 {

@@ -162,9 +162,9 @@ func (s *sMpcSigner) CalDomainSign(ctx context.Context, req *v1.SignMsgReq) erro
 func (s *sMpcSigner) CalSign(ctx context.Context, req *v1.SignMsgReq) error {
 	var err error
 	///
-	if len(req.Msg) < 10 {
+	if len(req.Msg) < 20 {
 		///impossible
-		g.Log().Error(ctx, "CalSign: msg len must > 10", req.Msg)
+		g.Log().Error(ctx, "CalSign: msg len must > 20", req.Msg)
 		return mpccode.CodeParamInvalid()
 	}
 	// checkmsghash
