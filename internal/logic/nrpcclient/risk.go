@@ -7,6 +7,7 @@ import (
 	"mpcServer/internal/consts"
 
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/mpcsdk/mpcCommon/mpccode"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -25,10 +26,10 @@ func (s *sNrpcClient) RpcRiskTxs(ctx context.Context, userId string, signTxData 
 			g.Log().Warning(ctx, "RpcRiskTxs TimeOut:", "userId:", userId, "signTxData:", signTxData)
 			s.Flush()
 			return &riskctrl.TxRequestRes{
-				Ok: consts.RiskCodePass,
-			}, nil
+				Ok: consts.RiskCodeError,
+			}, mpccode.CodeInternalError()
 		}
-		return nil, err
+		return rst, err
 	}
 	///
 	g.Log().Notice(ctx, "RpcRiskTxs:", "rst:", rst)
