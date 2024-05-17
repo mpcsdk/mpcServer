@@ -1,25 +1,26 @@
 server:
   name: "mpc-signer"
-  address:     ":8000"
+  address: ":8000"
   workId: 1
-  cpuCore: 2
+  cpuCore: 8
   openapiPath: "/api.json"
   swaggerPath: "/swagger"
   privateKey: "0ac7d64995c6b4daac2688c0e40d25af50887ada5b7a4cbe197ada0bdef32375"
-  hasRisk:  false
-  hashCore: 4
+  hasRisk: true
+  hashCore: 1
+  mpcTasks: 100
 
 jaegerUrl: "127.0.0.1:6831"
 
 logger:
-  level : "all"
-  stdout: true 
+  level: "all"
+  stdout: true
   rotateExpire: "1d"
   path: "./"
 
 database:
   default:
-  - link: "pgsql:postgres:123456@tcp(127.0.0.1:10100)/mpc"
+    - link: "pgsql:postgres:123456@tcp(127.0.0.1:10100)/mpc"
 
 cache:
   sessionDuration: 2000
@@ -27,14 +28,14 @@ cache:
 nrpc:
   natsUrl: "127.0.0.1:4222"
 
-# redis 
+# redis
 redis:
   default:
     address: 127.0.0.1:6379
-    db:      1
+    db: 1
   cache:
-    address:     127.0.0.1:6379
-    db:          2
+    address: 127.0.0.1:6379
+    db: 2
 
 userToken: "https://auth-dev.mixmarvel-sdk.com/info"
 # ?token=xxxxxxxxx
@@ -42,10 +43,9 @@ etcd:
   address: "127.0.0.1:2379"
   riskRpc: "riskRpc"
 
-
 gfcli:
   gen:
     dao:
-    - link:     "pgsql:postgres:123456@tcp(127.0.0.1:10100)/mpc"
-      tables:   "mpc_context"
-      jsonCase: "CamelLower"
+      - link: "pgsql:postgres:123456@tcp(127.0.0.1:10100)/mpc"
+        tables: "mpc_context"
+        jsonCase: "CamelLower"

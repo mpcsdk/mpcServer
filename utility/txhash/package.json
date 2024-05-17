@@ -1,8 +1,9 @@
 {
   "name": "txhash",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "dependencies": {
+    "ethers": "^5.7.1",
     "@grpc/grpc-js": "^1.9.1",
     "@types/node": "^20.5.7",
     "@unipasswallet/transactions": "^0.3.2",
@@ -108,6 +109,7 @@
     "yallist": "^4.0.0"
   },
   "scripts": {
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.js",
     "build": "npm i && webpack --config webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -119,6 +121,7 @@
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4"
   },
+  "type": "module",
   "keywords": [],
   "description": ""
 }
