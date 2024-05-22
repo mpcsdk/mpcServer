@@ -65,7 +65,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		rst, err = service.NrpcClient().RpcRiskTxs(ctx, userId, req.SignData)
 		if err != nil {
 			g.Log().Warning(ctx, "RpcRiskTx:", "sid:", req.SessionId, "err:", err)
-			return nil, mpccode.CodePerformRiskError(mpccode.TraceId(ctx))
+			return nil, err
 		}
 		g.Log().Notice(ctx, "CalSign PerformRiskTxs:", rst)
 	} else {

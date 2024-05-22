@@ -7,7 +7,9 @@ import (
 	"mpcServer/internal/consts"
 
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/gtrace"
 	"github.com/mpcsdk/mpcCommon/mpccode"
+	"github.com/nats-rpc/nrpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -27,9 +29,13 @@ func (s *sNrpcClient) RpcRiskTxs(ctx context.Context, userId string, signTxData 
 			s.Flush()
 			return &riskctrl.TxRequestRes{
 				Ok: consts.RiskCodeError,
-			}, mpccode.CodeInternalError()
+			}, mpccode.CodePerformRiskError()
 		}
-		return rst, err
+		if nerr, ok := err.(*nrpc.Error); ok {
+			return rst, mpccode.CodePerformRiskError(nerr.Message)
+		} else {
+			return rst, mpccode.CodePerformRiskError(gtrace.GetTraceID(ctx))
+		}
 	}
 	///
 	g.Log().Notice(ctx, "RpcRiskTxs:", "rst:", rst)
