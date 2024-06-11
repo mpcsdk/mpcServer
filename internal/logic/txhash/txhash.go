@@ -149,7 +149,7 @@ func new() *sTxHash {
 		poscli: 0,
 		maxcli: 0,
 	}
-	// go s.daemon()
+	go s.daemon()
 	return s
 }
 func init() {

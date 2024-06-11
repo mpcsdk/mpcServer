@@ -29,12 +29,12 @@ func (s *sNrpcClient) RpcRiskTxs(ctx context.Context, userId string, signTxData 
 			s.Flush()
 			return &riskctrl.TxRequestRes{
 				Ok: consts.RiskCodeError,
-			}, mpccode.CodePerformRiskError()
+			}, mpccode.CodePerformRiskInternalError()
 		}
 		if nerr, ok := err.(*nrpc.Error); ok {
-			return rst, mpccode.CodePerformRiskError(nerr.Message)
+			return rst, mpccode.CodePerformRiskInternalError(nerr.Message)
 		} else {
-			return rst, mpccode.CodePerformRiskError(gtrace.GetTraceID(ctx))
+			return rst, mpccode.CodePerformRiskInternalError(gtrace.GetTraceID(ctx))
 		}
 	}
 	///

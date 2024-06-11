@@ -74,19 +74,17 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	/////
 	////
 	if config.Config.Server.HasRisk {
-		g.Log().Debug(ctx, "SignMsg HasRisk ")
 		// ///Risktx
 		rst, err = service.NrpcClient().RpcRiskTxs(ctx, userId, req.SignData)
 		if err != nil {
 			g.Log().Warning(ctx, "RpcRiskTx:", "sid:", req.SessionId, "err:", err)
 			return nil, err
 		}
-		g.Log().Notice(ctx, "CalSign PerformRiskTxs:", rst)
+		g.Log().Notice(ctx, "CalSign PerformRiskTxs:", rst.Ok)
 	} else {
-		g.Log().Debug(ctx, "SignMsg HasRisk no ")
 		rst.Ok = mpccode.RiskCodePass
 	}
-
+	g.Log().Debug(ctx, "SignMsg Risk: ", rst)
 	switch rst.Ok {
 	case consts.RiskCodeForbidden:
 		return &v1.SignMsgRes{
@@ -118,7 +116,7 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		return &v1.SignMsgRes{
 			RiskSerial: rst.RiskSerial,
 			RiskKind:   rst.RiskKind,
-		}, mpccode.CodePerformRiskError()
+		}, mpccode.CodePerformRiskInternalError()
 	}
 
 	return nil, nil

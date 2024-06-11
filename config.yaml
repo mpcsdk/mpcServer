@@ -19,8 +19,8 @@ logger:
   path: "./"
 
 database:
-  default:
-    - link: "pgsql:postgres:123456@tcp(127.0.0.1:10100)/mpc"
+  mpc:
+    - link: "pgsql:postgres:123456@tcp(127.0.0.1:5432)/mpc"
 
 cache:
   sessionDuration: 2000
@@ -39,13 +39,3 @@ redis:
 
 userToken: "https://auth-dev.mixmarvel-sdk.com/info"
 # ?token=xxxxxxxxx
-etcd:
-  address: "127.0.0.1:2379"
-  riskRpc: "riskRpc"
-
-gfcli:
-  gen:
-    dao:
-      - link: "pgsql:postgres:123456@tcp(127.0.0.1:10100)/mpc"
-        tables: "mpc_context"
-        jsonCase: "CamelLower"
