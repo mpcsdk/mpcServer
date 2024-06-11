@@ -40,11 +40,38 @@ CREATE TABLE public.mpc_context (
 ALTER TABLE public.mpc_context OWNER TO postgres;
 
 --
+-- Name: wallet_addr; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.wallet_addr (
+    user_id character varying NOT NULL,
+    wallet_addr character varying(255) NOT NULL,
+    chain_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.wallet_addr OWNER TO postgres;
+
+--
 -- Name: mpc_context mpc_context_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.mpc_context
     ADD CONSTRAINT mpc_context_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: wallet_addr_user_id_wallet_addr_idx; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX wallet_addr_user_id_wallet_addr_idx ON public.wallet_addr USING btree (user_id, wallet_addr);
+
+
+--
+-- Name: wallet_addr_wallet_addr_idx; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX wallet_addr_wallet_addr_idx ON public.wallet_addr USING btree (wallet_addr);
 
 
 --
