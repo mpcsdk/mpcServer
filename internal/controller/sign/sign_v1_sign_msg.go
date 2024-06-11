@@ -12,6 +12,7 @@ import (
 
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/gtrace"
+	"github.com/mpcsdk/mpcCommon/ethtx/analzyer"
 	"github.com/mpcsdk/mpcCommon/mpccode"
 	///
 	// "github.com/ethereum/go-ethereum/signer/core/apitypes"
@@ -59,6 +60,19 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	rst := &riskctrl.TxRequestRes{
 		Ok: 0,
 	}
+	////todo: record mpc walletadr
+	aSignData, err := analzyer.DeSignData(req.SignData)
+	if err != nil {
+		return nil, mpccode.CodeParamInvalid()
+	}
+	walletAddr := aSignData.Address
+	chainId := aSignData.ChainId
+	err = service.DB().Mpc().InsertWalletAddr(ctx, userId, walletAddr.Hex(), int64(chainId))
+	if err != nil {
+		return nil, mpccode.CodeInternalError(gtrace.GetTraceID(ctx))
+	}
+	/////
+	////
 	if config.Config.Server.HasRisk {
 		g.Log().Debug(ctx, "SignMsg HasRisk ")
 		// ///Risktx
@@ -73,8 +87,6 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 		rst.Ok = mpccode.RiskCodePass
 	}
 
-	///
-	// }
 	switch rst.Ok {
 	case consts.RiskCodeForbidden:
 		return &v1.SignMsgRes{

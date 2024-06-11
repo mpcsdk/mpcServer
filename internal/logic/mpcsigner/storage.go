@@ -2,9 +2,10 @@ package mpcsigner
 
 import (
 	"context"
-	"mpcServer/internal/model/do"
-	"mpcServer/internal/model/entity"
 	"mpcServer/internal/service"
+
+	"github.com/mpcsdk/mpcCommon/mpcdao/model/do"
+	"github.com/mpcsdk/mpcCommon/mpcdao/model/entity"
 )
 
 // /
@@ -21,7 +22,7 @@ func (s *sMpcSigner) getBySid(ctx context.Context, sid string, key string) (stri
 }
 
 func (s *sMpcSigner) updateUserContext(ctx context.Context, userId string, context, request, pubkey *string) error {
-	err := service.DB().UpdateContext(ctx, userId, &do.MpcContext{
+	err := service.DB().Mpc().UpdateContext(ctx, userId, &do.MpcContext{
 		UserId:  userId,
 		Context: context,
 		Request: request,
@@ -30,7 +31,7 @@ func (s *sMpcSigner) updateUserContext(ctx context.Context, userId string, conte
 	return err
 }
 func (s *sMpcSigner) insertUserContext(ctx context.Context, userId string, context, request, pubkey *string, token, tokenData *string) error {
-	err := service.DB().InertContext(ctx, userId, &do.MpcContext{
+	err := service.DB().Mpc().InertContext(ctx, userId, &do.MpcContext{
 		UserId:    userId,
 		Context:   context,
 		Request:   request,
@@ -42,6 +43,6 @@ func (s *sMpcSigner) insertUserContext(ctx context.Context, userId string, conte
 	return err
 }
 func (s *sMpcSigner) fetchUserContext(ctx context.Context, userId string) (*entity.MpcContext, error) {
-	data, err := service.DB().FetchContext(ctx, userId)
+	data, err := service.DB().Mpc().FetchContext(ctx, userId)
 	return data, err
 }

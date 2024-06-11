@@ -6,16 +6,12 @@
 package service
 
 import (
-	"context"
-	"mpcServer/internal/model/do"
-	"mpcServer/internal/model/entity"
+	"github.com/mpcsdk/mpcCommon/mpcdao"
 )
 
 type (
 	IDB interface {
-		InertContext(ctx context.Context, userId string, data *do.MpcContext) error
-		UpdateContext(ctx context.Context, userId string, data *do.MpcContext) error
-		FetchContext(ctx context.Context, userId string) (*entity.MpcContext, error)
+		Mpc() *mpcdao.MpcContext
 	}
 )
 
