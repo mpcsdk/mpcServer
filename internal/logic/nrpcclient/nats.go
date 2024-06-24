@@ -6,8 +6,6 @@ import (
 	"mpcServer/internal/service"
 	"time"
 
-	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/os/gctx"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/nats-io/nats.go"
 )
@@ -18,38 +16,35 @@ type sNrpcClient struct {
 }
 
 func init() {
-	ctx := gctx.GetInitCtx()
+	s := &sNrpcClient{}
 	// Connect to the NATS server.
-	nc, err := nats.Connect(config.Config.Nrpc.NatsUrl, nats.Timeout(3*time.Second))
-	if err != nil {
-		g.Log().Error(ctx, err)
-		if config.Config.Server.HasRisk {
+	if config.Config.Server.HasRisk {
+		nc, err := nats.Connect(config.Config.Nrpc.NatsUrl, nats.Timeout(3*time.Second))
+		if err != nil {
 			panic(err)
 		}
-	}
-	// defer nc.Close()
+		// defer nc.Close()
 
-	// This is our generated client.
-	riskctrl := riskctrl.NewRiskCtrlClient(nc)
-	// Contact the server and print out its response.
-	_, err = riskctrl.RpcAlive(&empty.Empty{})
-	if err != nil {
-		g.Log().Error(ctx, err)
+		// This is our generated client.
+		riskctrl := riskctrl.NewRiskCtrlClient(nc)
+		// Contact the server and print out its response.
+		_, err = riskctrl.RpcAlive(&empty.Empty{})
+		if err != nil {
+			panic(err)
+		}
+		////
+		// Contact the server and print out its response.
+		// if err != nil {
+		// 	g.Log().Error(ctx, err)
+		// 	if config.Config.Server.HasRisk {
+		// 		panic(err)
+		// 	}
+		// }
+		///
+		s.nc = nc
+		s.riskctrl = riskctrl
+	}
 
-	}
-	////
-	// Contact the server and print out its response.
-	// if err != nil {
-	// 	g.Log().Error(ctx, err)
-	// 	if config.Config.Server.HasRisk {
-	// 		panic(err)
-	// 	}
-	// }
-	///
-	s := &sNrpcClient{
-		riskctrl: riskctrl,
-		nc:       nc,
-	}
 	service.RegisterNrpcClient(s)
 }
 func (s *sNrpcClient) Flush() {

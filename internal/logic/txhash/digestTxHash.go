@@ -2,7 +2,6 @@ package txhash
 
 import (
 	"encoding/json"
-	"fmt"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -84,15 +83,6 @@ func (s *UnipassTx) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	//////
-	// b := hexutil.Big{}
-	// hex := "0x01"
-	// b := common.FromHex(hex)
-	// b = common.TrimLeftZeroes(b)
-	// err = b.UnmarshalText([]byte("0x01"))
-	// if err != nil {
-	// 	return err
-	//
 
 	s.CallType = a.CallType
 	s.RevertOnError = a.RevertOnError
@@ -111,11 +101,11 @@ func (s *UnipassTx) UnmarshalJSON(data []byte) error {
 
 // //
 // //
-func DigestTxHash(signData string) string {
+func DigestTxHash(signData string) (string, error) {
 	tx := Tx{}
 	err := json.Unmarshal([]byte(signData), &tx)
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
 	///
 	Uint256, _ := abi.NewType("uint256", "", nil)
@@ -134,9 +124,8 @@ func DigestTxHash(signData string) string {
 
 	b, err := m.Inputs.Pack(&tx.Number, tx.Txs)
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
-	fmt.Println(common.Bytes2Hex(b))
 	b = crypto.Keccak256(b)
 	////
 	///
@@ -146,5 +135,5 @@ func DigestTxHash(signData string) string {
 	arr = append(arr, tx.Address.Bytes()...)
 	arr = append(arr, b...)
 	b = crypto.Keccak256(arr)
-	return "0x" + common.Bytes2Hex(b)
+	return "0x" + common.Bytes2Hex(b), nil
 }

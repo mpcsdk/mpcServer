@@ -67,9 +67,12 @@ func (c *ControllerV1) SignMsg(ctx context.Context, req *v1.SignMsgReq) (res *v1
 	}
 	walletAddr := aSignData.Address
 	chainId := aSignData.ChainId
-	err = service.DB().Mpc().InsertWalletAddr(ctx, userId, walletAddr.Hex(), int64(chainId))
-	if err != nil {
-		return nil, mpccode.CodeInternalError(gtrace.GetTraceID(ctx))
+	exisits, _ := service.DB().Mpc().ExistsWalletAddr(ctx, walletAddr.Hex(), int64(chainId))
+	if !exisits {
+		err = service.DB().Mpc().InsertWalletAddr(ctx, userId, walletAddr.Hex(), int64(chainId))
+		if err != nil {
+			return nil, mpccode.CodeInternalError(gtrace.GetTraceID(ctx))
+		}
 	}
 	/////
 	////

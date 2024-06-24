@@ -29,7 +29,7 @@ func TestTxHash(t *testing.T) {
     }
 	`
 	//////
-	txHash := DigestTxHash(signStr)
+	txHash, _ := DigestTxHash(signStr)
 	if txHash != "0x6cc6f23f55e83864d24013a4e5b802eec2950013c8fa12130ffa6355f15b31e0" {
 		t.Fatal("txHash is not equal 0x6cc6f23f55e83864d24013a4e5b802eec2950013c8fa12130ffa6355f15b31e0")
 	}
